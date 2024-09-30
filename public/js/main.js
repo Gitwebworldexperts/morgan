@@ -365,9 +365,3 @@ $(window).scroll(function() {
 		}
 		
 		
-		
-		//  $(document).ready(function() {
-        //   lightGallery(document.getElementById('aniimated-thumbnials'), {
-        //     thumbnail: true
-        //   });
-        // });
