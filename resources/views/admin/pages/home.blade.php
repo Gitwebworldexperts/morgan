@@ -39,6 +39,61 @@
                                     <label class="form-label d-block">Header Image</label>
                                     {!! getImage('first_section_image', 'section_1', 'image_section',$home->first_section_image) !!}
                                 </div>
+                                <div class="col-12 form-group">
+                                    <label>Show Search</label>
+                                    <div class="row">
+                                    @if(!empty($home->list_property))
+                                        @php
+                                            $list_property = json_decode($home->list_property, true); // true for associative array
+                                            if (json_last_error() !== JSON_ERROR_NONE) {
+                                                echo "JSON Decode Error: " . json_last_error_msg();
+                                            }
+                                        @endphp 
+
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" name="toggle_rent" id="toggle_rent" {{ ($list_property['rent'] == 1) ? 'checked':''  }} value="1">
+                                                    <label class="form-check-label" for="toggle_rent">Show/Hide Rent</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" name="toggle_project" id="toggle_project" value="1" {{ ($list_property['project'] == 1) ? 'checked':''  }}>
+                                                    <label class="form-check-label" for="toggle_project">Show/Hide Project</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" name="toggle_private" id="toggle_private" {{ ($list_property['private'] == 1) ? 'checked':''  }} value="1" >
+                                                    <label class="form-check-label" for="toggle_private">Show/Hide Private</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" name="toggle_international" id="toggle_international" value="1" {{ ($list_property['international'] == 1) ? 'checked':''  }}>
+                                                    <label class="form-check-label" for="toggle_international">Show/Hide International</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" name="toggle_buy" id="toggle_buy" value="1" {{ ($list_property['buy'] == 1) ? 'checked':''  }}>
+                                                    <label class="form-check-label" for="toggle_buy">Show/Hide Buy</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                    </div>
+                                </div>
                             </div>
 
 

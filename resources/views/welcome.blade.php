@@ -27,16 +27,50 @@
                         <div class="banner-form mobile-none">
                             <div class="TopTabsBar">
                                 <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                    <li class="nav-item"> <a class="nav-link active show" id="home-tab" data-toggle="tab"
+                                    @php
+                                            $list_property = json_decode($home->list_property); // true for associative array
+                                            if (json_last_error() !== JSON_ERROR_NONE) {
+                                                echo "JSON Decode Error: " . json_last_error_msg();
+                                            }
+                                              $firstActive = true;
+                                              $contentActive = true;
+                                    @endphp
+
+                                    @if($list_property->buy)
+                                    <li class="nav-item"> <a class="nav-link {{ $firstActive ? 'active show' : '' }}" id="home-tab" data-toggle="tab"
                                             href="#Buy" role="tab" aria-controls="home" aria-selected="true">Buy</a>
                                     </li>
-                                    <li class="nav-item"> <a class="nav-link" id="profile-tab" data-toggle="tab"
+                                    @php $firstActive = false; @endphp
+                                    @endif
+                                    @if($list_property->rent)
+                                    <li class="nav-item"> <a class="nav-link {{ $firstActive ? 'active show' : '' }}" id="profile-tab" data-toggle="tab"
                                             href="#Rent" role="tab" aria-controls="profile"
                                             aria-selected="false">Rent</a> </li>
+                                    @php $firstActive = false; @endphp
+                                    @endif
+                                    @if($list_property->project)
+                                    <li class="nav-item"> <a class="nav-link {{ $firstActive ? 'active show' : '' }}" id="profile-tab" data-toggle="tab"
+                                            href="#Project" role="tab" aria-controls="profile"
+                                            aria-selected="false">Project</a> </li>
+                                    @php $firstActive = false; @endphp
+                                    @endif
+                                    @if($list_property->private)
+                                    <li class="nav-item"> <a class="nav-link {{ $firstActive ? 'active show' : '' }}" id="profile-tab" data-toggle="tab"
+                                            href="#Private" role="tab" aria-controls="profile"
+                                            aria-selected="false">Private</a> </li>
+                                    @php $firstActive = false; @endphp
+                                    @endif
+                                    @if($list_property->international)
+                                    <li class="nav-item"> <a class="nav-link {{ $firstActive ? 'active show' : '' }}" id="profile-tab" data-toggle="tab"
+                                            href="#International" role="tab" aria-controls="profile"
+                                            aria-selected="false">International</a> </li>
+                                    @php $firstActive = false; @endphp
+                                    @endif
                                 </ul>
                             </div>
                             <div class="tab-content">
-                                <div id="Buy" class="tab-pane fade active show">
+                                @if($list_property->buy)
+                                <div id="Buy" class="tab-pane fade {{ $contentActive ? 'active show' : '' }}">
                                     <form action="#">
                                         <div class="BookingBox">
                                             <div class="BookingLocation">
@@ -73,7 +107,10 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div id="Rent" class="tab-pane fade">
+                                @php $contentActive = false; @endphp
+                                @endif
+                                @if($list_property->rent)
+                                <div id="Rent" class="tab-pane fade {{ $contentActive ? 'active show' : '' }}">
                                     <form>
                                         <div class="BookingBox">
                                             <div class="BookingLocation">
@@ -110,6 +147,128 @@
                                         </div>
                                     </form>
                                 </div>
+                                @php $contentActive = false; @endphp
+                                @endif
+                                @if($list_property->project)
+                                <div id="Project" class="tab-pane fade {{ $contentActive ? 'active show' : '' }}">
+                                    <form>
+                                        <div class="BookingBox">
+                                            <div class="BookingLocation">
+                                                <div class="BookingFrom"> <input type="" name=""
+                                                        class="form-control" placeholder="Search country and city...">
+                                                </div>
+                                                <div class="BookingFrom p-0"> <select class="form-control">
+                                                        <option>Property Type</option>
+                                                        <option>1</option>
+                                                        <option>2</option>
+                                                        <option>3</option>
+                                                    </select> </div>
+                                                <div class="BookingFrom p-0"> <select class="form-control">
+                                                        <option>Buy</option>
+                                                        <option>1</option>
+                                                        <option>2</option>
+                                                        <option>3</option>
+                                                    </select> </div>
+                                                <div class="BookingFrom p-0"> <select class="form-control">
+                                                        <option>Beds</option>
+                                                        <option>1</option>
+                                                        <option>2</option>
+                                                        <option>3</option>
+                                                    </select> </div>
+                                                <div class="BookingFrom p-0"> <select class="form-control">
+                                                        <option>Price</option>
+                                                        <option>1</option>
+                                                        <option>2</option>
+                                                        <option>3</option>
+                                                    </select> </div>
+                                                <div class="BookingFromBtn"> <a href="#"><img
+                                                            src="{{ asset('img/search.svg') }}"></a> </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                @php $contentActive = false; @endphp
+                                @endif
+                                @if($list_property->private)
+                                <div id="Private" class="tab-pane fade {{ $contentActive ? 'active show' : '' }}">
+                                    <form>
+                                        <div class="BookingBox">
+                                            <div class="BookingLocation">
+                                                <div class="BookingFrom"> <input type="" name=""
+                                                        class="form-control" placeholder="Search country and city...">
+                                                </div>
+                                                <div class="BookingFrom p-0"> <select class="form-control">
+                                                        <option>Property Type</option>
+                                                        <option>1</option>
+                                                        <option>2</option>
+                                                        <option>3</option>
+                                                    </select> </div>
+                                                <div class="BookingFrom p-0"> <select class="form-control">
+                                                        <option>Buy</option>
+                                                        <option>1</option>
+                                                        <option>2</option>
+                                                        <option>3</option>
+                                                    </select> </div>
+                                                <div class="BookingFrom p-0"> <select class="form-control">
+                                                        <option>Beds</option>
+                                                        <option>1</option>
+                                                        <option>2</option>
+                                                        <option>3</option>
+                                                    </select> </div>
+                                                <div class="BookingFrom p-0"> <select class="form-control">
+                                                        <option>Price</option>
+                                                        <option>1</option>
+                                                        <option>2</option>
+                                                        <option>3</option>
+                                                    </select> </div>
+                                                <div class="BookingFromBtn"> <a href="#"><img
+                                                            src="{{ asset('img/search.svg') }}"></a> </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                @php $contentActive = false; @endphp
+                                @endif
+                                @if($list_property->international)
+                                <div id="International" class="tab-pane fade {{ $contentActive ? 'active show' : '' }}">
+                                    <form>
+                                        <div class="BookingBox">
+                                            <div class="BookingLocation">
+                                                <div class="BookingFrom"> <input type="" name=""
+                                                        class="form-control" placeholder="Search country and city...">
+                                                </div>
+                                                <div class="BookingFrom p-0"> <select class="form-control">
+                                                        <option>Property Type</option>
+                                                        <option>1</option>
+                                                        <option>2</option>
+                                                        <option>3</option>
+                                                    </select> </div>
+                                                <div class="BookingFrom p-0"> <select class="form-control">
+                                                        <option>Buy</option>
+                                                        <option>1</option>
+                                                        <option>2</option>
+                                                        <option>3</option>
+                                                    </select> </div>
+                                                <div class="BookingFrom p-0"> <select class="form-control">
+                                                        <option>Beds</option>
+                                                        <option>1</option>
+                                                        <option>2</option>
+                                                        <option>3</option>
+                                                    </select> </div>
+                                                <div class="BookingFrom p-0"> <select class="form-control">
+                                                        <option>Price</option>
+                                                        <option>1</option>
+                                                        <option>2</option>
+                                                        <option>3</option>
+                                                    </select> </div>
+                                                <div class="BookingFromBtn"> <a href="#"><img
+                                                            src="{{ asset('img/search.svg') }}"></a> </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                @php $contentActive = false; @endphp
+                                @endif
                             </div>
                         </div>
                     </div>

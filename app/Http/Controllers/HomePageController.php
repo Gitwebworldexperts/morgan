@@ -92,6 +92,21 @@ class HomePageController extends Controller
         ]);
         // Handle file uploads
 
+
+        #handle show search
+        $toggles = [
+            'rent' => empty($request->toggle_rent) ? 0 : 1,
+            'project' => empty($request->toggle_project) ? 0 : 1,
+            'private' => empty($request->toggle_private) ? 0 : 1,
+            'international' => empty($request->toggle_international) ? 0 : 1,
+            'buy' => empty($request->toggle_buy) ? 0 : 1,
+        ];
+
+        // Convert the associative array to JSON
+        $jsonToggles = json_encode($toggles);
+        #handle show search
+
+
         $second_section_button = $this->createButton($request->second_section_button, $request->second_section_button_2) ? 
             [$this->createButton($request->second_section_button, $request->second_section_button_2)] : null;
 
@@ -142,7 +157,7 @@ class HomePageController extends Controller
         $homePage = HomePage::create([
             'section_1' => isset($request->section_1)?(string)$request->section_1:'0',
             'first_section_image' => $first_section_image ?? '',
-            'list_property' => $validatedData['list_property'] ?? json_encode([]),
+            'list_property' => $jsonToggles ?? json_encode([]),
             'first_section_heading' => $validatedData['first_section_heading'],
             'section_2' => isset($request->section_2)?(string)$request->section_2: '0',
             'second_heading' => $validatedData['second_heading'],
