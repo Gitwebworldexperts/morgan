@@ -1,4 +1,4 @@
-        <section class="faq-sec faq-after space bg-grey">
+        <section class="faq-sec  space bg-grey pr">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-7 mx-auto">

@@ -20,5 +20,10 @@ class BaseController extends Controller
     public function settings()
     {
         return view('admin.settings');
-     }
+    }
+    public function contactus()
+    {
+        return view('contactus');
+    }
+
 }

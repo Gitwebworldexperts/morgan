@@ -224,5 +224,27 @@
             });
         });
     </script>
+    <script>
+        document.addEventListener('keydown', function(event) {
+            if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+                event.preventDefault(); // Prevent the default save behavior
+                
+                Swal.fire({
+                  title: "Save Changes!",
+                  text: "Would you like to proceed with saving your changes?",
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "Save"
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    document.getElementById('image-upload-form').submit(); // Submit the form
+                  }
+                });
+            }
+        });
+
+    </script>
 
 @endsection

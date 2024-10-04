@@ -5974,7 +5974,9 @@ iframe{
 }
 
 
-
+.map-section iframe {
+    border-radius: 0;
+}
 
 /* popup */
 .MemeberModal .modal-content {

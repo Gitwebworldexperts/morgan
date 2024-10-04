@@ -1222,10 +1222,11 @@
         </div>
     </section>
     @endif
-    @include('faq')
+    <div class="mt-4">
+        @include('faq')        
+    </div>
     <!-- back to top -->
 
-@endsection
 <!-- Modal -->
 <div class="modal fade" id="search-modal" tabindex="-1" role="dialog"
     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -1326,3 +1327,5 @@
         </div>
     </div>
 </div>
+
+@endsection

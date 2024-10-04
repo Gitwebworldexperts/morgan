@@ -16,6 +16,8 @@ use App\Http\Controllers\RentPropertieController;
 use App\Http\Controllers\BuyPropertieController;
 use App\Http\Controllers\HomePageController;
 
+use App\Http\Controllers\SearchController;
+
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -56,3 +58,9 @@ Route::prefix('admin')->group(function () {
 
 });
 
+Route::get('/search', [SearchController::class, 'search'])->name('search');
+
+Route::get('/google/redirect', [App\Http\Controllers\GoogleLoginController::class, 'redirectToGoogle'])->name('google.redirect');
+Route::get('/google/callback', [App\Http\Controllers\GoogleLoginController::class, 'handleGoogleCallback'])->name('google.callback');
+
+Route::get('/contactus', [BaseController::class, 'contactus'])->name('contactus');
