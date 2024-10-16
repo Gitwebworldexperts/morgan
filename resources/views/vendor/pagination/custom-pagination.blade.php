@@ -1,4 +1,4 @@
-@if ($paginator->hasMorePages())
+<!-- if ($paginator->hasMorePages()) -->
 <div class="pagination-main">
     <div class="row">
         <div class="col-12">
@@ -37,4 +37,4 @@
         </div>
     </div>
 </div>
-@endif
+<!-- endif -->

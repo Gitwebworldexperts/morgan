@@ -37,16 +37,18 @@
                         <!-- <td>{{ $item->country_id }}</td> You may want to show the country name instead of the ID -->
                         <td>{{ isset($item->propertyType->type_name)? $item->propertyType->type_name : '' }}</td> <!-- Same as above, consider showing the category name -->
                         <td>
-                            <a class="edit_button" href="{{ route('international_properties.edit', $item) }}">
-                                <i class="fa-solid fa-pencil"></i>
-                            </a>
-                            <form action="{{ route('international_properties.destroy', $item) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button class="faq_delete_button" type="submit" onclick="return confirm('Are you sure you want to delete this property?');">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </form>
+                            <div class="faq-actions">
+                                <a class="edit_button" href="{{ route('international_properties.edit', $item) }}">
+                                    <i class="fa-solid fa-pencil"></i> Edit
+                                </a>
+                                <form action="{{ route('international_properties.destroy', $item) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="faq_delete_button" type="submit" onclick="return confirm('Are you sure you want to delete this property?');">
+                                        <i class="fa-solid fa-trash"></i> Delete
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     @endforeach

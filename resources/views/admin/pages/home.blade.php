@@ -19,7 +19,7 @@
             @csrf
             <p class="heading_for_admin_section">Home Page</p>
             <div class="section_con tent">
-                <div class="container">
+                <div class="container-fluid">
                     <div class="row">
                         <div class="col-12 home_section">
                             <div class="section_breaker pr"><label class="section_name"><input type="checkbox" name="section_1" value="1" {{ old('section_1', $home->section_1) ? 'checked' : '' }} 
@@ -362,7 +362,7 @@
                             </div>
                             <div class="row row-container-section pl-2 pr-2">
                                 <div class="col-12 form-group">
-                                    <button type="submit" class="btn btn-primary">Submit</button>  
+                                    <button type="submit" class="green-btn">Submit</button>  
                                 </div>
                             </div>
                         </div>

@@ -1429,6 +1429,9 @@ nav.open.sidebar {
 
 
 /* footer */
+.footer-item.Social-Media a:hover {
+    text-decoration: none;
+}
 .footer {
     background: #231F14;
     padding: 60px 0px;

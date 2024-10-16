@@ -7,6 +7,7 @@ use App\Models\Properties;
 use App\Models\PrivatePropertie;
 use App\Models\ProjectPropertie;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class HomeController extends Controller
 {

@@ -6,7 +6,7 @@
         <p class="heading_for_admin_section">Faq's Section</p>
         <div class="section_content">
             <form action="{{ route('faq.update', $faq) }}" method="POST" enctype="multipart/form-data"
-                class="container mt-4">
+                class="mt-4">
                 @csrf
                 @method('PUT')
                 <div id="row-container">
@@ -29,10 +29,13 @@
                             </div>                        
                         </div>                        
                     </div>
+                    <div class="btn-grp d-flex">
+                    <button type="submit" class="green-btn">Update</button>
+                    <a href="{{ route('faq.index') }}" class="border-btn">Back</a>
                 </div>
-
-                <button type="submit" class="btn btn-primary">Update</button>
-                <a href="{{ route('faq.index') }}" class="btn btn-secondary">Back</a>
+                </div>
+               
+              
             </form>
 
         </div>

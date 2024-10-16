@@ -7,7 +7,7 @@
         </div>
     @endif
     <section>
-    	<p class="heading_for_admin_section">New Property Type (<span class="text-captilized"><strong> {{$category}} </strong></span>)</p>
+    	<p class="heading_for_admin_section">New Property Type ( {{$category}} )</p>
     	<div class="section_content">
             <form action="{{ route('property-types.store') }}" method="POST">
                 @csrf
@@ -23,9 +23,10 @@
                         <option value="0">Inactive</option>
                     </select>
                 </div>
-            </br>
-                <button type="submit" class="btn btn-success">Add Property Type</button>
-                <a href="{{ route('property-type.index', $category) }}" class="btn btn-secondary">Cancel</a>
+                <div class="btn-grp d-flex">
+                    <button type="submit" class="green-btn">Add Property Type</button>
+                    <a href="{{ route('property-type.index', $category) }}" class="border-btn">Cancel</a>
+                </div>
             </form>
     	</div>
 	</section>

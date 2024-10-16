@@ -150,9 +150,7 @@
                 @enderror
             </div>    
         </div>
-        
-
-	            <button type="submit" class="btn btn-primary">Submit</button>
+	            <button type="submit" class="green-btn">Submit</button>
 	        </form>    	
         </div>
 	</section>

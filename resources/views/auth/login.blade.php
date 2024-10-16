@@ -39,7 +39,7 @@
                             
                             <form method="POST" action="{{ route('login') }}">
                             @csrf
-
+                                <input type="hidden" name="type" value="basic">
                                 <div class="form-group"> 
                                     <label>Username</label> 
                                     <input class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" placeholder="example@gmail.com" autocomplete="email" autofocus type="email"> 

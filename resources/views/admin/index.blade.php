@@ -9,7 +9,7 @@
         <p class="heading_for_admin_section">Header Section</p>
         <div class="section_content">
             <form action="{{ route('header_sections.store') }}" method="POST" enctype="multipart/form-data"
-                class="container mt-4">
+                class=" mt-4">
                 @csrf
                 <div class="mb-3">
                     <label for="logo" class="form-label"><strong>Upload Logo :</strong></label>
@@ -56,14 +56,16 @@
                                     </div>
                                 @endforeach
                             @endif
+                            
+                            
                         </div>
-                        <button id="add-row-btn" type="button" class="clone_button"><i
-                                class="fa-solid fa-square-plus"></i></button>
-                        @if ($errors->has('nav_name') || $errors->has('nav_url'))
-                            <div class="text-danger backend_error">
-                                Navigation part is required
-                            </div>
-                        @endif
+                        <button id="add-row-btn" type="button" class="clone_button border-btn ml-auto">Add new row</button>
+                            @if ($errors->has('nav_name') || $errors->has('nav_url'))
+                                <div class="text-danger backend_error">
+                                    Navigation part is required
+                                </div>
+                            @endif
+                       
                     </div>
                 @else
                     <div class="mb-3 pr">
@@ -82,14 +84,15 @@
                                     <span class="remove-row ml-2"><i class="fas fa-trash-alt"></i></span>
                                 </div>
                             </div>
+                            
                         </div>
-                        <button id="add-row-btn" type="button" class="clone_button"><i
-                                class="fa-solid fa-square-plus"></i></button>
+                        <button id="add-row-btn" type="button" class="clone_button border-btn">Add new row</button>
                         @if ($errors->has('nav_name') || $errors->has('nav_url'))
                             <div class="text-danger backend_error">
                                 Navigation part is required
                             </div>
                         @endif
+                        
                     </div>
 
                 @endif
@@ -118,14 +121,16 @@
                                     </div>
                                 @endforeach
                             @endif
+                            
+                              
                         </div>
-                        <button id="new-add-row-btn" type="button" class="clone_button"><i
-                                class="fa-solid fa-square-plus"></i></button>
-                        @if ($errors->has('nav_name') || $errors->has('nav_url'))
-                            <div class="text-danger backend_error">
-                                Navigation part is required
-                            </div>
-                        @endif
+                        <button id="new-add-row-btn" type="button" class="clone_button border-btn">Add new row</button>
+                            @if ($errors->has('nav_name') || $errors->has('nav_url'))
+                                <div class="text-danger backend_error">
+                                    Navigation part is required
+                                </div>
+                            @endif
+                        
                     </div>
                 @else
                     <div class="mb-3 pr">
@@ -144,14 +149,14 @@
                                     <span class="new-remove-row ml-2"><i class="fas fa-trash-alt"></i></span>
                                 </div>
                             </div>
+                            <button id="new-add-row-btn" type="button" class="clone_button">Add new row</button>
+                            @if ($errors->has('nav_name') || $errors->has('nav_url'))
+                                <div class="text-danger backend_error">
+                                    Navigation part is required
+                                </div>
+                            @endif
                         </div>
-                        <button id="new-add-row-btn" type="button" class="clone_button"><i
-                                class="fa-solid fa-square-plus"></i></button>
-                        @if ($errors->has('nav_name') || $errors->has('nav_url'))
-                            <div class="text-danger backend_error">
-                                Navigation part is required
-                            </div>
-                        @endif
+                        
                     </div>
                 @endif
 
@@ -188,7 +193,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="green-btn">Save</button>
             </form>
 
         </div>

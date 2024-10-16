@@ -6,9 +6,9 @@
         <p class="heading_for_admin_section">Faq's Section</p>
         <div class="section_content">
             <form action="{{ route('faq.store') }}" method="POST" enctype="multipart/form-data"
-                class="container mt-4">
+                class="mt-4">
                 @csrf
-                <div id="row-container">
+                <div id="row-container" class="faq-create-row">
                     <div class="row bottom_line">
                         <div class="col-12">
                             <div class="mb-1">
@@ -33,10 +33,14 @@
                     </div>
 
                 </div>
-                <button id="add-row-btn" type="button" class="custom_clone_button clone_button"><i class="fa-solid fa-square-plus"></i></button>
-
-                <button type="submit" class="btn btn-primary">Save</button>
-                <a href="{{ route('faq.index') }}" class="btn btn-secondary">Back</a>
+                <div class="btn-grp d-flex">
+                        <button type="submit" class="green-btn">Save</button>
+                        <button id="add-row-btn" type="button" class="custom_clone_button clone_button border-btn">Add new</button>
+                        <a href="{{ route('faq.index') }}" class="border-btn">Back</a>
+                    </div>
+                
+               
+                
             </form>
 
         </div>

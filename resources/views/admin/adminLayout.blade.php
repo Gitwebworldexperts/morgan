@@ -19,10 +19,10 @@
 <body>
 <div class="container-fluid">
     <div class="row flex-nowrap">
-        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark left_sidebar">
-            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-brown left_sidebar">
+            <div class="d-flex flex-column align-items-center align-items-sm-start text-white min-vh-100">
                 <a href="{{ route('home') }}" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                    <span class="bg-light custom_logo d-sm-inline"><img style="max-width: 100%" src="{{asset('img/logo.svg')}}"></span>
+                    <span class="custom_logo d-sm-inline"><img style="max-width: 100%" src="{{asset('img/logo-admin.png')}}"></span>
                 </a>
                 <ul class="nav nav-pills flex-column w-100 mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                     <li class="nav-item hav_child w-100">
@@ -33,6 +33,11 @@
                             <li class="nav-item">
                                 <a href="{{ url('/admin/home') }}" class="nav-link align-middle px-0">
                                     <span class="ms-1 d-none d-sm-inline">Home</span>
+                                </a>    
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('privacy.list') }}" class="nav-link align-middle px-0">
+                                    <span class="ms-1 d-none d-sm-inline">Privacy Policy</span>
                                 </a>    
                             </li>
                         </ul>
@@ -74,10 +79,15 @@
                             <i class="fa-solid fa-circle-question"></i> <span class="ms-1 d-none d-sm-inline">Faq</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ route('contact.show') }}" class="@if (request()->is('contact*') || Route::is('contact.show')) active_nav @endif nav-link align-middle px-0">
+                            <i class="fa-solid fa-id-card"></i> <span class="ms-1 d-none d-sm-inline">Contact us</span>
+                        </a>
+                    </li>
                    
                 </ul>
                 <hr>
-                <div class="dropdown pb-4">
+                <div class="dropdown admin-user">
                     @if (Auth::check())
                     <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="{{asset('img/user.svg')}}" alt="hugenerd" width="30" height="30" class="rounded-circle">
@@ -109,7 +119,9 @@
 
 
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-@yield('scripts')
+ <script src = "https://cdn.tiny.cloud/1/0bhoqku69v9e5xlhdurqb41r41h8ibv8xq2d47hpb5zpr9y5/tinymce/7/tinymce.min.js" referrerpolicy = "origin" ></script>
+ <script src="{{asset('js/admin.js')}}"></script>
+ @yield('scripts')
 </body>
 </html>
 
