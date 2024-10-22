@@ -23,6 +23,38 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="name">Property Description<span class="mandatory">*</span></label>
+                    <textarea class="form-control" name="description" id="description" rows="3" >{{ old('description',$property->description) }}</textarea>
+                    @error('description')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                    <label for="name">Slug <span class="mandatory">*</span></label>
+                    <input type="text" class="form-control" name="slug" id="slug" disabled readonly value="{{ old('slug',$property->slug) }}"
+                        required placeholder="Website Slug">
+                    @error('slug')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+                    <div class="col-md-6">
+                    <label for="agent_id">Agent <span class="mandatory">*</span> </label>
+                    <select class="form-control" name="agent_id" id="agent_id">
+                        <option value="">Select an Agent</option>
+                        @if (!empty($agents) && count($agents))
+                            @foreach ($agents as $item)
+                                <option value="{{ $item->id }}" {{ ($property->agent == $item->id)?'selected':'';  }} >{{ $item->name }}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                    @error('agent_id')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label for="address">Address <span class="mandatory">*</span></label>
                     <textarea class="form-control" name="address" id="address" rows="3" required>{{ old('address', $property->address) }}</textarea>
                     @error('address')
@@ -31,8 +63,31 @@
                 </div>
 
                 <div class="form-group">
+                    <div class="col-md-6">
+                        <label for="address">Heading </label>
+                        <input type="text" class="form-control" name="information_heading" id="information_heading"
+                            value="{{ old('information_heading',$property->information_heading) }}">
+                        @error('second_heading')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-12">
+                        <label>Description </label>
+                        <textarea class="form-control" name="information_description" id="information_description" rows="3">{{ old('information_description',$property->information_description) }}</textarea>
+                        @error('information_description')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-12">
+                        {!! getButtonUrl('information_button_label', old('information_button_label',$property->information_button_label), old('information_button_label_2',$property->information_button_url)) !!}
+                    </div>
+                </div>
+
+
+                <div class="form-group">
                     <label for="google_maps_link">Google Maps Link</label>
-                    <input type="url" class="form-control" name="google_maps_link" id="google_maps_link" pattern="https?://.*" placeholder="https://example.com" value="{{ old('google_maps_link', $property->google_maps_link) }}">
+                    <input type="text" class="form-control" name="google_maps_link" id="google_maps_link"  placeholder="</>" value="{{ old('google_maps_link', $property->google_maps_link) }}">
                     @error('google_maps_link')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror

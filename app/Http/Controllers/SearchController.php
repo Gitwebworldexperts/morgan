@@ -36,7 +36,7 @@ class SearchController extends Controller
             'project' => ProjectPropertie::class,
             'private' => PrivatePropertie::class,
             'international' => InternationalPropertie::class,
-            'buy' => BuyPropertie::class,
+            'sales' => BuyPropertie::class,
         ];
 
         // Check if the requested property type exists

@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.6/css/dataTables.bootstrap5.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <link href="{{asset('css/admin.css')}}" rel="stylesheet" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -84,6 +85,11 @@
                             <i class="fa-solid fa-id-card"></i> <span class="ms-1 d-none d-sm-inline">Contact us</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ route('agents.index') }}" class="@if (request()->is('agents*') || Route::is('agents.index')) active_nav @endif nav-link align-middle px-0">
+                            <i class="fa-brands fa-teamspeak"></i> <span class="ms-1 d-none d-sm-inline">Agents</span>
+                        </a>
+                    </li>
                    
                 </ul>
                 <hr>
@@ -120,6 +126,7 @@
 
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
  <script src = "https://cdn.tiny.cloud/1/0bhoqku69v9e5xlhdurqb41r41h8ibv8xq2d47hpb5zpr9y5/tinymce/7/tinymce.min.js" referrerpolicy = "origin" ></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
  <script src="{{asset('js/admin.js')}}"></script>
  @yield('scripts')
 </body>

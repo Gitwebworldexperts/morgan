@@ -375,19 +375,6 @@
 
 @section('scripts')
     <script type="text/javascript">
-        function previewImage(event, input) {
-            const file = input.files[0];
-            const reader = new FileReader();
-
-            reader.onload = function(e) {
-                const img = input.nextElementSibling.querySelector('img');
-                img.src = e.target.result;
-                img.style.display = 'block';
-            }
-
-            if (file) {
-                reader.readAsDataURL(file);
-            }
-        }
+       
     </script>
 @endsection

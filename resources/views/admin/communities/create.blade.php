@@ -1,5 +1,5 @@
 @extends('admin.adminLayout')
-@section('title', 'Pages: Home Page')
+@section('title', 'Pages: Community Page')
 @section('content')
     @if (session('success'))
         <div class="alert alert-success">
@@ -41,6 +41,9 @@
                     if (isset($community_detail->second_section) && !empty($community_detail->second_section)) {
                         $second_section = json_decode($community_detail->second_section);
                     }
+                    if(isset($community_detail->insights) && !empty($community_detail->insights)){
+                        $insights = json_decode($community_detail->insights);
+                    }
                 @endphp
                 <div id="row-container">
                     @if (isset($second_section) && !empty($second_section))
@@ -49,7 +52,7 @@
                                 <div class="col-12">
                                     <div class="mb-1">
                                         <label class="form-label"><strong>BG Image :</strong></label>
-                                        <input type="file" name="bg_images[]" required id="images"
+                                        <input type="file" name="bg_images[]"  id="images"
                                             accept="image/png, image/jpeg" class="form-control">
                                         @error('images.*')
                                             <div class="text-danger">{{ $message }}</div>
@@ -103,12 +106,12 @@
                                 </div>
                             </div>
                         @endforeach
-                    @endif
+                    @else
                     <div class="row bottom_line">
                         <div class="col-12">
                             <div class="mb-1">
                                 <label class="form-label"><strong>BG Image :</strong></label>
-                                <input type="file" name="bg_images[]" required id="images"
+                                <input type="file" name="bg_images[]" id="images"
                                     accept="image/png, image/jpeg" class="form-control">
                                 @error('images.*')
                                     <div class="text-danger">{{ $message }}</div>
@@ -149,7 +152,7 @@
                             <span class="trash_button remove-row ml-2"><i class="fas fa-trash-alt"></i></span>
                         </div>
                     </div>
-                    
+                    @endif
                 </div>
                 <button id="add-row-btn" type="button" class="custom_clone_button clone_button border-btn">Add
                     More</button>
@@ -161,24 +164,24 @@
                     <div class="form-group col-md-6">
                         <label for="tenth_heading">Heading </label>
                         <input type="text" class="form-control" name="tenth_heading" id="tenth_heading"
-                            value="{{ old('tenth_heading') }}">
+                            value="{{ old('tenth_heading',$insights->tenth_heading) }}">
                         @error('tenth_heading')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="col-md-6">
                         <label class="form-label d-block">Header Image</label>
-                        {!! getImage('tenth_section_image', 'tenth_section_image', 'tenth_section_image') !!}
+                        {!! getImage('tenth_section_image', 'tenth_section_image', 'tenth_section_image',$insights->image) !!}
                     </div>
                     <div class="form-group col-md-12">
                         <label>Description </label>
-                        <textarea class="form-control" name="tenth_description" id="tenth_description" rows="3">{{ old('tenth_description') }}</textarea>
+                        <textarea class="form-control" name="tenth_description" id="tenth_description" rows="3">{{ old('tenth_description',$insights->tenth_description) }}</textarea>
                         @error('tenth_description')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="col-12">
-                        {!! getButtonUrl('tenth_section_button', old('tenth_section_button'), old('tenth_section_button_2')) !!}
+                        {!! getButtonUrl('tenth_section_button', old('tenth_section_button'), old('tenth_section_button_2'),$insights->tenth_section_button) !!}
                     </div>
                 </div>
 

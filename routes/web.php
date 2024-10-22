@@ -18,6 +18,11 @@ use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\AgentController;
+use App\Http\Controllers\FormController;
+use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\ListWithUsController;
+
 // Route::get('/', function () {
 //     return view('welcome');
 // });
@@ -65,9 +70,12 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/contents/edit/{post}', [BaseController::class, 'EditPrivacyPolicy'])->name('edit.policy');
     Route::any('/contents/update/{post}', [BaseController::class, 'UpdatePrivacyPolicy'])->name('update.policy');
     Route::resource('community', CommunityController::class);
+    Route::resource('agents', AgentController::class);
 });
 
 Route::get('/search', [SearchController::class, 'search'])->name('search');
+
+Route::get('/properties/view/{slug}', [PropertieController::class, 'DetailPage'])->name('detail.page');
 
 Route::get('/google/redirect', [App\Http\Controllers\GoogleLoginController::class, 'redirectToGoogle'])->name('google.redirect');
 Route::get('/google/callback', [App\Http\Controllers\GoogleLoginController::class, 'handleGoogleCallback'])->name('google.callback');
@@ -78,3 +86,10 @@ Route::get('/communities-detail', [BaseController::class, 'communitiesDetail'])-
 
 Route::get('/contents/view/{slug}', [BaseController::class, 'PrivacyPolicy'])->name('privacy.policy');
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
+
+
+
+Route::post('/submit', [FormController::class, 'submit'])->name('intrest.submit');
+Route::post('/submit-application', [ApplicationController::class, 'store'])->name('application.store');
+Route::post('/list-with-us', [ListWithUsController::class, 'store'])->name('list-with-us.store');
+

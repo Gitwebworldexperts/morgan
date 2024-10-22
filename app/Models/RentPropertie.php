@@ -10,6 +10,15 @@ class RentPropertie extends Model
     use HasFactory;
        protected $fillable = [
         'name',
+        'slug',
+        'agent',
+        'description',
+        'floor_plan',
+        'brochure',
+        'information_heading',
+        'information_description',
+        'information_button_label',
+        'information_button_url',
         'address',
         'google_maps_link',
         'featured_image',

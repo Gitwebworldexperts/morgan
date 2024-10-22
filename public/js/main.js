@@ -365,3 +365,26 @@ $(window).scroll(function() {
 		}
 		
 		
+		
+		 $(document).ready(function() {
+          lightGallery(document.getElementById('aniimated-thumbnials'), {
+            thumbnail: true
+          });
+        });
+
+
+
+        function checkAndDownload(url, type, e) {
+            if (!url) {
+                // Show the modal alert
+                $('#alertContent').html('Please connect with the admin regarding this document');
+                $('#alertTitle').html('Document Not Found');
+                $('#documentNotFound').modal('show');                
+                return;
+            }
+            // For downloading the document
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = '';
+            link.click();
+        }

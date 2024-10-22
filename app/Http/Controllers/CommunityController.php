@@ -33,14 +33,15 @@ class CommunityController extends Controller
     {
         $request->validate([
             'tenth_heading' => 'required|string|max:255',
-            'tenth_description' => 'required|string|max:255',
-            'heading' => 'required|string|max:255',
+            'tenth_description' => 'required|string',
+            'heading' => 'required|string',
         ]);
+        $community_detail = community_detail::orderBy('id', 'desc')->first();
 
         // Check for matching counts of images and descriptions
-        if (count($request->bg_images) !== count($request->Description)) {
-            return redirect()->back()->with('error', 'Mismatch in count of background images and descriptions.');
-        }
+        // if (count($request->bg_images) !== count($request->Description)) {
+        //     return redirect()->back()->with('error', 'Mismatch in count of background images and descriptions.');
+        // }
 
         $header_image = $imageUploadService->storeImage($request->file('bg_image'), 'community', 1);
         $urls = $this->uploadImages($request->bg_images);

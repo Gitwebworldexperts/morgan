@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\BuyPropertie;
 use App\Models\PropertyType;
 use App\Models\Banners;
-
+use App\Models\Agent;
 class BuyPropertieController extends Controller
 {
     /**
@@ -29,17 +29,21 @@ class BuyPropertieController extends Controller
         public function create()
         {
             $propertyTypes = PropertyType::where('property',$this->property)->get();
+            $agents = Agent::all();
             if(!count($propertyTypes)){
                 return redirect()->back()->with('error', 'Please create property type');   
             }
-
-            return view('admin.buy_propertie.create',compact('propertyTypes'));
+            return view('admin.buy_propertie.create',compact('propertyTypes','agents'));
         }
 
         public function store(Request $request)
         {
             $request->validate([
                 'name' => 'required|string|max:255',
+                'slug' => 'required',
+                'agent_id' => 'required',
+                'information_heading' => 'required',
+                'information_description' => 'required',
                 'address' => 'required|string',
                 'google_maps_link' => 'nullable|url',
                 'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -55,6 +59,7 @@ class BuyPropertieController extends Controller
                 'category_id' => 'required',
             ]);
             // Create a new property instance
+            // dd($request);
             $property = new BuyPropertie();
             $property->name = $request->name;
             $property->address = $request->address;
@@ -69,6 +74,13 @@ class BuyPropertieController extends Controller
             $property->country_id = $request->country_id;
             $property->category_id = $request->category_id;
 
+            $property->description = $request->description;
+            $property->slug = $request->slug;
+            $property->agent = $request->agent_id;
+            $property->information_heading = $request->information_heading;
+            $property->information_description = $request->information_description;
+            $property->information_button_label = $request->information_button_label;
+            $property->information_button_url = $request->information_button_label_2;
             // Save the property to the database to get the ID
             $property->save();
 
@@ -109,20 +121,23 @@ class BuyPropertieController extends Controller
             // Save the property again if needed to update the featured image
             $property->save();
 
+            return redirect()->action([__CLASS__, 'index'])->with('success', 'Property created successfully!');
 
-            return redirect()->back()->with('success', 'Property created successfully!');
+
+            // return redirect()->back()->with('success', 'Property created successfully!');
         }
 
 
         public function edit($id)
         {
             $property = BuyPropertie::findOrFail($id);
+            $agents = Agent::all();
             if(!$property){
                 return redirect()->back()->with('error', 'Private property not found!');
             }
             $property->load('banners');
             $propertyTypes = PropertyType::where('property',$this->property)->get();
-            return view('admin.buy_propertie.edit', compact('property','propertyTypes'));
+            return view('admin.buy_propertie.edit', compact('property','propertyTypes','agents'));
         }
 
 
@@ -131,7 +146,7 @@ class BuyPropertieController extends Controller
             $request->validate([
                 'name' => 'required|string|max:255',
                 'address' => 'required|string',
-                'google_maps_link' => 'nullable|url',
+                // 'google_maps_link' => 'nullable|url',
                 'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
                 'featured_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
                 'area' => 'nullable|numeric',
@@ -141,6 +156,10 @@ class BuyPropertieController extends Controller
                 'sale_price' => 'nullable|numeric',
                 'country_id' => 'nullable|exists:countries,id',
                 'category_id' => 'required|exists:property_types,id',
+                // 'slug' => 'required',
+                'agent_id' => 'required',
+                'information_heading' => 'required',
+                'information_description' => 'required',
             ]);
 
             // Find the property to update
@@ -159,6 +178,18 @@ class BuyPropertieController extends Controller
             $property->sale_price = $request->sale_price;
             $property->country_id = $request->country_id;
             $property->category_id = $request->category_id;
+
+
+
+            $property->description = $request->description;
+            // $property->slug = $request->slug;
+            $property->agent = $request->agent_id;
+            $property->information_heading = $request->information_heading;
+            $property->information_description = $request->information_description;
+            $property->information_button_label = $request->information_button_label;
+            $property->information_button_url = $request->information_button_label_2;
+
+
             // dd($request->file('images'));
              if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $key => $image) {

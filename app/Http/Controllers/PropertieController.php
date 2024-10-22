@@ -2,6 +2,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Properties;
+
+use App\Models\RentPropertie;
+use App\Models\PrivatePropertie;
+use App\Models\ProjectPropertie;
+use App\Models\InternationalPropertie;
+use App\Models\BuyPropertie;
+use App\Models\Agent;
+
 use App\Models\PropertyType;
 use App\Models\Banners;
 use Illuminate\Http\Request;
@@ -37,7 +45,7 @@ class PropertieController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'required|string',
-            'google_maps_link' => 'nullable|url',
+            // 'google_maps_link' => 'nullable|url',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'featured_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             // 'area' => 'nullable|numeric',
@@ -124,7 +132,7 @@ class PropertieController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'required|string',
-            'google_maps_link' => 'nullable|url',
+            // 'google_maps_link' => 'nullable|url',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'featured_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'area' => 'nullable|numeric',
@@ -222,5 +230,33 @@ class PropertieController extends Controller
         return response()->json(['message' => 'Banner deleted successfully.'], 200);
     }
 
-
+    public function DetailPage(Request $request,$pageName){
+        $properties = [
+            RentPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType'])->first(),
+            PrivatePropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType'])->first(),
+            ProjectPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType'])->first(),
+            InternationalPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType'])->first(),
+            BuyPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType'])->first()
+        ];        
+        
+        $foundProperty = $agent = null;
+        
+        foreach ($properties as $property) {
+            if ($property) {
+                $foundProperty = $property;
+                if(isset($foundProperty->agent) && !empty($foundProperty->agent)){
+                    $agent = Agent::find($foundProperty->agent);
+                }
+                break; // Exit the loop on first found property
+            }
+        }
+        
+        if ($foundProperty) {
+            return view('detail', compact('foundProperty','agent'));
+        } else {
+            echo "Error: Property not found.";
+            die;
+        }
+        die;
+    }
 }

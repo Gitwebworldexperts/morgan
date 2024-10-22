@@ -5396,6 +5396,9 @@ video {
     margin-bottom: 30px;
 }
 
+.property-location iframe {
+    width: 100% !important;
+}
 iframe{
 	border-radius:12px;
 }

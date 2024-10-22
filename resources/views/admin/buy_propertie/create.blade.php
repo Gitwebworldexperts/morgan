@@ -1,156 +1,243 @@
 @extends('admin.adminLayout')
 @section('title', 'Pages: Home Page')
 @section('content')
- 	@if(session('success'))
+    @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
     <section>
-    	<p class="heading_for_admin_section">New Buy Properties</p>
-    	<div class="section_content">
-    		<form id="image-upload-form" action="{{ route('buy_properties.store') }}" method="POST" enctype="multipart/form-data">
-    			 @csrf
-	            <div class="form-group">
-            <label for="name">Name <span class="mandatory">*</span></label>
-            <input type="text" class="form-control" name="name" id="name" value="{{ old('name') }}" required>
-            @error('name')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
+        <p class="heading_for_admin_section">New Buy Properties</p>
+        <div class="section_content">
+            <form id="image-upload-form" action="{{ route('buy_properties.store') }}" method="POST"
+                enctype="multipart/form-data">
+                @csrf
+                <div class="form-group">
+                    <label for="name">Name <span class="mandatory">*</span></label>
+                    <input type="text" class="form-control" name="name" id="name" oninput="generateSlug()" value="{{ old('name') }}"
+                        required>
+                    @error('name')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Property Description<span class="mandatory">*</span></label>
+                    <textarea class="form-control" name="description" id="description" rows="3" >{{ old('description') }}</textarea>
+                    @error('description')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                    <label for="name">Slug <span class="mandatory">*</span></label>
+                    <input type="text" class="form-control" name="slug" id="slug" value="{{ old('slug') }}"
+                        required placeholder="Website Slug" readonly>
+                    @error('slug')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+                    <div class="col-md-6">
+                    <label for="agent_id">Agent <span class="mandatory">*</span> </label>
+                    <select class="form-control" name="agent_id" id="agent_id">
+                        <option value="">Select an Agent</option>
+                        @if (!empty($agents) && count($agents))
+                            @foreach ($agents as $item)
+                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                    @error('agent_id')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Address <span class="mandatory">*</span></label>
+                    <textarea class="form-control" name="address" id="address" rows="3" >{{ old('address') }}</textarea>
+                    @error('address')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="address">Heading </label>
+                            <input type="text" class="form-control" name="information_heading" id="information_heading"
+                                value="{{ old('information_heading') }}">
+                            @error('second_heading')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label d-block">Background Image</label>
+                            {!! getImage('information_banner', 'information_banner', 'information_banner') !!}
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <label>Description </label>
+                        <textarea class="form-control" name="information_description" id="information_description" rows="3">{{ old('information_description') }}</textarea>
+                        @error('information_description')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-12">
+                        {!! getButtonUrl('information_button_label', old('information_button_label'), old('information_button_label_2')) !!}
+                    </div>
+                    <div class="col-12">
+                        {!! getButtonUrl('second_information_button_label', old('second_information_button_label'), old('second_information_button_label_2')) !!}
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="google_maps_link">Google Maps Iframe</label>
+                    <input type="url" class="form-control" name="google_maps_link" id="google_maps_link"
+                         placeholder="</>" value="{{ old('google_maps_link') }}">
+                    @error('google_maps_link')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                    <small class="form-text text-muted">Please enter a valid Iframe.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="images">Choose Images</label>
+                    <input type="file" name="images[]" id="images" class="form-control" multiple>
+                    @error('images.*')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                    <div id="image-preview" class="mt-3"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="featured_image">Featured Image</label>
+                    <input type="file" name="featured_image" class="form-control">
+                    @error('featured_image')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="area">Area</label>
+                        <input type="text" class="form-control" name="area" id="area"
+                            value="{{ old('area') }}">
+                        @error('area')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="bed">Bed</label>
+                        <input type="number" class="form-control" name="bed" id="bed"
+                            value="{{ old('bed', 0) }}">
+                        @error('bed')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="price">Price</label>
+                        <input type="number" class="form-control" name="price" id="price" step="0.01"
+                            value="{{ old('price') }}">
+                        @error('price')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="sale_price">Sale Price</label>
+                        <input type="number" class="form-control" name="sale_price" id="sale_price" step="0.01"
+                            value="{{ old('sale_price') }}">
+                        @error('sale_price')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    
+                    <div class="form-group col-md-6">
+                        <label for="floor_plan">Upload Floor Plan</label>
+                        <input type="file" name="floor_plan" id="floor_plan" class="form-control">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="brochure">Upload Brochure</label>
+                        <input type="file" name="brochure" id="brochure" class="form-control">
+                    </div>
+
+
+                </div>
+
+
+                <div class="form-group">
+                    <label>Additional Settings</label><br>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="is_featured" id="is_featured"
+                            value="1" {{ old('is_featured') ? 'checked' : '' }}>
+                        <label class="form-check-label" for="is_featured">Is Featured</label>
+                    </div>
+                    @error('is_featured')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="is_private" id="is_private"
+                            value="1" {{ old('is_private') ? 'checked' : '' }}>
+                        <label class="form-check-label" for="is_private">Is Private</label>
+                    </div>
+                    @error('is_private')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label>Facilities</label><br>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="jacuzzi" id="jacuzzi" value="1"
+                            {{ old('jacuzzi') ? 'checked' : '' }}>
+                        <label class="form-check-label" for="jacuzzi">Jacuzzi</label>
+                    </div>
+                    @error('jacuzzi')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-6">
+                        <label for="country_id">Country</label>
+                        {!! getCountry('country_id', 'country_id') !!}
+                        @error('country_id')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="category_id">Property Type <span class="mandatory">*</span> <span class="help_url"><a
+                                    href="{{ route('property-type.create', 'buy') }}" target="_blank">Add Property
+                                    Type</a></label>
+                        <select class="form-control" name="category_id" id="category_id">
+                            <option value="">Select a property type</option>
+                            @if ($propertyTypes)
+                                @foreach ($propertyTypes as $item)
+                                    <option value="{{ $item->id }}"
+                                        {{ old('category_id') == $item->id ? 'selected' : '' }}>{{ $item->type_name }}
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
+                        @error('category_id')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
         </div>
-
-        <div class="form-group">
-            <label for="address">Address <span class="mandatory">*</span></label>
-            <textarea class="form-control" name="address" id="address" rows="3" required>{{ old('address') }}</textarea>
-            @error('address')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
-
-
-
-        <div class="form-group">
-            <label for="google_maps_link">Google Maps Link</label>
-            <input type="url" class="form-control" name="google_maps_link" id="google_maps_link" pattern="https?://.*" placeholder="https://example.com" value="{{ old('google_maps_link') }}">
-            @error('google_maps_link')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
-            <small class="form-text text-muted">Please enter a valid URL.</small>
-        </div>
-
-        <div class="form-group">
-            <label for="images">Choose Images</label>
-            <input type="file" name="images[]" id="images" class="form-control" multiple>
-            @error('images.*')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
-            <div id="image-preview" class="mt-3"></div>
-        </div>
-
-        <div class="form-group">
-            <label for="featured_image">Featured Image</label>
-            <input type="file" name="featured_image" class="form-control">
-            @error('featured_image')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="row">
-            <div class="form-group col-md-6">
-                <label for="area">Area</label>
-                <input type="text" class="form-control" name="area" id="area" value="{{ old('area') }}">
-                @error('area')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <div class="form-group col-md-6">
-                <label for="bed">Bed</label>
-                <input type="number" class="form-control" name="bed" id="bed" value="{{ old('bed', 0) }}">
-                @error('bed')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <div class="form-group col-md-6">
-                <label for="price">Price</label>
-                <input type="number" class="form-control" name="price" id="price" step="0.01" value="{{ old('price') }}">
-                @error('price')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <div class="form-group col-md-6">
-                <label for="sale_price">Sale Price</label>
-                <input type="number" class="form-control" name="sale_price" id="sale_price" step="0.01" value="{{ old('sale_price') }}">
-                @error('sale_price')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
-            </div>
-            
-        </div>
-
-
-        <div class="form-group">
-            <label>Additional Settings</label><br>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" name="is_featured" id="is_featured" value="1" {{ old('is_featured') ? 'checked' : '' }}>
-                <label class="form-check-label" for="is_featured">Is Featured</label>
-            </div>
-            @error('is_featured')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" name="is_private" id="is_private" value="1" {{ old('is_private') ? 'checked' : '' }}>
-                <label class="form-check-label" for="is_private">Is Private</label>
-            </div>
-            @error('is_private')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="form-group">
-            <label>Facilities</label><br>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" name="jacuzzi" id="jacuzzi" value="1" {{ old('jacuzzi') ? 'checked' : '' }}>
-                <label class="form-check-label" for="jacuzzi">Jacuzzi</label>
-            </div>
-            @error('jacuzzi')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
-        <div class="row">
-            <div class="form-group col-md-6">
-                <label for="country_id">Country</label>
-                {!! getCountry('country_id','country_id') !!}
-                @error('country_id')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <div class="form-group col-md-6">
-                <label for="category_id">Property Type <span class="mandatory">*</span> <span class="help_url"><a href="{{ route('property-type.create','buy') }}" target="_blank">Add Property Type</a></label>
-                <select class="form-control" name="category_id" id="category_id">
-                    <option value="">Select a property type</option>
-                    @if($propertyTypes)
-                        @foreach($propertyTypes as $item)
-                            <option value="{{$item->id}}" {{ old('category_id') == $item->id ? 'selected' : '' }}>{{$item->type_name}}</option>
-                        @endforeach
-                    @endif
-                </select>
-                @error('category_id')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
-            </div>    
-        </div>
-        
-
-	            <button type="submit" class="btn btn-primary">Submit</button>
-	        </form>    	
-        </div>
-	</section>
+    </section>
 @endsection
-@section('scripts')    
+@section('scripts')
     <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.js"></script>
     <script type="text/javascript">
@@ -158,39 +245,37 @@
             new DataTable('#example');
         });
         document.getElementById('images').addEventListener('change', function() {
-	        const previewContainer = document.getElementById('image-preview');
-	        previewContainer.innerHTML = ''; // Clear previous previews
+            const previewContainer = document.getElementById('image-preview');
+            previewContainer.innerHTML = ''; // Clear previous previews
 
-	        for (const file of this.files) {
-	            const img = document.createElement('img');
-	            img.src = URL.createObjectURL(file);
-	            img.classList.add('img-thumbnail', 'mr-2');
-	            img.style.maxHeight = '150px';
-	            previewContainer.appendChild(img);
-	        }
-	    });
-
+            for (const file of this.files) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.classList.add('img-thumbnail', 'mr-2');
+                img.style.maxHeight = '150px';
+                previewContainer.appendChild(img);
+            }
+        });
     </script>
     <script>
         document.addEventListener('keydown', function(event) {
             if ((event.ctrlKey || event.metaKey) && event.key === 's') {
                 event.preventDefault(); // Prevent the default save behavior
-                
+
                 Swal.fire({
-                  title: "Save Changes!",
-                  text: "Would you like to proceed with saving your changes?",
-                  icon: "warning",
-                  showCancelButton: true,
-                  confirmButtonColor: "#3085d6",
-                  cancelButtonColor: "#d33",
-                  confirmButtonText: "Save"
+                    title: "Save Changes!",
+                    text: "Would you like to proceed with saving your changes?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Save"
                 }).then((result) => {
-                  if (result.isConfirmed) {
-                    document.getElementById('image-upload-form').submit(); // Submit the form
-                  }
+                    if (result.isConfirmed) {
+                        document.getElementById('image-upload-form').submit(); // Submit the form
+                    }
                 });
             }
         });
-
     </script>
 @endsection
