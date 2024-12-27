@@ -35,6 +35,10 @@ class RentPropertie extends Model
         'type',
         'tag',
         'status',
+        'reference_number',
+        'geopoints',
+        'XML',
+        'iframe'
     ];
 
     public function country()
@@ -55,7 +59,7 @@ class RentPropertie extends Model
 
     public function banners()
     {
-        return $this->hasMany(Banners::class, 'property_id'); // Specify the foreign key
+        return $this->hasMany(Banners::class, 'property_id')->where('page_type', 'rent'); // Specify the foreign key
     }
 
     public static function getFeaturedProperties()

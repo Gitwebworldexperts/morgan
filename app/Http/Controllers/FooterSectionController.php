@@ -20,7 +20,7 @@ class FooterSectionController extends Controller
     }
     public function index()
     {
-        $footerSections = FooterSections::first();
+        $footerSections = FooterSections::first(    );
         return view('admin.footer', compact('footerSections'));
      }
 
@@ -113,6 +113,8 @@ class FooterSectionController extends Controller
         $headerSection->phone = $request->phone;
         $headerSection->email = $request->email;
         $headerSection->address = $request->address;
+        $headerSection->meta_tags = $request->meta_tags;
+        $headerSection->mortgage_advisor_number = $request->mortgage_advisor_number;
 
         // Save the record
         $headerSection->save();

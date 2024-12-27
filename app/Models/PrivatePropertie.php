@@ -55,7 +55,7 @@ class PrivatePropertie extends Model
 
     public function banners()
     {
-        return $this->hasMany(Banners::class, 'property_id'); // Specify the foreign key
+        return $this->hasMany(Banners::class, 'property_id')->where('page_type', 'private'); // Specify the foreign key
     }
 
     public static function getFeaturedProperties()

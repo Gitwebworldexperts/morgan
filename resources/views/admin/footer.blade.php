@@ -255,6 +255,26 @@
                     @endif
                 </div>
 
+                <div class="mb-3">
+                    <label for="meta_tags" class="form-label"><strong>Meta Tags:</strong></label>                    
+                    <input type="text" name="meta_tags" placeholder="Meta Tags" style="overflow-wrap: break-word;word-wrap: break-word;" value="{{$footerSections->meta_tags}}" class="form-control">
+                    @if ($errors->has('meta_tags'))
+                        <div class="text-danger backend_error">
+                            {{ $errors->first('meta_tags') }}
+                        </div>
+                    @endif
+                </div>
+
+                <div class="mb-3">
+                    <label for="" class="form-label"><strong>Mortgage Advisor Number:</strong></label>                    
+                    <input type="text" name="mortgage_advisor_number" placeholder="Mortgage Advisor Number" value="{{$footerSections->mortgage_advisor_number}}" class="form-control">
+                    @if ($errors->has('mortgage_advisor_number'))
+                        <div class="text-danger backend_error">
+                            {{ $errors->first('mortgage_advisor_number') }}
+                        </div>
+                    @endif
+                </div>
+
                 <button type="submit" class="btn btn-primary">Save</button>
             </form>
 

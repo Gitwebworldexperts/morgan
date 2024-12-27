@@ -5,13 +5,22 @@ use App\Models\Properties;
 
 use App\Models\RentPropertie;
 use App\Models\PrivatePropertie;
+use App\Models\Community;
 use App\Models\ProjectPropertie;
 use App\Models\InternationalPropertie;
+use App\Models\InvestmentPropertie;
 use App\Models\BuyPropertie;
+use App\Models\ListingDetail;
 use App\Models\Agent;
-
+use App\Models\Report;
+use App\Models\ReportIndividual;
+use DB;
+use App\Models\PrivateOffice;
 use App\Models\PropertyType;
+use App\Models\Amenitie;
 use App\Models\Banners;
+use App\Models\PageBrandedResidence;
+use App\Models\BrandedPropertie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -217,16 +226,18 @@ class PropertieController extends Controller
         return redirect()->back()->with('success', 'Property delete successfully');
     }
 
-    public function bannerDestroy(Properties $property,Banners $banner)
+    public function bannerDestroy($property,$banner)
     {
-        if(!isset($property->id)){
+
+        if(!isset($property)){
             return response()->json(['message' => 'Delete Request Not for this property.'], 404);
         }
-        $property = Properties::find($property->id);
-        if(!$property){
-            return response()->json(['message' => 'Associated property not found.'], 404);
-        }
-        $banner->delete();
+        // $property = Properties::find($property);
+        // if(!$property){
+        //     return response()->json(['message' => 'Associated property not found.'], 404);
+        // }
+        $banner_list = Banners::where('property_id', $property)->where('id',$banner)->first();
+        $banner_list->delete();
         return response()->json(['message' => 'Banner deleted successfully.'], 200);
     }
 
@@ -234,11 +245,13 @@ class PropertieController extends Controller
         $properties = [
             RentPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType'])->first(),
             PrivatePropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType'])->first(),
-            ProjectPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType'])->first(),
+            ProjectPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType','company','plans'])->first(),
             InternationalPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType'])->first(),
-            BuyPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType'])->first()
+            BuyPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType'])->first(),
+            BrandedPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType'])->first()
         ];        
         
+        $amenitie = Amenitie::where('status','1')->get();
         $foundProperty = $agent = null;
         
         foreach ($properties as $property) {
@@ -252,11 +265,516 @@ class PropertieController extends Controller
         }
         
         if ($foundProperty) {
-            return view('detail', compact('foundProperty','agent'));
+            $tableName = $foundProperty->getTable();
+
+            if($tableName == "rent_properties"){
+                $property_type = 'rent';
+            }elseif($tableName == "private_properties"){
+                $property_type = 'private';
+            }elseif($tableName == "project_properties"){
+                $property_type = 'project';
+            }elseif($tableName == "international_properties"){
+                $property_type = 'international';
+            }elseif($tableName == "buy_properties"){
+                $property_type = 'buy';
+            }elseif($tableName == "branded_properties"){
+                $property_type = 'branded';
+            }
+            // $property_list = DB::table($tableName)->limit(10)->get();
+            // dd($foundProperty);
+            $property_list = DB::table($tableName)
+            ->leftJoin('property_types', $tableName . '.category_id', '=', 'property_types.id')  // Use concatenation to form the full table.column reference
+            ->select($tableName . '.*', 'property_types.*')  // Select columns from both tables
+            ->limit(10)
+            ->get();
+            // dd($property_list);
+            return view('detail', compact('foundProperty','agent','property_list','amenitie','property_type'));
         } else {
             echo "Error: Property not found.";
             die;
         }
         die;
+    }
+
+    public function DevlopmentDetailPage(Request $request,$pageName){
+        $properties = [
+            ProjectPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType','company','plans'])->first(),
+        ];        
+        
+        $amenitie = Amenitie::where('status','1')->get();
+        $foundProperty = $agent = null;
+        
+        foreach ($properties as $property) {
+            if ($property) {
+                $foundProperty = $property;
+                if(isset($foundProperty->agent) && !empty($foundProperty->agent)){
+                    $agent = Agent::find($foundProperty->agent);
+                }
+                break; // Exit the loop on first found property
+            }
+        }
+        
+        if ($foundProperty) {
+            $tableName = $foundProperty->getTable();
+            if($tableName == "rent_properties"){
+                $property_type = 'rent';
+            }elseif($tableName == "private_properties"){
+                $property_type = 'private';
+            }elseif($tableName == "project_properties"){
+                $property_type = 'project';
+            }elseif($tableName == "international_properties"){
+                $property_type = 'international';
+            }elseif($tableName == "buy_properties"){
+                $property_type = 'buy';
+            }elseif($tableName == "branded_properties"){
+                $property_type = 'branded';
+            }
+            // $property_list = DB::table($tableName)->limit(10)->get();
+            // dd($foundProperty);
+            $property_list = DB::table($tableName)
+            ->leftJoin('property_types', $tableName . '.category_id', '=', 'property_types.id')  // Use concatenation to form the full table.column reference
+            ->select($tableName . '.*', 'property_types.*')  // Select columns from both tables
+            ->limit(10)
+            ->get();
+            $devlopment = "";
+            // dd($property_list);
+            return view('detail', compact('foundProperty','agent','property_list','amenitie','devlopment','property_type'));
+        } else {
+            echo "Error: Property not found.";
+            die;
+        }
+        die;
+    }
+
+    public function PrivateDetailPage(Request $request,$pageName){
+        $properties = [
+            PrivatePropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType'])->first(),
+        ];        
+        
+        $amenitie = Amenitie::where('status','1')->get();
+        $foundProperty = $agent = null;
+        
+        foreach ($properties as $property) {
+            if ($property) {
+                $foundProperty = $property;
+                if(isset($foundProperty->agent) && !empty($foundProperty->agent)){
+                    $agent = Agent::find($foundProperty->agent);
+                }
+                break; // Exit the loop on first found property
+            }
+        }
+        
+        if ($foundProperty) {
+            $tableName = $foundProperty->getTable();
+            if($tableName == "rent_properties"){
+                $property_type = 'rent';
+            }elseif($tableName == "private_properties"){
+                $property_type = 'private';
+            }elseif($tableName == "project_properties"){
+                $property_type = 'project';
+            }elseif($tableName == "international_properties"){
+                $property_type = 'international';
+            }elseif($tableName == "buy_properties"){
+                $property_type = 'buy';
+            }elseif($tableName == "branded_properties"){
+                $property_type = 'branded';
+            }
+            // $property_list = DB::table($tableName)->limit(10)->get();
+            // dd($foundProperty);
+            $property_list = DB::table($tableName)
+            ->leftJoin('property_types', $tableName . '.category_id', '=', 'property_types.id')  // Use concatenation to form the full table.column reference
+            ->select($tableName . '.*', 'property_types.*')  // Select columns from both tables
+            ->limit(10)
+            ->get();
+            $private = "";
+            // dd($property_list);
+            return view('detail', compact('foundProperty','agent','property_list','amenitie','private','property_type'));
+        } else {
+            echo "Error: Property not found.";
+            die;
+        }
+        die;
+    }
+
+    public function InvestmentDetailPage(Request $request,$pageName){
+        $properties = [
+            InvestmentPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType'])->first(),
+        ];        
+        
+        $amenitie = Amenitie::where('status','1')->get();
+        $foundProperty = $agent = null;
+        
+        foreach ($properties as $property) {
+            if ($property) {
+                $foundProperty = $property;
+                if(isset($foundProperty->agent) && !empty($foundProperty->agent)){
+                    $agent = Agent::find($foundProperty->agent);
+                }
+                break; // Exit the loop on first found property
+            }
+        }
+        
+        if ($foundProperty) {
+            $tableName = $foundProperty->getTable();
+            if($tableName == "rent_properties"){
+                $property_type = 'rent';
+            }elseif($tableName == "private_properties"){
+                $property_type = 'private';
+            }elseif($tableName == "project_properties"){
+                $property_type = 'project';
+            }elseif($tableName == "international_properties"){
+                $property_type = 'international';
+            }elseif($tableName == "buy_properties"){
+                $property_type = 'buy';
+            }elseif($tableName == "branded_properties"){
+                $property_type = 'branded';
+            }elseif($tableName == "investment_properties"){
+                $property_type = 'investment';
+            }
+            // $property_list = DB::table($tableName)->limit(10)->get();
+            // dd($foundProperty);
+            $property_list = DB::table($tableName)
+            ->leftJoin('property_types', $tableName . '.category_id', '=', 'property_types.id')  // Use concatenation to form the full table.column reference
+            ->select($tableName . '.*', 'property_types.*')  // Select columns from both tables
+            ->limit(10)
+            ->get();
+            $investment = "";
+            // dd($property_list);
+            return view('detail', compact('foundProperty','agent','property_list','amenitie','investment','property_type'));
+        } else {
+            echo "Error: Property not found.";
+            die;
+        }
+        die;
+    }
+
+    public function PrivateListing(Request $request){
+        $propertyTypes = PropertyType::where('property',$this->property)->get();
+        $this->page_title = 'Private Listing';
+        $propFor = 'private';
+        $pagination = $request->input('page');
+
+        // Check if pagination was requested and set propFor if needed
+        if ($pagination) {
+            $previousUrl = url()->previous();
+            parse_str(parse_url($previousUrl, PHP_URL_QUERY), $queryParams);
+            $propFor = $queryParams['prop_for'] ?? null;
+        }
+
+        // Redirect if propFor is empty
+        if (empty($propFor)) {
+            return redirect()->route('home');
+        }
+
+        $propertyTypes = [
+            'private' => PrivatePropertie::class
+        ];
+
+        // Check if the requested property type exists
+        if (array_key_exists($propFor, $propertyTypes)) {
+            // Fetch properties with pagination
+            $properties = $propertyTypes[$propFor]::orderBy('id', 'desc')->with('propertyType')->paginate(12); // Change to your desired items per page
+
+            $property_type = PropertyType::where('status',1)->where('property','private')->get();
+            
+            $private_listing = ListingDetail::where('id',1)->first();
+
+            $data = [
+                'page_title' => ucfirst($propFor) . " Properties",
+                'page_type' => $propFor,
+                'detail' => $private_listing,
+                'property' => $properties,
+                'property_type' => $property_type,
+                'property_name' => $propFor,
+                'title' => ucfirst($propFor) . " "
+            ];
+
+            // Pass 'prop_for' through the pagination links
+            $properties->appends(['prop_for' => $propFor]);
+
+            $private = ""; 
+            $property_type_name = "private";
+            // Return view directly with paginated data
+            return view('search', compact('data','private','property_type_name'));
+        } else {
+            return redirect()->route('home');    
+        }
+        die;
+    }
+
+    
+
+    public function DevelopmentListing(Request $request){
+        $propertyTypes = PropertyType::where('property',$this->property)->get();
+        $this->page_title = 'Development Listing';
+        $propFor = 'project';
+        $pagination = $request->input('page');
+
+        // Check if pagination was requested and set propFor if needed
+        if ($pagination) {
+            $previousUrl = url()->previous();
+            parse_str(parse_url($previousUrl, PHP_URL_QUERY), $queryParams);
+            $propFor = $queryParams['prop_for'] ?? null;
+        }
+
+        // Redirect if propFor is empty
+        if (empty($propFor)) {
+            return redirect()->route('home');
+        }
+
+        $propertyTypes = [
+            'project' => ProjectPropertie::class,
+        ];
+        // Check if the requested property type exists
+        if (array_key_exists($propFor, $propertyTypes)) {
+            // Fetch properties with pagination
+            $properties = $propertyTypes[$propFor]::orderBy('id', 'desc')->with('propertyType')->paginate(12); // Change to your desired items per page
+        
+                $top_listing = $propertyTypes[$propFor]::orderBy('id', 'desc')->with('propertyType')->latest()->take(5)->get()->map(function ($item) {
+                    $item['property_source'] = 'project';
+                    return $item;
+                });
+        
+            $property_type = PropertyType::where('status',1)->where('property','project')->get();
+            
+            
+            $private_listing = ListingDetail::where('id',12)->first();
+            $data = [
+                'page_title' => ucfirst($propFor) . " Properties",
+                'page_type' => $propFor,
+                'detail' => $private_listing,
+                'property' => $properties,
+                'property_type' => $property_type,
+                'property_name' => $propFor,
+                'title' => ucfirst($propFor) . " "
+            ];
+
+            // Pass 'prop_for' through the pagination links
+            $properties->appends(['prop_for' => $propFor]);
+            $devlopment = "";
+             $filter_array = [
+                'sort' => !empty($request->sort) ? $request->sort : '',
+                'property_type' => !empty($request->property_type) ? $request->property_type : [],
+                'size' => !empty($request->size) ? $request->size : [],
+                'min_range' => !empty($request->min_range) ? $request->min_range : '',
+                'max_range' => !empty($request->max_range) ? $request->max_range : '',
+            ];
+
+
+            // Return view directly with paginated data
+            return view('search', compact('data','devlopment','top_listing','filter_array'));
+        } else {
+            return redirect()->route('home');    
+        }
+
+        die;
+    }
+
+    public function BrandedResidences(Request $request){
+
+        $propertyTypes = PropertyType::where('property','branded')->get();
+        $this->page_title = 'Branded Residences';
+        $propFor = 'branded';
+        $pagination = $request->input('page');
+
+        // Check if pagination was requested and set propFor if needed
+        if ($pagination) {
+            $previousUrl = url()->previous();
+            parse_str(parse_url($previousUrl, PHP_URL_QUERY), $queryParams);
+            $propFor = $queryParams['prop_for'] ?? null;
+        }
+
+        // Redirect if propFor is empty
+        if (empty($propFor)) {
+            return redirect()->route('home');
+        }
+
+        $propertyTypes = [
+            'branded' => BrandedPropertie::class,
+        ];
+        $pageBrandedResidence = PageBrandedResidence::latest()->first();
+        
+        $properties = $propertyTypes[$propFor]::orderBy('id', 'desc')->with('propertyType')->paginate(12); // Change to your desired items per page
+        
+            $property_type = PropertyType::where('status',1)->where('property','branded')->get();
+            
+            $data = [
+                'page_title' => ucfirst($propFor) . " Properties",
+                'page_type' => $propFor,
+                'property' => $properties,
+                'property_type' => $property_type,
+                'property_name' => $propFor,
+                'title' => ucfirst($propFor) . " ",
+                'page_data' => $pageBrandedResidence
+            ];
+
+            // Pass 'prop_for' through the pagination links
+            $properties->appends(['prop_for' => $propFor]);
+            
+        return view('branded_residences', compact('data'));
+    }
+
+    public function PrivateOffices(Request $request){
+        $propertyTypes = PropertyType::where('property',$this->property)->get();
+        $this->page_title = 'Private Listing';
+        $propFor = 'private';
+        $pagination = $request->input('page');
+
+        // Check if pagination was requested and set propFor if needed
+        if ($pagination) {
+            $previousUrl = url()->previous();
+            parse_str(parse_url($previousUrl, PHP_URL_QUERY), $queryParams);
+            $propFor = $queryParams['prop_for'] ?? null;
+        }
+
+        // Redirect if propFor is empty
+        if (empty($propFor)) {
+            return redirect()->route('home');
+        }
+
+        $propertyTypes = [
+            'private' => PrivatePropertie::class
+        ];
+
+            // Fetch properties with pagination
+            $properties = $propertyTypes[$propFor]::orderBy('id', 'desc')->with('propertyType')->paginate(12); // Change to your desired items per page
+
+            $property_type = PropertyType::where('status',1)->where('property','private')->get();
+            
+            $private_listing = ListingDetail::where('id',1)->first();
+
+            $data = [
+                'page_title' => ucfirst($propFor) . " Properties",
+                'page_type' => $propFor,
+                'detail' => $private_listing,
+                'property' => $properties,
+                'property_type' => $property_type,
+                'property_name' => $propFor,
+                'title' => ucfirst($propFor) . " "
+            ];
+
+
+
+            // Pass 'prop_for' through the pagination links
+            $properties->appends(['prop_for' => $propFor]);
+
+            $privateOffice = PrivateOffice::latest()->first();
+            $private_properties = PrivatePropertie::where('status', 'active')
+            ->latest()
+            ->take(6)
+            ->with('propertyType')
+            ->get();
+        
+            // Return view directly with paginated data
+            return view('PrivateOffice', compact('data','privateOffice','private_properties'));
+
+    }
+
+    public function Communities(Request $request){
+        $data = [];
+
+        $data['communities'] =  Community::paginate(12);
+        return view('communitie_listing', compact('data'));
+    }
+
+    public function CommunitieDetail($id){
+        $id = base64_decode($id);
+        // base64_encode
+        $data = [];
+        $data['communities'] =  Community::find($id);
+
+
+        // Fetch data for each property type and add a 'property_source' key
+        $brandedProperties = BrandedPropertie::where('community_id', $id)
+            ->where('is_featured','1')
+            ->with(['banners', 'propertyType'])
+            ->take(3)
+            ->get()
+            ->map(function ($item) {
+                $item['property_source'] = 'branded';
+                return $item;
+            });
+
+        $investmentPropertie = InvestmentPropertie::where('community_id', $id)
+        ->where('is_featured','1')
+        ->with(['banners', 'propertyType'])
+        ->take(3)
+        ->get()
+        ->map(function ($item) {
+            $item['property_source'] = 'invest';
+            return $item;
+        });
+
+        $rentProperties = RentPropertie::where('community_id', $id)
+            ->where('is_featured','1')
+            ->with(['banners', 'propertyType'])
+            ->take(3)
+            ->get()
+            ->map(function ($item) {
+                $item['property_source'] = 'rent';
+                return $item;
+            });
+
+        $privateProperties = PrivatePropertie::where('community_id', $id)
+            ->where('is_featured','1')
+            ->with(['banners', 'propertyType'])
+            ->take(3)
+            ->get()
+            ->map(function ($item) {
+                $item['property_source'] = 'private';
+                return $item;
+            });
+
+        $projectProperties = ProjectPropertie::where('community_id', $id)
+            ->where('is_featured','1')
+            ->with(['banners', 'propertyType'])
+            ->take(3)
+            ->get()
+            ->map(function ($item) {
+                $item['property_source'] = 'project';
+                return $item;
+            });
+
+        $internationalProperties = InternationalPropertie::where('community_id', $id)
+            ->where('is_featured','1')
+            ->with(['banners', 'propertyType'])
+            ->take(3)
+            ->get()
+            ->map(function ($item) {
+                $item['property_source'] = 'international';
+                return $item;
+            });
+
+        $buyProperties = BuyPropertie::where('community_id', $id)
+            ->where('is_featured','1')    
+            ->with(['banners', 'propertyType'])
+            ->take(3)
+            ->get()
+            ->map(function ($item) {
+                $item['property_source'] = 'buy';
+                return $item;
+            });
+
+        // Merge all arrays into a single array
+        $allProperties = array_merge(
+            $brandedProperties->toArray(),
+            $rentProperties->toArray(),
+            $privateProperties->toArray(),
+            $projectProperties->toArray(),
+            $investmentPropertie->toArray(),
+            $internationalProperties->toArray(),
+            $buyProperties->toArray()
+        );
+
+        // Now each item in $allProperties will have a 'property_source' key indicating its origin
+
+
+        return view('communitie_detail', compact('data','allProperties'));
+    }
+
+    public function ReportList(){
+        $report = Report::latest()->first();
+        $reports = ReportIndividual::all();
+        return view('reports', compact('report','reports'));
     }
 }

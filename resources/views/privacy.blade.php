@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Home Page')
+@section('title', isset($privacy_policy->heading) ? $privacy_policy->heading: "")
 @section('content')
 @php
 $footerSection = getFooterSection();

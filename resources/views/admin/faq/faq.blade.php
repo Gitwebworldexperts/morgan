@@ -31,7 +31,7 @@
                             </h2>
                             <div id="collapseOne{{$key}}" class="accordion-collapse collapse {{ ($count == 1) ? 'show':'' }}" data-bs-parent="#accordionExample">
                               <div class="accordion-body custom_accordian_body">
-                                    {{ $question->answer }}
+                                    {!! $question->answer !!}
                               </div>
                             </div>
                           </div>

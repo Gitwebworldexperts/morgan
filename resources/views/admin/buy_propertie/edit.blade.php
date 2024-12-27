@@ -22,80 +22,35 @@
                     @enderror
                 </div>
 
-                <div class="form-group">
-                    <label for="name">Property Description<span class="mandatory">*</span></label>
-                    <textarea class="form-control" name="description" id="description" rows="3" >{{ old('description',$property->description) }}</textarea>
-                    @error('description')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="form-group row">
-                    <div class="col-md-6">
-                    <label for="name">Slug <span class="mandatory">*</span></label>
-                    <input type="text" class="form-control" name="slug" id="slug" disabled readonly value="{{ old('slug',$property->slug) }}"
-                        required placeholder="Website Slug">
-                    @error('slug')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-                    <div class="col-md-6">
-                    <label for="agent_id">Agent <span class="mandatory">*</span> </label>
-                    <select class="form-control" name="agent_id" id="agent_id">
-                        <option value="">Select an Agent</option>
-                        @if (!empty($agents) && count($agents))
-                            @foreach ($agents as $item)
-                                <option value="{{ $item->id }}" {{ ($property->agent == $item->id)?'selected':'';  }} >{{ $item->name }}</option>
-                            @endforeach
-                        @endif
-                    </select>
-                    @error('agent_id')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="address">Address <span class="mandatory">*</span></label>
-                    <textarea class="form-control" name="address" id="address" rows="3" required>{{ old('address', $property->address) }}</textarea>
-                    @error('address')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="form-group">
-                    <div class="col-md-6">
-                        <label for="address">Heading </label>
-                        <input type="text" class="form-control" name="information_heading" id="information_heading"
-                            value="{{ old('information_heading',$property->information_heading) }}">
-                        @error('second_heading')
+                <div class="row">
+                    <div class="form-group">
+                        <label for="property_description">Property Description <span class="mandatory">*</span></label>
+                        <textarea class="form-control" name="property_description" id="property_description" rows="3" >{{ old('property_description',$property->description) }}</textarea>
+                        @error('property_description')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-
-                    <div class="col-md-12">
-                        <label>Description </label>
-                        <textarea class="form-control" name="information_description" id="information_description" rows="3">{{ old('information_description',$property->information_description) }}</textarea>
-                        @error('information_description')
+                    <div class="form-group">
+                        <label for="address">Address <span class="mandatory">*</span></label>
+                        <textarea class="form-control" name="address" id="address" rows="3" required>{{ old('address', $property->address) }}</textarea>
+                        @error('address')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
-                    </div>
-                    <div class="col-12">
-                        {!! getButtonUrl('information_button_label', old('information_button_label',$property->information_button_label), old('information_button_label_2',$property->information_button_url)) !!}
                     </div>
                 </div>
 
 
                 <div class="form-group">
-                    <label for="google_maps_link">Google Maps Link</label>
-                    <input type="text" class="form-control" name="google_maps_link" id="google_maps_link"  placeholder="</>" value="{{ old('google_maps_link', $property->google_maps_link) }}">
+                    <label for="google_maps_link">Detailed Location</label>
+                    <textarea class="form-control" name="google_maps_link" id="google_maps_link" rows="3" >{{ old('google_maps_link', $property->google_maps_link) }}</textarea>
                     @error('google_maps_link')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
-                    <small class="form-text text-muted">Please enter a valid URL.</small>
+                    <!-- <small class="form-text text-muted">Please enter a valid URL.</small> -->
                 </div>
 
                 <div class="form-group">
-                    <label for="images">Choose Images</label>
+                    <label for="images">Choose Images <span class="mandatory">*</span></label>
                     <input type="file" name="images[]" id="images" class="form-control" multiple>
                     @error('images.*')
                         <div class="text-danger">{{ $message }}</div>
@@ -152,14 +107,14 @@
 
                     <div class="form-group col-md-6">
                         <label for="bed">Bed</label>
-                        <input type="number" class="form-control" name="bed" id="bed" value="{{ old('bed', $property->bed) }}">
+                        <input type="number"  min="0" class="form-control" name="bed" id="bed" value="{{ old('bed', $property->bed) }}">
                         @error('bed')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>                    
                     <div class="form-group col-md-6">
                         <label for="price">Price</label>
-                        <input type="number" class="form-control" name="price" id="price" step="0.01" value="{{ old('price', $property->price) }}">
+                        <input type="number"  min="0" class="form-control" name="price" id="price" min="0" value="{{ old('price', $property->price) }}">
                         @error('price')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -167,7 +122,7 @@
 
                     <div class="form-group col-md-6">
                         <label for="sale_price">Sale Price</label>
-                        <input type="number" class="form-control" name="sale_price" id="sale_price" step="0.01" value="{{ old('sale_price', $property->sale_price) }}">
+                        <input type="number" min="0" class="form-control" name="sale_price" id="sale_price" min="0" value="{{ old('sale_price', $property->sale_price) }}">
                         @error('sale_price')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -183,19 +138,15 @@
                     @error('is_featured')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
-                    <div class="form-check form-check-inline">
+
+                    <!-- <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" name="is_private" id="is_private" value="1" {{ old('is_private',$property->is_private) ? 'checked' : '' }}>
                         <label class="form-check-label" for="is_private">Is Private</label>
                     </div>
                     @error('is_private')
                         <div class="text-danger">{{ $message }}</div>
-                    @enderror
+                    @enderror -->
 
-                </div>
-
-
-                <div class="form-group">
-                    <label>Facilities</label><br>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" name="jacuzzi" id="jacuzzi" value="1" {{ old('jacuzzi', $property->jacuzzi) ? 'checked' : '' }}>
                         <label class="form-check-label" for="jacuzzi">Jacuzzi</label>
@@ -203,6 +154,111 @@
                     @error('jacuzzi')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
+
+                </div>
+
+                <div class="col-12">
+                    <div class="row">
+                        @if(isset($property->floor_plan) && !empty($property->floor_plan) && $property->floor_plan)
+                        <div class="form-group">
+                            <label for="floor_plan">Floor Plan</label>
+                            <input type="file" name="floor_plan" class="form-control">
+                            <a class="download_document" href="{{ asset($property->floor_plan) }}" download >Floor Plan</a>
+                            @error('floor_plan')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        @endif
+                        @if(isset($property->brochure) && !empty($property->brochure) && $property->brochure)
+                        <div class="form-group">
+                            <label for="brochure">Brochure</label>
+                            <input type="file" name="brochure" class="form-control">
+                            <a class="download_document" href="{{ asset($property->brochure) }}" download >Brochure</a>
+                            @error('brochure')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Facilities</label><br>
+                    <div class="form-group">
+                        <label for="amenitie_id">Amenities <span class="mandatory">*</span></label>
+                        <select class="form-control select2" multiple data-placeholder="Select a Amenity" name="amenities_id[]" id="amenities_id">
+                            <option value="">Select amenities</option>
+                            
+                            @if ($amenitie)
+                                @foreach ($amenitie as $item)
+                                    <option value="{{ $item->id }}" <?php if(in_array($item->id, explode(",",$property->amenities_id))){ echo "selected"; } ?>> {{ $item->amenity_name }} </option>
+                                @endforeach
+                            @endif
+                        </select>
+                        @error('amenities_id')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <label class="pt-2" for="property_size">Property Size<span class="mandatory">*</span></label>
+                    <select class="form-control" name="property_size" id="property_size">
+                        <option value="1 BHK" {{ old('property_size',$property->property_size) == '1 BHK' ? 'selected' : '' }}>1 BHK</option>
+                        <option value="2 BHK" {{ old('property_size',$property->property_size) == '2 BHK' ? 'selected' : '' }}>2 BHK</option>
+                        <option value="3 BHK" {{ old('property_size',$property->property_size) == '3 BHK' ? 'selected' : '' }}>3 BHK</option>
+                        <option value="4 BHK" {{ old('property_size',$property->property_size) == '4 BHK' ? 'selected' : '' }}>4 BHK</option>
+                        <option value="Studio" {{ old('property_size',$property->property_size) == 'Studio' ? 'selected' : '' }}>Studio</option>
+                    </select>
+                    @error('property_size')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+
+                </div>
+
+                <div class="form-group">
+                    <label for=""><b>Blog Section:</b></label>
+                    <div class="form-group col-md-12">
+                        <label for="address">Heading </label>
+                        <input type="text" class="form-control" name="eighth_heading" id="eighth_heading"
+                            value="{{ old('eighth_heading', $property->information_heading) }}">
+                        @error('eighth_heading')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group  col-md-12">
+                        <label for="blog_background">Background</label>
+                        <input type="file" name="blog_background" id="blog_background" class="form-control">
+                        @error('blog_background')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+
+                    <div class="col-12">
+                        <div class="current-banners row">
+                            @if($property->blog_background)
+                                
+                                    <div class="banner col-xl-2 col-md-3 col-sm-4 pr">
+                                        <img src="{{ asset($property->blog_background) }}" alt="Blog Left Image" style="height: auto;">
+                                    </div>
+                            @else
+                                <p>No image found for this property.</p>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label>Description </label>
+                        <textarea class="form-control" name="eighth_description" id="eighth_description" rows="3">{{ old('eighth_description', $property->information_description) }}</textarea>
+                        @error('eighth_description')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-12">
+                        {!! getButtonUrl('eighth_section_button', old('eighth_section_button',$property->information_button_label), old('eighth_section_button_2',$property->information_button_url), '') !!}
+                    </div>
+                    <div class="col-12">
+                        {!! getButtonUrl('eighth_section_button_3',old('eighth_section_button_3',$property->information_button_label_2),old('eighth_section_button_3_2',$property->information_button_url_2),'',1,'') !!}
+                    </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-6">
@@ -230,10 +286,44 @@
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
+                    <div class="form-group col-md-6">
+                        <label for="agent_id">Agent<span class="mandatory">*</span></label>
+                        <select class="form-control" name="agent_id" id="agent_id">
+                            <option value="">Select an Agent</option>
+                            @if ($agents)
+                                @foreach ($agents as $item)
+                                    <option value="{{ $item->id }}"
+                                        {{ old('agent_id',$property->agent) == $item->id ? 'selected' : '' }}>{{ $item->name }}
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
+                        @error('agent_id')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    {!!  addCommunity(isset($property->community_id)?$property->community_id:'') !!}
+                    <div class="form-group col-md-12 mt-2">
+                        <!-- <label for="meta_tags">Meta Tags <span class="mandatory">*</span></label>
+                        <input class="form-control" name="meta_tags" id="meta_tags" rows="3" value="{{ old('meta_tags',$property->meta_tags) }}" > -->
+                        {!!  addMetaTag(isset($property->meta_title)?$property->meta_title:'',isset($property->meta_description2)?$property->meta_description2:'') !!}
+                        @error('meta_tags')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                        <label for="status">Status<span class="mandatory">*</span></label>
+                        <select class="form-control" name="status" id="status">
+                            <option value="active" {{ old('status', $property->status) == 'active' ? 'selected' : '' }}>Active</option>
+                            <option value="inactive" {{ old('status', $property->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                        </select>
+
+                        @error('status')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
                 
 
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="submit" class="green-btn">Update</button>
             </form>
         </div>
     </section>
@@ -260,7 +350,7 @@
                 const url = this.getAttribute('data-url');
                 if (confirm('Are you sure you want to delete this banner?')) {
                     fetch(url, {
-                        method: 'DELETE',
+                        method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}',
                             'Content-Type': 'application/json'

@@ -24,6 +24,14 @@
         </div>
 
         <div class="form-group">
+            <label for="detail">Detail:</label>
+            <textarea class="form-control @error('detail') is-invalid @enderror" name="detail" id="detail">{{ old('detail',$agent->detail) }}</textarea>
+            @error('detail')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="form-group">
             <label for="username">Username (Email):</label>
             <input type="email" class="form-control" id="username" name="username" value="{{ old('username', $agent->username) }}" required>
         </div>

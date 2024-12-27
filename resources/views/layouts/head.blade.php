@@ -9,9 +9,16 @@
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="{{asset('css/owl.carousel.min.css')}}" rel="stylesheet" type="text/css">
     <link href="{{asset('css/owl.theme.default.css')}}" rel="stylesheet" type="text/css">
-
-    <link href="{{asset('css/lightgallery.css')}}" rel="stylesheet" type="text/css" />
-
-    <link href="{{asset('css/common.css')}}" rel="stylesheet" type="text/css">
+    <link href="{{asset('css/lightgallery.css')}}" rel="stylesheet" type="text/css">
+    <link href="{{asset('css/common.css?1.0')}}" rel="stylesheet" type="text/css">
     <link href="{{asset('css/responsive.css')}}" rel="stylesheet" type="text/css">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <link rel="canonical" href="{{ url()->full() }}"/>
+
+    @php
+    $footerSection = getFooterSection();
+    @endphp
+    {!! isset($footerSection->meta_tags) ? $footerSection->meta_tags : ""!!}
+    @yield('meta')
 </head>

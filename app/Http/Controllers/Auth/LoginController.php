@@ -51,7 +51,14 @@ class LoginController extends Controller
 
         if (Auth::attempt($request->only('email', 'password')) && isset($request->type) && $request->type == 'basic') {
             // Authentication passed
-            
+            $user = Auth::user();
+
+            if ($user && $user->is_active != 1) {
+            Auth::logout();
+            return back()->withErrors([
+                                'email' => 'Account is in active',
+                            ]);
+            }
             if(Gate::allows('isAdmin')){
                 Auth::logout();
                 return back()->withErrors([

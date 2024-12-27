@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Home Page')
+@section('title', 'Contact Us  – Morgan’s International Realty')
 @section('content')
 @php
 $footerSection = getFooterSection();
@@ -10,8 +10,8 @@ $footerSection = getFooterSection();
             <div class="col-12">
                 <div class="bread-container">
                     <ul>
-                        <li><a href="" class="">Home</a></li>
-                        <li><a href="" class=""> Contact Us</a></li>
+                        <li><a href="{{ asset('/') }}" class="">Home</a></li>
+                        <li><a href="javascript:void(0)" class=""> Contact Us</a></li>
                     </ul>
                 </div>
             </div>
@@ -66,7 +66,7 @@ $footerSection = getFooterSection();
 								<p>Contact Us</p>
 								<h4>Get in touch with us</h4>
 							</div>
-							<form action="{{ route('contact.submit') }}" method="POST">
+							<form id="demo-form" action="{{ route('contact.submit') }}" method="POST">
 							    @csrf
 							    <div class="row">
 							        <div class="col-lg-6">
@@ -105,7 +105,7 @@ $footerSection = getFooterSection();
 							        </div>
 							        <div class="col-lg-12">
 							            <div class="form-group">
-							                <button type="submit" class="green-btn contact-submit">Submit <img src="img/arrow-right3.svg" class=""></button>
+							                <button type="submit" data-sitekey="6LdTOJIqAAAAAIzlPRlnrnXROcFEH92ZzhUR-pAs" data-callback='onSubmit' data-action='submit' class=" g-recaptcha green-btn contact-submit">Submit <img src="img/arrow-right3.svg" class=""></button>
 							            </div>
 							        </div>
 							    </div>
@@ -123,5 +123,16 @@ $footerSection = getFooterSection();
 	<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3613.11940326637!2d55.153619976080115!3d25.097819135717454!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f6b4164e9f477%3A0x873c65b1c9eb0f7e!2sConcord%20Tower%20-%20Al%20Sufouh%20-%20Al%20Sufouh%202%20-%20Dubai%20-%20United%20Arab%20Emirates!5e0!3m2!1sen!2sin!4v1722857107508!5m2!1sen!2sin" width="100%" height="550" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 </section>
 
+
+
+
+@endsection
+@section('scripts')
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<script>
+   function onSubmit(token) {
+     document.getElementById("demo-form").submit();
+   }
+ </script>
 
 @endsection

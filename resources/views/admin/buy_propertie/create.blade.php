@@ -1,5 +1,5 @@
 @extends('admin.adminLayout')
-@section('title', 'Pages: Home Page')
+@section('title', 'Pages: Buy Properties')
 @section('content')
     @if (session('success'))
         <div class="alert alert-success">
@@ -11,100 +11,44 @@
         <div class="section_content">
             <form id="image-upload-form" action="{{ route('buy_properties.store') }}" method="POST"
                 enctype="multipart/form-data">
-                @csrf
-                <div class="form-group">
-                    <label for="name">Name <span class="mandatory">*</span></label>
-                    <input type="text" class="form-control" name="name" id="name" oninput="generateSlug()" value="{{ old('name') }}"
-                        required>
-                    @error('name')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="form-group">
-                    <label for="name">Property Description<span class="mandatory">*</span></label>
-                    <textarea class="form-control" name="description" id="description" rows="3" >{{ old('description') }}</textarea>
-                    @error('description')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="form-group row">
-                    <div class="col-md-6">
-                    <label for="name">Slug <span class="mandatory">*</span></label>
-                    <input type="text" class="form-control" name="slug" id="slug" value="{{ old('slug') }}"
-                        required placeholder="Website Slug" readonly>
-                    @error('slug')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-                    <div class="col-md-6">
-                    <label for="agent_id">Agent <span class="mandatory">*</span> </label>
-                    <select class="form-control" name="agent_id" id="agent_id">
-                        <option value="">Select an Agent</option>
-                        @if (!empty($agents) && count($agents))
-                            @foreach ($agents as $item)
-                                <option value="{{ $item->id }}">{{ $item->name }}</option>
-                            @endforeach
-                        @endif
-                    </select>
-                    @error('agent_id')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="address">Address <span class="mandatory">*</span></label>
-                    <textarea class="form-control" name="address" id="address" rows="3" >{{ old('address') }}</textarea>
-                    @error('address')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-
-
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="address">Heading </label>
-                            <input type="text" class="form-control" name="information_heading" id="information_heading"
-                                value="{{ old('information_heading') }}">
-                            @error('second_heading')
-                                <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label d-block">Background Image</label>
-                            {!! getImage('information_banner', 'information_banner', 'information_banner') !!}
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <label>Description </label>
-                        <textarea class="form-control" name="information_description" id="information_description" rows="3">{{ old('information_description') }}</textarea>
-                        @error('information_description')
+    			 @csrf
+	            <div class="form-group">
+            <label for="name">Name <span class="mandatory">*</span></label>
+            <input type="text" class="form-control" name="name" id="name" value="{{ old('name') }}" required>
+            @error('name')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="property_description">Property Description <span class="mandatory">*</span></label>
+                        <textarea class="form-control" name="property_description" id="property_description" rows="3" >{{ old('property_description') }}</textarea>
+                        @error('property_description')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="col-12">
-                        {!! getButtonUrl('information_button_label', old('information_button_label'), old('information_button_label_2')) !!}
-                    </div>
-                    <div class="col-12">
-                        {!! getButtonUrl('second_information_button_label', old('second_information_button_label'), old('second_information_button_label_2')) !!}
+                    <div class="form-group">
+                        <label for="address">Address <span class="mandatory">*</span></label>
+                        <textarea class="form-control" name="address" id="address" rows="3" >{{ old('address') }}</textarea>
+                        @error('address')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
 
+
                 <div class="form-group">
-                    <label for="google_maps_link">Google Maps Iframe</label>
-                    <input type="url" class="form-control" name="google_maps_link" id="google_maps_link"
-                         placeholder="</>" value="{{ old('google_maps_link') }}">
+                    <label for="google_maps_link">Detailed Location</label>
+                    <textarea class="form-control" name="google_maps_link" id="google_maps_link" rows="3" >{{ old('google_maps_link') }}</textarea>
                     @error('google_maps_link')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
-                    <small class="form-text text-muted">Please enter a valid Iframe.</small>
+                    <!-- <small class="form-text text-muted">Please enter a valid URL.</small> -->
                 </div>
 
                 <div class="form-group">
-                    <label for="images">Choose Images</label>
+                    <label for="images">Choose Images <span class="mandatory">*</span></label>
                     <input type="file" name="images[]" id="images" class="form-control" multiple>
                     @error('images.*')
                         <div class="text-danger">{{ $message }}</div>
@@ -120,79 +64,53 @@
                     @enderror
                 </div>
 
-                <div class="row">
-                    <div class="form-group col-md-6">
-                        <label for="area">Area</label>
-                        <input type="text" class="form-control" name="area" id="area"
-                            value="{{ old('area') }}">
-                        @error('area')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="area">Area</label>
+                <input type="text" class="form-control" name="area" id="area" value="{{ old('area') }}">
+                @error('area')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
 
-                    <div class="form-group col-md-6">
-                        <label for="bed">Bed</label>
-                        <input type="number" class="form-control" name="bed" id="bed"
-                            value="{{ old('bed', 0) }}">
-                        @error('bed')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
+            <div class="form-group col-md-6">
+                <label for="bed">Bed</label>
+                <input type="number" class="form-control"  min="0" name="bed" id="bed" value="{{ old('bed', 0) }}">
+                @error('bed')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
 
-                    <div class="form-group col-md-6">
-                        <label for="price">Price</label>
-                        <input type="number" class="form-control" name="price" id="price" step="0.01"
-                            value="{{ old('price') }}">
-                        @error('price')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
+            <div class="form-group col-md-6">
+                <label for="price">Price</label>
+                <input type="number"  min="0" class="form-control" min="0" name="price" id="price" value="{{ old('price') }}">
+                @error('price')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
 
-                    <div class="form-group col-md-6">
-                        <label for="sale_price">Sale Price</label>
-                        <input type="number" class="form-control" name="sale_price" id="sale_price" step="0.01"
-                            value="{{ old('sale_price') }}">
-                        @error('sale_price')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    
-                    <div class="form-group col-md-6">
-                        <label for="floor_plan">Upload Floor Plan</label>
-                        <input type="file" name="floor_plan" id="floor_plan" class="form-control">
-                    </div>
-
-                    <div class="form-group col-md-6">
-                        <label for="brochure">Upload Brochure</label>
-                        <input type="file" name="brochure" id="brochure" class="form-control">
-                    </div>
+            <div class="form-group col-md-6">
+                <label for="sale_price">Sale Price</label>
+                <input type="number"  min="0" class="form-control" min="0" name="sale_price" id="sale_price" value="{{ old('sale_price') }}">
+                @error('sale_price')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+            
+        </div>
 
 
-                </div>
-
-
-                <div class="form-group">
+        <div class="form-group">
                     <label>Additional Settings</label><br>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="is_featured" id="is_featured"
-                            value="1" {{ old('is_featured') ? 'checked' : '' }}>
+                        <input class="form-check-input" type="checkbox" name="is_featured" id="is_featured" value="1"
+                            {{ old('is_featured') ? 'checked' : '' }}>
                         <label class="form-check-label" for="is_featured">Is Featured</label>
                     </div>
                     @error('is_featured')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="is_private" id="is_private"
-                            value="1" {{ old('is_private') ? 'checked' : '' }}>
-                        <label class="form-check-label" for="is_private">Is Private</label>
-                    </div>
-                    @error('is_private')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
 
-                <div class="form-group">
-                    <label>Facilities</label><br>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" name="jacuzzi" id="jacuzzi" value="1"
                             {{ old('jacuzzi') ? 'checked' : '' }}>
@@ -201,9 +119,99 @@
                     @error('jacuzzi')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
+                    <!-- <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="is_private" id="is_private" value="1" {{ old('is_private') ? 'checked' : '' }}>
+                    <label class="form-check-label" for="is_private">Is Private</label>
                 </div>
-                <div class="row form-group">
-                    <div class="col-md-6">
+                @error('is_private')
+        <div class="text-danger">{{ $message }}</div>
+    @enderror -->
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="floor_plan">Floor Plan</label>
+                        <input type="file" name="floor_plan" class="form-control">
+                        @error('floor_plan')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="brochure">Brochure</label>
+                        <input type="file" name="brochure" class="form-control">
+                        @error('brochure')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+        <div class="form-group">
+            <label>Facilities</label><br>
+                    <div class="form-group">
+                        <label for="amenitie_id">Amenities <span class="mandatory">*</span></label>
+                        <select class="form-control select2" multiple data-placeholder="Select a Amenity" name="amenities_id[]" id="amenities_id">
+                            <option value="">Select amenities</option>
+                            @if ($amenitie)
+                                @foreach ($amenitie as $item)
+                                    <option value="{{ $item->id }}"> {{ $item->amenity_name }} </option>
+                                @endforeach
+                            @endif
+                        </select>
+                        @error('amenities_id')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                        <label class="pt-2" for="property_size">Property Size<span class="mandatory">*</span></label>
+                        <select class="form-control" name="property_size" id="property_size">
+                            <option value="1 BHK" {{ old('property_size') == '1 BHK' ? 'selected' : '' }}>1 BHK</option>
+                            <option value="2 BHK" {{ old('property_size') == '2 BHK' ? 'selected' : '' }}>2 BHK</option>
+                            <option value="3 BHK" {{ old('property_size') == '3 BHK' ? 'selected' : '' }}>3 BHK</option>
+                            <option value="4 BHK" {{ old('property_size') == '4 BHK' ? 'selected' : '' }}>4 BHK</option>
+                            <option value="Studio" {{ old('property_size') == 'Studio' ? 'selected' : '' }}>Studio</option>
+                        </select>
+                        @error('property_size')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                <div class="form-group">
+                    <label for=""><b>Blog Section:</b></label>
+                    <div class="form-group col-md-12">
+                        <label for="address">Heading </label>
+                        <input type="text" class="form-control" name="eighth_heading" id="eighth_heading"
+                            value="{{ old('eighth_heading', '') }}">
+                        @error('eighth_heading')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+            </div>
+                    <div class="form-group  col-md-12">
+                        <label for="blog_background">Background</label>
+                        <input type="file" name="blog_background" id="blog_background" class="form-control">
+                        @error('blog_background')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>Description </label>
+                        <textarea class="form-control" name="eighth_description" id="eighth_description" rows="3">{{ old('eighth_description', '') }}</textarea>
+                        @error('eighth_description')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-12">
+                        {!! getButtonUrl('eighth_section_button', old('eighth_section_button'), old('eighth_section_button_2'), '') !!}
+                    </div>
+                    <div class="col-12">
+                        {!! getButtonUrl(
+                            'eighth_section_button_3',
+                            old('eighth_section_button_3'),
+                            old('eighth_section_button_3_2'),
+                            '',
+                            1,
+                        ) !!}
+                    </div>
+                </div>
+        <div class="row">
+            <div class="form-group col-md-6">
                         <label for="country_id">Country</label>
                         {!! getCountry('country_id', 'country_id') !!}
                         @error('country_id')
@@ -211,28 +219,57 @@
                         @enderror
                     </div>
 
-                    <div class="col-md-6">
-                        <label for="category_id">Property Type <span class="mandatory">*</span> <span class="help_url"><a
-                                    href="{{ route('property-type.create', 'buy') }}" target="_blank">Add Property
-                                    Type</a></label>
-                        <select class="form-control" name="category_id" id="category_id">
-                            <option value="">Select a property type</option>
-                            @if ($propertyTypes)
-                                @foreach ($propertyTypes as $item)
+            <div class="form-group col-md-6">
+                <label for="category_id">Property Type <span class="mandatory">*</span> <span class="help_url"><a href="{{ route('property-type.create','rent') }}" target="_blank">Add Property Type</a></label>
+                <select class="form-control" name="category_id" id="category_id">
+                    <option value="">Select a property type</option>
+                    @if($propertyTypes)
+                        @foreach($propertyTypes as $item)
+                            <option value="{{$item->id}}" {{ old('category_id') == $item->id ? 'selected' : '' }}>{{$item->type_name}}</option>
+                        @endforeach
+                    @endif
+                </select>
+                @error('category_id')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>    
+                    <div class="form-group col-md-6">
+                        <label for="agent_id">Agent<span class="mandatory">*</span></label>
+                        <select class="form-control" name="agent_id" id="agent_id">
+                            <option value="">Select an Agent</option>
+                            @if ($agents)
+                                @foreach ($agents as $item)
                                     <option value="{{ $item->id }}"
-                                        {{ old('category_id') == $item->id ? 'selected' : '' }}>{{ $item->type_name }}
+                                        {{ old('agent_id') == $item->id ? 'selected' : '' }}>{{ $item->name }}
                                     </option>
                                 @endforeach
                             @endif
                         </select>
-                        @error('category_id')
+                        @error('agent_id')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
+                    {!!  addCommunity(isset($property->community_id)?$property->community_id:'') !!}
+                <div class="form-group col-md-12 mt-2">
+                    <!-- <label for="meta_tags">Meta Tags <span class="mandatory">*</span></label>
+                    <input class="form-control" name="meta_tags" id="meta_tags" rows="3" value="{{ old('meta_tags') }}" > -->
+                    {!!  addMetaTag(isset($property->meta_title)?$property->meta_title:'',isset($property->meta_description2)?$property->meta_description2:'') !!}
+                    @error('meta_tags')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+                <label for="status">Status<span class="mandatory">*</span></label>
+                <select class="form-control" name="status" id="status">
+                    <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
+                    <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                </select>
+
+                    @error('status')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
-
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="green-btn">Submit</button>
             </form>
         </div>
     </section>

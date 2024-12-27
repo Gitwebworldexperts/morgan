@@ -5,9 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Contact;
+use App\Models\FormData;
 
 class ContactController extends Controller
 {
+    public function index()
+    {
+        $contact = FormData::orderBy('id', 'desc')->paginate(10);
+        // dd($contact);die;
+        return view('admin.form_data', compact('contact')); // Ensure this matches your Blade view name
+    }
+
     public function show()
     {
         $contact = Contact::orderBy('id', 'desc')->paginate(10);
@@ -41,6 +49,7 @@ class ContactController extends Controller
         // Save the property to the database to get the ID
         $contact->save();
 
+        return redirect()->route('thank-you');        
         return redirect()->back()->with('success', 'Thank you for your message!');
     }
 }

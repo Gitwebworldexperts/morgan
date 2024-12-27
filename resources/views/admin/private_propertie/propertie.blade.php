@@ -22,7 +22,7 @@
                     <th>Property</th>
                     <th>Price</th>
                     <th>Sale Price</th>
-                    <!-- <th>Country</th> -->
+                    <th>Status</th>
                     <th>Category</th>
                     <th>Action</th>
                 </tr>
@@ -34,11 +34,17 @@
                         <td>{{ $item->name }}</td>
                         <td>{{ $item->price }}</td>
                         <td>{{ $item->sale_price }}</td>
+                        <td>{{ ucwords($item->status) }}</td>
                         <!-- <td>{{ $item->country_id }}</td> You may want to show the country name instead of the ID -->
                         <td>{{ isset($item->propertyType->type_name)? $item->propertyType->type_name : '' }}</td> <!-- Same as above, consider showing the category name -->
                         <td>
                             <div class="faq-actions">
-                                <a class="edit_button" href="{{ route('private_properties.edit', $item) }}">
+                            @if(isset($item->slug) && !empty($item->slug) && $item->slug)
+                                <a class="edit_button" target="_blank" href="{{ route('private.detail_page', $item->slug) }}">
+                                    <i class="fa-solid fa-eye"></i> View
+                                </a>
+                            @endif
+                            <a class="edit_button" href="{{ route('private_properties.edit', $item) }}">
                                 <i class="fa-solid fa-pencil"></i> Edit
                             </a>
                             <form action="{{ route('private_properties.destroy', $item) }}" method="POST" style="display:inline;">
@@ -59,7 +65,7 @@
                     <th>Property</th>
                     <th>Price</th>
                     <th>Sale Price</th>
-                    <!-- <th>Country</th> -->
+                    <th>Status</th>
                     <th>Category</th>
                     <th>Action</th>
                 </tr>

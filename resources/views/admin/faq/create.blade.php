@@ -17,13 +17,32 @@
                             </div>
                             <div class="mb-2">
                                 <label class="form-label"><strong>Answer :</strong></label>
-                                <textarea class="form-control" required name="answer[]"></textarea>
+                                <textarea class="form-control"  name="answer[]"></textarea>
                             </div>        
                             <div class="mb-2">
                                 <label class="form-label"><strong>Linked Page :</strong></label>
                                 <select class="form-control" name="linked_page[]">
                                     <option value=""> Select Linked Page </option>
                                     <option value="home"> Home </option>
+                                    <option value="sales"> Buy </option>
+                                    <option value="rent"> Rent </option>
+                                    <option value="private"> Private </option>
+                                    <option value="investment"> Investment </option>
+                                    <option value="international"> International </option>
+                                    <option value="project"> Development </option>
+                                    <option value="branded"> Branded Redidency </option>
+                                    <option value="mortgage"> Mortgage Calculator </option>
+                                    <option value="report"> Report </option>
+                                    <option value="career"> Career </option>
+                                    <option value="communities"> Communities </option>
+                                    @php
+                                        if(isset($blogs) && !empty($blogs)){
+                                            foreach ($blogs as $key => $value) {   
+                                                echo '<option value="'.$value->slug.'"> Blog : '.$value->name.'</option>'; 
+                                            }
+                                        }    
+                                    @endphp  
+                                    @endphp
                                 </select>
                             </div>                        
                         </div>

@@ -19,6 +19,8 @@ class FooterSections extends Model
         'newsletter_section',
         'social_media_links',
         'copyright',
+        'meta_tags',
+        'mortgage_advisor_number',
     ];
 
     // Specify the attributes that should be cast to native types

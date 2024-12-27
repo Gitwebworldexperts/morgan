@@ -58,7 +58,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-2 d-none">
                                             <div class="form-group">
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="checkbox" name="toggle_project" id="toggle_project" value="1" {{ ($list_property['project'] == 1) ? 'checked':''  }}>
@@ -66,7 +66,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-2 d-none">
                                             <div class="form-group">
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="checkbox" name="toggle_private" id="toggle_private" {{ ($list_property['private'] == 1) ? 'checked':''  }} value="1" >
@@ -74,7 +74,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-2 d-none">
                                             <div class="form-group">
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="checkbox" name="toggle_international" id="toggle_international" value="1" {{ ($list_property['international'] == 1) ? 'checked':''  }}>
@@ -204,7 +204,7 @@
                                     <label class="form-label d-block">Header Image</label>
                                     {!! getImage('fifth_section_image', 'fifth_section_image', 'fifth_section_image',$home->fifth_section_image) !!}
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 d-none">
                                     <div class="form-group">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="checkbox"
@@ -238,7 +238,7 @@
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 d-none">
                                     <div class="form-group">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="checkbox"
@@ -329,6 +329,9 @@
                                         @enderror
                                     </div>
                                 </div>
+                                <div class="col-12">
+                                    {!! getButtonUrl('blog_section_button', old('blog_section_button',$home->blog_section_button), old('blog_section_button_2',$home->blog_section_button_2),$home->blog_section_button) !!}
+                                </div>
                             </div>
 
 
@@ -361,6 +364,22 @@
                                 </div>
                             </div>
                             <div class="row row-container-section pl-2 pr-2">
+                                <div class="form-group">
+                                    <label for="meta_title">Meta Title <span class="mandatory">*</span></label>
+                                    <input class="form-control" type="text" name="meta_title" value="{{ old('meta_title',$home->meta_title) }}" id="meta_title" >
+                                    @error('meta_title')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>    
+
+                                <div class="form-group">
+                                    <label for="meta_description">Meta Description <span class="mandatory">*</span></label>
+                                    <input class="form-control" type="text" name="meta_description" value="{{ old('meta_description',$home->meta_description) }}" id="meta_description" >
+                                    @error('meta_description')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>    
+
                                 <div class="col-12 form-group">
                                     <button type="submit" class="green-btn">Submit</button>  
                                 </div>

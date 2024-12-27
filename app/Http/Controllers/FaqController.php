@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Faqs;
 use App\Models\User;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -20,14 +21,16 @@ class FaqController extends Controller
     }
     public function index()
     {
+        $blogs = Post::all();
         $faqs = Faqs::orderBy('id', 'desc')->get();
         // $faqs = Faqs::all();
-        return view('admin.faq.faq', compact('faqs'));
+        return view('admin.faq.faq', compact('faqs','blogs'));
      }
 
     public function create()
     {
-        return view('admin.faq.create');
+        $blogs = Post::all();
+        return view('admin.faq.create', compact('blogs'));
     }
 
     public function store(Request $request)
@@ -63,7 +66,8 @@ class FaqController extends Controller
 
     public function edit(Faqs $faq)
     {   
-        return view('admin.faq.edit', compact('faq'));
+        $blogs = Post::all();
+        return view('admin.faq.edit', compact('faq','blogs'));
     }
 
     public function update(Request $request, Faqs $faq)

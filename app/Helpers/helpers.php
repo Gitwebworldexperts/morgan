@@ -3,6 +3,27 @@ use App\Models\HeaderSections;
 use App\Models\FooterSections;
 use App\Models\Faqs;
 use App\Models\Countries;
+use App\Models\PrivatePropertie;
+use App\Models\PropertyType;
+use App\Models\Testimonial;
+use App\Models\Gallery;
+use App\Models\Agent;
+use App\Models\Community;
+use App\Models\Wishlist;
+use App\Models\HomePage;
+
+
+use App\Models\RentPropertie;
+use App\Models\ProjectPropertie;
+use App\Models\InternationalPropertie;
+use App\Models\BuyPropertie;
+use App\Models\BrandedPropertie;
+use App\Models\InvestmentPropertie;
+
+
+
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\View;
 
 
 if (!function_exists('siteLogo')) {
@@ -18,6 +39,16 @@ if (!function_exists('siteLogo')) {
         return isset($headerSections->logo_url) ? $headerSections->logo_url : 'img/logo.svg' ;
     }
 }
+
+  function getWhishList()
+    {
+
+$slugs = Wishlist::where('user_id', Auth::id())
+                             ->pluck('product_slug') // Get only the 'product_slug' column
+                             ->toArray();
+
+        return isset($slugs) ? $slugs : [] ;
+    }
 
 if (!function_exists('siteFooterLogo')) {
     /**
@@ -91,7 +122,11 @@ if (!function_exists('getFaqs')) {
      */
     function getFaqs($page_name = '')
     {
-    $footerSections = Faqs::orderBy('id', 'desc')->get();
+        if($page_name){
+            $footerSections = Faqs::where('page',$page_name)->orderBy('id', 'desc')->get();
+        }else{
+            $footerSections = Faqs::orderBy('id', 'desc')->get();            
+        }
         return $footerSections;
     }
 }
@@ -257,6 +292,60 @@ if (!function_exists('contactForm')) {
 
 }
 
+if (!function_exists('devContactForm')) {
+    /**
+     * get createButtonUrl 
+     * created By: Yesvant Alaria
+     * Ceated at: 20 Sep 2024
+     *
+     * @param  name, Button Name, Button Url
+     * @return Image Html 
+     */
+    function devContactForm($name = "RegisterYourInterest", $pageName = null, $pageId = null)
+    {
+        $pageName = $pageName ?? request()->route()->getName();
+        $pageId = $pageId ?? request()->route('id'); // assuming 'id' is a parameter in the route
+    
+        return `
+        <form id="contactForm" action="{{ route('intrest.submit') }}" method="POST">
+          @csrf
+          <div class="form-group">
+              <label>Full Name</label>
+              <input class="form-control" name="fullName" type="text" placeholder="John Doe" required>
+          </div>
+          <div class="form-group">
+              <label>Email</label>
+              <input class="form-control" name="email" type="email" placeholder="example@gmail.com" required>
+          </div>
+          <div class="form-group">
+              <label>Contact Number</label>
+              <input class="form-control" name="contactNumber" type="text" placeholder="+91 2344 34332" required>
+          </div>
+          <input type="hidden" name="pageName" value="${pageName}">
+          <input type="hidden" name="pageId" value="${pageId}">
+          <button type="submit" class="green-btn submit-btn">Submit</button>
+      </form>`;
+    }
+    
+
+}
+
+
+function generateSlug($name,$model_name)
+{
+    // Step 1: Convert the name to a slug
+    $slug = Str::slug($name);
+
+    // Step 2: Check if the slug exists in the database
+    $count = $model_name::where('slug', 'like', $slug.'%')->count();
+
+    // Step 3: If the slug exists, append a unique number
+    if ($count > 0) {
+        $slug = $slug . '-' . ($count + 1); // Append a unique number
+    }
+
+    return $slug;
+}
 
 
 function renderInterestForm($form_name = "RegsiterYourInterest",$pageId = "",$page_name = "") {
@@ -357,7 +446,7 @@ function renderInterestForm($form_name = "RegsiterYourInterest",$pageId = "",$pa
 
         <div class="col-md-6 col-12">
             <div class="form-group">
-                <button type="submit" class="green-btn submit-btn">Submit <img src="/img/arrow-right3.svg" alt=""></button>
+                <button type="submit" class="green-btn submit-btn">Submit <img class="d-none" src="/img/arrow-right3.svg" alt=""></button>
             </div>
         </div>
     </div>
@@ -389,3 +478,159 @@ function renderInterestForm($form_name = "RegsiterYourInterest",$pageId = "",$pa
     }
 
 }
+
+
+if (! function_exists('testimonial')) {
+    function testimonial($count = 3)
+    {
+        $testimonials = Testimonial::orderBy('created_at', 'desc')->take($count)->get();
+        return View::make('Helper.testimonial_slider')->with('testimonials', $testimonials)->render();
+    }
+}
+
+
+if (! function_exists('addCommunity')) {
+    function addCommunity($selected = '')
+    {
+        $communities = Community::all();
+        return View::make('Helper.communityDropdown')->with(['communities'=> $communities,'selected' =>$selected])->render();
+    }
+}
+
+
+if (! function_exists('addMetaTag')) {
+    function addMetaTag($meta_title = "",$meta_description = "")
+    {
+        return View::make('Helper.addMetaTag')->with(['meta_title'=> $meta_title,'meta_description' =>$meta_description])->render();
+    }
+}
+
+
+
+if (! function_exists('mediaSection')) {
+    function mediaSection($count = 'all',$new_heading = '')
+    {
+        if($count == 'all'){
+            $gallery = Gallery::orderBy('created_at', 'desc')->get();
+        }else{
+            $gallery = Gallery::orderBy('created_at', 'desc')->take($count)->get();
+        }
+        
+        return View::make('Helper.media')->with(['gallery'=>$gallery,'new_heading'=>$new_heading])->render();
+    }
+}
+
+if (! function_exists('reportmediaSection')) {
+    function reportmediaSection($count = 'all',$new_heading = '')
+    {
+        if($count == 'all'){
+            $gallery = Gallery::orderBy('created_at', 'desc')->get();
+        }else{
+            $gallery = Gallery::orderBy('created_at', 'desc')->take($count)->get();
+        }
+        
+        return View::make('Helper.report_media')->with(['gallery'=>$gallery,'new_heading'=>$new_heading])->render();
+    }
+}
+
+if (! function_exists('teamSlider')) {
+    function teamSlider($count = "all")
+    {
+        if($count == 'all'){
+            $team = Agent::orderBy('created_at', 'desc')->get();
+        }else{
+            $team = Agent::orderBy('created_at', 'desc')->take($count)->get();
+        }
+        return View::make('Helper.team_slider')->with(['team'=>$team])->render();
+    }
+}
+
+if (! function_exists('descriptionWithImages')) {
+    function descriptionWithImages($description ="")
+    {
+        $descriptionWithImages = preg_replace('/!\[\]\((.*?)\)/', '<div class="thmb-img"><img src="$1" alt="Image" class="w-100" /></div>', $description);
+        return $descriptionWithImages;
+    }
+}
+
+
+if (!function_exists('searchBox')) {
+    /**
+     * Generate HTML for search Box.
+     * 
+     * Created by: Yesvant Alaria
+     * Created at: 18 Nov 2024
+     *
+     * @param string $name The name attribute for the input.
+     * @param string $id The id attribute for the input.
+     */
+    function searchBox()
+    {
+        $property_type = PropertyType::all()->groupBy('property');
+        $home = HomePage::orderBy('id','desc')->first();
+        return View::make('Helper.commonSearch')->with(['home'=>$home,'property_type'=>$property_type])->render();
+    }
+}
+
+
+
+if (!function_exists('innerSearchBox')) {
+    /**
+     * Generate HTML for search Box.
+     * 
+     * Created by: Yesvant Alaria
+     * Created at: 18 Nov 2024
+     *
+     * @param string $name The name attribute for the input.
+     * @param string $id The id attribute for the input.
+     */
+    function innerSearchBox($searchData = [])
+    {   
+        $old_property_type = '';
+        if(isset($searchData['property_type']) && !empty($searchData['property_type']) && $searchData['property_type']){
+            $old_property_type = $searchData['property_type'];
+        }$property_type = PropertyType::all()->groupBy('property');
+
+
+        return View::make('Helper.innerSearch')->with(['old_property_type'=>$old_property_type,'property_type'=>$property_type,'searchData'=>$searchData])->render();
+    }
+}
+
+
+if (!function_exists('getPropertyDeatil')) {
+    /**
+     * get site url 
+     *
+     * @return get Property Detail
+     * @return property type, property id
+     * @param  $property_type = null,$property_id = null 
+     */
+    function getPropertyDeatil($property_type = '',$property_id = "",$column_name = "")
+    {
+    	if(!$property_type || !$property_id){
+    		return '';
+    	}
+    	    	
+    	$propertyTypes = [
+            'rent' => RentPropertie::class,
+            'project' => ProjectPropertie::class,
+            'private' => PrivatePropertie::class,
+            'international' => InternationalPropertie::class,
+            'sales' => BuyPropertie::class,
+            'branded' => BrandedPropertie::class,
+            'invest' => InvestmentPropertie::class
+        ];
+        
+        if (array_key_exists($property_type, $propertyTypes)) {
+        	$properties = $propertyTypes[$property_type]::where('id',$property_id)->first();
+ 		if($column_name && $properties){
+ 			return $properties->$column_name;
+ 		}
+        	return $properties;
+        }
+                
+        return "";
+    }
+}
+
+

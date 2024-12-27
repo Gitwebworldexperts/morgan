@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /public/admin/
+Disallow: /public/captcha/
+Sitemap: https://myprojectdemonstration.net/development/morgan/web/sitemap.xml

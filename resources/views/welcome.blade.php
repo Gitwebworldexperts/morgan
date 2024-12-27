@@ -1,7 +1,32 @@
 @extends('layouts.app')
-@section('title', 'Home Page')
+
+@php
+  $page_name = $data['detail']->page_name ?? $data['page_title'] ?? 'Home Page';
+    if(isset($home->meta_title) && !empty($home->meta_title)){
+        $page_name = $home->meta_title;
+    }
+@endphp
+
+@php
+ $wish = getWhishList()
+@endphp
+
+@section('title', $page_name)
+@section('meta')
+  @if(isset($data['detail']->meta_tags) && !empty($data['detail']->meta_tags))
+      {!! $data['detail']->meta_tags !!}
+  @endif
+  @if(isset($home->meta_title) && !empty($home->meta_title))
+    <meta property="og:title" content="{{$page_name}}" />
+  @endif
+  @if(isset($home->meta_description) && !empty($home->meta_description))
+    <meta property="og:description" content="{{ $home->meta_description }}" />
+  @endif
+@endsection
+
 @section('content')
 
+@if($home->section_1)
     <!-- banner -->
     <section class="banner" style="background-image: url('{{ $home->first_section_image ? asset($home->first_section_image) : asset('img/Home-banner.png') }}');">
 
@@ -11,271 +36,25 @@
                     <div class="banner-heading">
                         <h1>
                             @php
-    $heading = $home->first_section_heading;
-    $words = explode(' ', $heading);
-    $last_word = array_pop($words);
-    $new_heading = implode(' ', $words) . ' <span>' . $last_word . '</span>';
-    $button_name = "Button";
-    $button_url = "#";
-@endphp
+                                $heading = $home->first_section_heading;
+                                $words = explode(' ', $heading);
+                                $last_word = array_pop($words);
+                                $new_heading = implode(' ', $words) . ' <span>' . $last_word . '</span>';
+                                $button_name = "Button";
+                                $button_url = "#";
+                            @endphp
 
-
-{!! $new_heading !!}
-</h1>
+                            {!! $new_heading !!}
+                        </h1>
                     </div>
-                    <div class="banner-form mobile-none">
-                        <div class="banner-form mobile-none">
-                            <div class="TopTabsBar">
-                                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                    @php
-                                            $list_property = json_decode($home->list_property); // true for associative array
-                                            if (json_last_error() !== JSON_ERROR_NONE) {
-                                                echo "JSON Decode Error: " . json_last_error_msg();
-                                            }
-                                              $firstActive = true;
-                                              $contentActive = true;
-                                    @endphp
-
-                                    @if($list_property->buy)
-                                    <li class="nav-item"> <a class="nav-link {{ $firstActive ? 'active show' : '' }}" id="home-tab" data-toggle="tab"
-                                            href="#Buy" role="tab" aria-controls="home" aria-selected="true">Buy</a>
-                                    </li>
-                                    @php $firstActive = false; @endphp
-                                    @endif
-                                    @if($list_property->rent)
-                                    <li class="nav-item"> <a class="nav-link {{ $firstActive ? 'active show' : '' }}" id="profile-tab" data-toggle="tab"
-                                            href="#Rent" role="tab" aria-controls="profile"
-                                            aria-selected="false">Rent</a> </li>
-                                    @php $firstActive = false; @endphp
-                                    @endif
-                                    @if($list_property->project)
-                                    <li class="nav-item"> <a class="nav-link {{ $firstActive ? 'active show' : '' }}" id="profile-tab" data-toggle="tab"
-                                            href="#Project" role="tab" aria-controls="profile"
-                                            aria-selected="false">Project</a> </li>
-                                    @php $firstActive = false; @endphp
-                                    @endif
-                                    @if($list_property->private)
-                                    <li class="nav-item"> <a class="nav-link {{ $firstActive ? 'active show' : '' }}" id="profile-tab" data-toggle="tab"
-                                            href="#Private" role="tab" aria-controls="profile"
-                                            aria-selected="false">Private</a> </li>
-                                    @php $firstActive = false; @endphp
-                                    @endif
-                                    @if($list_property->international)
-                                    <li class="nav-item"> <a class="nav-link {{ $firstActive ? 'active show' : '' }}" id="profile-tab" data-toggle="tab"
-                                            href="#International" role="tab" aria-controls="profile"
-                                            aria-selected="false">International</a> </li>
-                                    @php $firstActive = false; @endphp
-                                    @endif
-                                </ul>
-                            </div>
-                            <div class="tab-content">
-                                @if($list_property->buy)
-                                <div id="Buy" class="tab-pane fade {{ $contentActive ? 'active show' : '' }}">
-                                    <form action="#">
-                                        <div class="BookingBox">
-                                            <div class="BookingLocation">
-                                                <div class="BookingFrom"> <input type="" name=""
-                                                        class="form-control" placeholder="Search country and city...">
-                                                </div>
-                                                <div class="BookingFrom p-0"> <select class="form-control">
-                                                        <option>Property Type</option>
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                    </select> </div>
-                                                <div class="BookingFrom p-0"> <select class="form-control">
-                                                        <option>Buy</option>
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                    </select> </div>
-                                                <div class="BookingFrom p-0"> <select class="form-control">
-                                                        <option>Beds</option>
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                    </select> </div>
-                                                <div class="BookingFrom p-0"> <select class="form-control">
-                                                        <option>Price</option>
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                    </select> </div>
-                                                <div class="BookingFromBtn"> <a href="#"><img
-                                                            src="{{ asset('img/search.svg') }}"></a> </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                @php $contentActive = false; @endphp
-                                @endif
-                                @if($list_property->rent)
-                                <div id="Rent" class="tab-pane fade {{ $contentActive ? 'active show' : '' }}">
-                                    <form>
-                                        <div class="BookingBox">
-                                            <div class="BookingLocation">
-                                                <div class="BookingFrom"> <input type="" name=""
-                                                        class="form-control" placeholder="Search country and city...">
-                                                </div>
-                                                <div class="BookingFrom p-0"> <select class="form-control">
-                                                        <option>Property Type</option>
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                    </select> </div>
-                                                <div class="BookingFrom p-0"> <select class="form-control">
-                                                        <option>Buy</option>
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                    </select> </div>
-                                                <div class="BookingFrom p-0"> <select class="form-control">
-                                                        <option>Beds</option>
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                    </select> </div>
-                                                <div class="BookingFrom p-0"> <select class="form-control">
-                                                        <option>Price</option>
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                    </select> </div>
-                                                <div class="BookingFromBtn"> <a href="#"><img
-                                                            src="{{ asset('img/search.svg') }}"></a> </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                @php $contentActive = false; @endphp
-                                @endif
-                                @if($list_property->project)
-                                <div id="Project" class="tab-pane fade {{ $contentActive ? 'active show' : '' }}">
-                                    <form>
-                                        <div class="BookingBox">
-                                            <div class="BookingLocation">
-                                                <div class="BookingFrom"> <input type="" name=""
-                                                        class="form-control" placeholder="Search country and city...">
-                                                </div>
-                                                <div class="BookingFrom p-0"> <select class="form-control">
-                                                        <option>Property Type</option>
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                    </select> </div>
-                                                <div class="BookingFrom p-0"> <select class="form-control">
-                                                        <option>Buy</option>
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                    </select> </div>
-                                                <div class="BookingFrom p-0"> <select class="form-control">
-                                                        <option>Beds</option>
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                    </select> </div>
-                                                <div class="BookingFrom p-0"> <select class="form-control">
-                                                        <option>Price</option>
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                    </select> </div>
-                                                <div class="BookingFromBtn"> <a href="#"><img
-                                                            src="{{ asset('img/search.svg') }}"></a> </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                @php $contentActive = false; @endphp
-                                @endif
-                                @if($list_property->private)
-                                <div id="Private" class="tab-pane fade {{ $contentActive ? 'active show' : '' }}">
-                                    <form>
-                                        <div class="BookingBox">
-                                            <div class="BookingLocation">
-                                                <div class="BookingFrom"> <input type="" name=""
-                                                        class="form-control" placeholder="Search country and city...">
-                                                </div>
-                                                <div class="BookingFrom p-0"> <select class="form-control">
-                                                        <option>Property Type</option>
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                    </select> </div>
-                                                <div class="BookingFrom p-0"> <select class="form-control">
-                                                        <option>Buy</option>
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                    </select> </div>
-                                                <div class="BookingFrom p-0"> <select class="form-control">
-                                                        <option>Beds</option>
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                    </select> </div>
-                                                <div class="BookingFrom p-0"> <select class="form-control">
-                                                        <option>Price</option>
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                    </select> </div>
-                                                <div class="BookingFromBtn"> <a href="#"><img
-                                                            src="{{ asset('img/search.svg') }}"></a> </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                @php $contentActive = false; @endphp
-                                @endif
-                                @if($list_property->international)
-                                <div id="International" class="tab-pane fade {{ $contentActive ? 'active show' : '' }}">
-                                    <form>
-                                        <div class="BookingBox">
-                                            <div class="BookingLocation">
-                                                <div class="BookingFrom"> <input type="" name=""
-                                                        class="form-control" placeholder="Search country and city...">
-                                                </div>
-                                                <div class="BookingFrom p-0"> <select class="form-control">
-                                                        <option>Property Type</option>
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                    </select> </div>
-                                                <div class="BookingFrom p-0"> <select class="form-control">
-                                                        <option>Buy</option>
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                    </select> </div>
-                                                <div class="BookingFrom p-0"> <select class="form-control">
-                                                        <option>Beds</option>
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                    </select> </div>
-                                                <div class="BookingFrom p-0"> <select class="form-control">
-                                                        <option>Price</option>
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                    </select> </div>
-                                                <div class="BookingFromBtn"> <a href="#"><img
-                                                            src="{{ asset('img/search.svg') }}"></a> </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                @php $contentActive = false; @endphp
-                                @endif
-                            </div>
-                        </div>
-                    </div>
+                    {!! searchBox() !!}
                 </div>
             </div>
         </div>
     </section>
+    @endif
+
+    
     @if($home->section_2)
     <section class="space panel-sec mobile-none">
         <div class="container">
@@ -295,7 +74,7 @@
                     @endphp
                     <div class="col-lg-7 col-md-6 col-12">
                         <div class="panel-sec-content">
-                            <p>{{ Str::words($home->second_description, 45, '...') }}</p> <a
+                            <p>{!! Str::words($home->second_description, 45, '...') !!}</p> <a
                                 href="{{$buttonUrl_2}}" class="link-btn">{{$buttonName_1}}<img
                                     src="{{ asset('img/arrow.svg') }}"></a>
                         </div>
@@ -305,6 +84,7 @@
         </div>
     </section> <!-- section -->
     @endif
+
     @if($home->section_3)
     <section class="space position-relative">
         <div class="container">
@@ -316,66 +96,65 @@
                     <div class="col-lg-4 col-12"></div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="cards-main">
-                        <div class="owl-carousel owl-loaded owl-drag" id="instructor-slider">
 
+              <div class="row">
+                    <div class="col-12">
+                        <div class="cards-main">
+                            <div class="owl-carousel" id="instructor-slider">
 
-
-                            <div class="owl-stage-outer owl-height" style="height: 468.328px;">
-                                <div class="owl-stage"
-                                    style="transform: translate3d(-1270px, 0px, 0px); transition: all; width: 4128px;">
-                                        @if(isset($featured_properties) && !empty($featured_properties))
+                                         @if(isset($featured_properties) && !empty($featured_properties))
                                             @foreach($featured_properties as $featured)
-                                                <div class="owl-item cloned" style="width: 297.5px; margin-right: 20px;">
-                                                    <div class="item">
-                                                        <div class="card-box">
-                                                            <a href="#">
-                                                                <figure>
-                                                                    <div class="VillaText">
-                                                                        <p>Villa</p>
-                                                                    </div>
-                                                                    <img src="{{ asset($featured->featured_image) }}" alt="Featured Image">
-                                                                    <div class="Wishlist">
-                                                                        <img class="heart-o-icon" src="{{ asset('img/heart-o.svg') }}">
-                                                                        <img src="{{ asset('img/heart.svg') }}" class="heart-icon">
-                                                                    </div>
-                                                                </figure>
-                                                            </a>
-                                                            <figcaption>
-                                                                <a href="#">
-                                                                    <h3>{{ $featured->name }}</h3>
-                                                                    <p><img src="{{ asset('img/map.svg') }}">{{ $featured->address}}</p>
-                                                                    <div class="HotelViews">
-                                                                        <ul>
-                                                                            <li><img src="{{ asset('img/1.svg') }}"> {{ number_format($featured->area) }} SQ FT</li>
-                                                                            @if($featured->bed)
-                                                                            <li><img src="{{ asset('img/2.svg') }}"> {{ $featured->bed }}</li>
-                                                                            @endif
-                                                                            @if($featured->jacuzzi)
-                                                                            <li><img src="{{ asset('img/3.svg') }}"> {{ $featured->jacuzzi }}</li>
-                                                                            @endif
-                                                                        </ul>
-                                                                    </div>
-                                                                    <h6><span>$</span> {{ number_format($featured->sale_price) }}/-</h6>
-                                                                </a>
-                                                            </figcaption>
-                                                        </div>
-                                                    </div>
+                                <div class="item">
+                                    <div class="card-box"> 
+                                        
+                                            <figure>
+                                                <div class="VillaText">
+                                                    <p>Villa</p>
                                                 </div>
-                                            @endforeach
-                                        @endif
+                                                <a href="{{ route('detail.page',$featured->slug) }}">
+                                                    @if($featured->featured_image)
+                                                        <img src="{{ asset($featured->featured_image) }}" alt="Featured Image">
+                                                    @else
+                                                        <img src="{{ asset('img/list/3.png') }}" alt="Featured Image">
+                                                    @endif  
+                                                </a>
+                                                <div class="Wishlist {{ in_array(route('detail.page', $featured->slug), $wish) ? 'added' : '' }}" 
+                                                    data-id="{{ $featured->id }}" 
+                                                    data-type="{{ $featured->property_source }}" 
+                                                    data-url="{{ route('detail.page', $featured->slug) }}"  
+                                                    data-auth="{{ isset(auth()->user()->id) ? auth()->user()->id : '' }}">
+                                                    <img class="heart-o-icon" src="{{ asset('img/heart-o.svg') }}">
+                                                    <img src="{{ asset('img/heart.svg') }}" class="heart-icon">
+                                                </div>
+
+                                            </figure>
+                                      
+                                        <figcaption>
+                                            <a href="#">
+                                                <h3>{{ $featured->name }}</h3>
+                                                <span class="d-flex align-items-start"><img  style="width: 12px;margin-right: 7px;margin-top: 6px;" src="{{ asset('img/map.svg') }}"><span>{!! $featured->address !!}</span></span>
+                                                <div class="HotelViews">
+                                                    <ul>
+                                                        <li><img src="{{ asset('img/1.svg') }}"> {{ number_format($featured->area) }} SQ FT</li>
+                                                        @if($featured->bed)
+                                                        <li><img src="{{ asset('img/2.svg') }}"> {{ $featured->bed }}</li>
+                                                        @endif
+                                                        @if($featured->jacuzzi)
+                                                        <li><img src="{{ asset('img/3.svg') }}"> {{ $featured->jacuzzi }}</li>
+                                                        @endif
+                                                    </ul>
+                                                </div>
+                                                <h6><span>$</span> {{ number_format($featured->sale_price) }}/-</h6>
+                                            </a>
+                                        </figcaption>
+                                    </div>
                                 </div>
+                            @endforeach
+                            @endif
                             </div>
-                            <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><span
-                                        aria-label="Previous">‹</span></button><button type="button" role="presentation"
-                                    class="owl-next"><span aria-label="Next">›</span></button></div>
-                            <div class="owl-dots disabled"></div>
                         </div>
                     </div>
                 </div>
-            </div> <!-- view all -->
             <div class="view-all">
                 <div class="row">
                      @php
@@ -412,7 +191,7 @@
                         </div>
                     </div>
                     <div class="col-12">
-                        <p>{{ Str::words($home->fourth_description, 45, '...') }}</p>
+                        <p>{!! Str::words($home->fourth_description, 45, '...') !!}</p>
                     </div>
                 </div>
             </div>
@@ -424,8 +203,9 @@
                                     <figure> <img src="{{ asset($private->featured_image) }}" class="" alt="">
                                         <figcaption>
                                             <div class="add-grp">
-                                                <div class="VillaText">Villa</div>
-                                                <p><img src="{{ asset('img/map.svg') }}">{{ $private->address}}</p>
+                                                <div class="VillaText">                                                
+                                                Villa</div>
+                                                <p><img src="{{ asset('img/map.svg') }}">{!! strip_tags($private->address) !!}</p>
                                             </div>
                                             <h3>{{ $private->name }}</h3>
                                             <div class="HotelViews">
@@ -607,105 +387,50 @@
                 $name = $jsonData['buttonName'] ?? $button_name;
                 $url = $jsonData['buttonUrl'] ?? $button_url;
             @endphp
-            <div class="international-main" style="background-image: url('{{ $home->fifth_section_image ? asset($home->fifth_section_image) : asset('img/international-bg.png') }}');">
+            <div class="international-main" id="international-main" 
+     style="background-image: url('{{ $home->fifth_section_image ? asset($home->fifth_section_image) : asset('img/international-bg.png') }}');">
                 <div class="row">
                     <div class="col-12">
                         <div class="tabs-grp">
-                            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                <li class="nav-item" role="presentation"> <a class="nav-link active" id="Africa-tab"
-                                        data-toggle="tab" data-target="#Africa" type="button" role="tab"
-                                        aria-controls="home" aria-selected="true">Africa</a> </li>
-                                <li class="nav-item"> <a class="nav-link" id="Europe-tab" data-toggle="tab"
-                                        data-target="#Europe" type="button" role="tab" aria-controls="profile"
-                                        aria-selected="false">Europe</a> </li>
-                                <li class="nav-item"> <a class="nav-link" id="Middle-tab" data-toggle="tab"
-                                        data-target="#MiddleEast" type="button" role="tab" aria-controls="contact"
-                                        aria-selected="false">Middle East</a> </li>
-                                <li class="nav-item"> <a class="nav-link" id="North-tab" data-toggle="tab"
-                                        data-target="#NorthAmerica" type="button" role="tab"
-                                        aria-controls="contact" aria-selected="false">North America</a> </li>
-                                <li class="nav-item"> <a class="nav-link" id="South-tab" data-toggle="tab"
-                                        data-target="#SouthAfrica" type="button" role="tab" aria-controls="contact"
-                                        aria-selected="false">South Africa</a> </li>
+                            <ul class="nav nav-tabs" id="myTab0" role="tablist">
+                                @if(isset($regions) && !empty($regions))
+                                    @php $first1 = true; @endphp
+                                    @foreach($regions as $item)
+                                        <li class="nav-item" role="presentation"> 
+                                            <a class="nav-link {{ $first1 ? 'active' : '' }}" id="Africa-tab{{ $item->id }}"
+                                            data-toggle="tab" data-image="{{ asset($item->image_url) }}" 
+                                            data-target="#Africa{{ $item->id }}" type="button" role="tab"
+                                            aria-controls="home" aria-selected="true">{{ $item->name }}</a> 
+                                        </li>
+                                        @php $first1 = false; @endphp
+                                    @endforeach
+                                @endif
                             </ul>
                             <div class="tab-content" id="myTabContent">
-                                <div class="tab-pane fade show active" id="Africa" role="tabpanel"
-                                    aria-labelledby="Africa-tab">
-                                    <div class="tabs-caption fff">
-                                        <div class="row">
-                                            <div class="col-lg-4 col-md-8 col-12">
-                                                <div class="heading-pnel m-0 fff">
-                                                    <h2 class="m-0">Africa</h2>
-                                                    <p>Morgan’s International Realty is a luxury real estate brokerage and
-                                                        property investment consultancy firm. Established in Dubai was just
-                                                        evolving empowered by a joint effort...</p>
-                                                    <div class="btn-grp"> <a href="{{$url}}" class="border-btn fff">{{$name}}</a> </div>
+                                @if(isset($regions) && !empty($regions))
+                                    @php $first = true; @endphp
+                                    @foreach($regions as $item)
+                                        <div class="tab-pane fade {{ $first ? 'show active' : '' }}" 
+                                            id="Africa{{ $item->id }}" role="tabpanel"
+                                            aria-labelledby="Africa-tab{{ $item->id }}">
+                                            <div class="tabs-caption fff">
+                                                <div class="row">
+                                                    <div class="col-lg-4 col-md-8 col-12">
+                                                        <div class="heading-pnel m-0 fff">
+                                                            <h2 class="m-0">{{ $item->name }}</h2>
+                                                            <p>{!! Str::words($item->description, 45, '...') !!}</p>
+                                                            <div class="btn-grp"> 
+                                                                        
+                                                                <a href="{{ route('search') }}?prop_for=international&region={{$item->id}}" class="border-btn fff">{{$name}}</a> 
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="Europe" role="tabpanel" aria-labelledby="Europe-tab">
-                                    <div class="tabs-caption fff">
-                                        <div class="row">
-                                            <div class="col-lg-4 col-md-8 col-12">
-                                                <div class="heading-pnel m-0 fff">
-                                                    <h2 class="m-0">Europe</h2>
-                                                    <p>Morgan’s International Realty is a luxury real estate brokerage and
-                                                        property investment consultancy firm. Established in Dubai was just
-                                                        evolving empowered by a joint effort...</p>
-                                                    <div class="btn-grp"> <a href="{{$url}}" class="border-btn fff">{{$name}}</a> </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="MiddleEast" role="tabpanel" aria-labelledby="Middle-tab">
-                                    <div class="tabs-caption fff">
-                                        <div class="row">
-                                            <div class="col-lg-4 col-md-8 col-12">
-                                                <div class="heading-pnel m-0 fff">
-                                                    <h2 class="m-0">Middle East</h2>
-                                                    <p>Morgan’s International Realty is a luxury real estate brokerage and
-                                                        property investment consultancy firm. Established in Dubai was just
-                                                        evolving empowered by a joint effort...</p>
-                                                    <div class="btn-grp"> <a href="{{$url}}" class="border-btn fff">{{$name}}</a> </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="NorthAmerica" role="tabpanel"
-                                    aria-labelledby="North-tab">
-                                    <div class="tabs-caption fff">
-                                        <div class="row">
-                                            <div class="col-lg-4 col-md-8 col-12">
-                                                <div class="heading-pnel m-0 fff">
-                                                    <h2 class="m-0">North America</h2>
-                                                    <p>Morgan’s International Realty is a luxury real estate brokerage and
-                                                        property investment consultancy firm. Established in Dubai was just
-                                                        evolving empowered by a joint effort...</p>
-                                                    <div class="btn-grp"> <a href="{{$url}}" class="border-btn fff">{{$name}}</a> </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="SouthAfrica" role="tabpanel" aria-labelledby="South-tab">
-                                    <div class="tabs-caption fff">
-                                        <div class="row">
-                                            <div class="col-lg-4 col-md-8 col-12">
-                                                <div class="heading-pnel m-0 fff">
-                                                    <h2 class="m-0">South Africa</h2>
-                                                    <p>Morgan’s International Realty is a luxury real estate brokerage and
-                                                        property investment consultancy firm. Established in Dubai was just
-                                                        evolving empowered by a joint effort...</p>
-                                                    <div class="btn-grp"> <a href="{{$url}}" class="border-btn fff">{{$name}}</a></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                        @php $first = false; @endphp
+                                    @endforeach
+                                @endif  
                             </div>
                         </div>
                     </div>
@@ -725,275 +450,38 @@
                     <div class="col-lg-6 col-12"></div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="cards-main">
-                        <div class="owl-carousel owl-loaded owl-drag" id="NewDevelopment">
-
-
-
-
-
-                            <div class="owl-stage-outer owl-height" style="height: 364.438px;">
-                                <div class="owl-stage"
-                                    style="transform: translate3d(-1270px, 0px, 0px); transition: all; width: 4128px;">
-                                    <div class="owl-item cloned" style="width: 297.5px; margin-right: 20px;">
-                                        <div class="item">
-                                            <div class="new-development card-box"> <a href="#">
-                                                    <figure> <img src="{{ asset('img/2(2).png') }}" class=""
-                                                            alt="">
-                                                        <div class="Wishlist"><img class="heart-o-icon"
-                                                                src="{{ asset('img/heart-o.svg') }}"><img
-                                                                src="{{ asset('img/heart.svg') }}" class="heart-icon">
-                                                        </div>
-                                                    </figure>
-                                                </a>
-                                                <figcaption> <a href="#">
-                                                        <h3>Bugatti Residences at Business Bay</h3>
-                                                        <p><img src="{{ asset('img/map.svg') }}">75 Prince St, NY, USA
-                                                        </p>
-                                                    </a> </figcaption>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="owl-item cloned" style="width: 297.5px; margin-right: 20px;">
-                                        <div class="item">
-                                            <div class="new-development card-box"> <a href="#">
-                                                    <figure> <img src="{{ asset('img/3(2).png') }}" class=""
-                                                            alt="">
-                                                        <div class="Wishlist"><img class="heart-o-icon"
-                                                                src="{{ asset('img/heart-o.svg') }}"><img
-                                                                src="{{ asset('img/heart.svg') }}" class="heart-icon">
-                                                        </div>
-                                                    </figure>
-                                                </a>
-                                                <figcaption> <a href="#">
-                                                        <h3>Bugatti Residences at Business Bay</h3>
-                                                        <p><img src="{{ asset('img/map.svg') }}">75 Prince St, NY, USA
-                                                        </p>
-                                                    </a> </figcaption>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="owl-item cloned" style="width: 297.5px; margin-right: 20px;">
-                                        <div class="item">
-                                            <div class="new-development card-box"> <a href="#">
-                                                    <figure> <img src="{{ asset('img/4(2).png') }}" class=""
-                                                            alt="">
-                                                        <div class="Wishlist"><img class="heart-o-icon"
-                                                                src="{{ asset('img/heart-o.svg') }}"><img
-                                                                src="{{ asset('img/heart.svg') }}" class="heart-icon">
-                                                        </div>
-                                                    </figure>
-                                                </a>
-                                                <figcaption> <a href="#">
-                                                        <h3>Bugatti Residences at Business Bay</h3>
-                                                        <p><img src="{{ asset('img/map.svg') }}">75 Prince St, NY, USA
-                                                        </p>
-                                                    </a> </figcaption>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="owl-item cloned" style="width: 297.5px; margin-right: 20px;">
-                                        <div class="item">
-                                            <div class="new-development card-box"> <a href="#">
-                                                    <figure> <img src="{{ asset('img/1(2).png') }}" class=""
-                                                            alt="">
-                                                        <div class="Wishlist"><img class="heart-o-icon"
-                                                                src="{{ asset('img/heart-o.svg') }}"><img
-                                                                src="{{ asset('img/heart.svg') }}" class="heart-icon">
-                                                        </div>
-                                                    </figure>
-                                                </a>
-                                                <figcaption> <a href="#">
-                                                        <h3>Bugatti Residences at Business Bay</h3>
-                                                        <p><img src="{{ asset('img/map.svg') }}">75 Prince St, NY, USA
-                                                        </p>
-                                                    </a> </figcaption>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="owl-item active" style="width: 297.5px; margin-right: 20px;">
-                                        <div class="item">
-                                            <div class="new-development card-box"> <a href="#">
-                                                    <figure> <img src="{{ asset('img/1(2).png') }}" class=""
-                                                            alt="">
-                                                        <div class="Wishlist"><img class="heart-o-icon"
-                                                                src="{{ asset('img/heart-o.svg') }}"><img
-                                                                src="{{ asset('img/heart.svg') }}" class="heart-icon">
-                                                        </div>
-                                                    </figure>
-                                                </a>
-                                                <figcaption> <a href="#">
-                                                        <h3>Bugatti Residences at Business Bay</h3>
-                                                        <p><img src="{{ asset('img/map.svg') }}">75 Prince St, NY, USA
-                                                        </p>
-                                                    </a> </figcaption>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="owl-item active" style="width: 297.5px; margin-right: 20px;">
-                                        <div class="item">
-                                            <div class="new-development card-box"> <a href="#">
-                                                    <figure> <img src="{{ asset('img/2(2).png') }}" class=""
-                                                            alt="">
-                                                        <div class="Wishlist"><img class="heart-o-icon"
-                                                                src="{{ asset('img/heart-o.svg') }}"><img
-                                                                src="{{ asset('img/heart.svg') }}" class="heart-icon">
-                                                        </div>
-                                                    </figure>
-                                                </a>
-                                                <figcaption> <a href="#">
-                                                        <h3>Bugatti Residences at Business Bay</h3>
-                                                        <p><img src="{{ asset('img/map.svg') }}">75 Prince St, NY, USA
-                                                        </p>
-                                                    </a> </figcaption>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="owl-item active" style="width: 297.5px; margin-right: 20px;">
-                                        <div class="item">
-                                            <div class="new-development card-box"> <a href="#">
-                                                    <figure> <img src="{{ asset('img/3(2).png') }}" class=""
-                                                            alt="">
-                                                        <div class="Wishlist"><img class="heart-o-icon"
-                                                                src="{{ asset('img/heart-o.svg') }}"><img
-                                                                src="{{ asset('img/heart.svg') }}" class="heart-icon">
-                                                        </div>
-                                                    </figure>
-                                                </a>
-                                                <figcaption> <a href="#">
-                                                        <h3>Bugatti Residences at Business Bay</h3>
-                                                        <p><img src="{{ asset('img/map.svg') }}">75 Prince St, NY, USA
-                                                        </p>
-                                                    </a> </figcaption>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="owl-item active" style="width: 297.5px; margin-right: 20px;">
-                                        <div class="item">
-                                            <div class="new-development card-box"> <a href="#">
-                                                    <figure> <img src="{{ asset('img/4(2).png') }}" class=""
-                                                            alt="">
-                                                        <div class="Wishlist"><img class="heart-o-icon"
-                                                                src="{{ asset('img/heart-o.svg') }}"><img
-                                                                src="{{ asset('img/heart.svg') }}" class="heart-icon">
-                                                        </div>
-                                                    </figure>
-                                                </a>
-                                                <figcaption> <a href="#">
-                                                        <h3>Bugatti Residences at Business Bay</h3>
-                                                        <p><img src="{{ asset('img/map.svg') }}">75 Prince St, NY, USA
-                                                        </p>
-                                                    </a> </figcaption>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="owl-item" style="width: 297.5px; margin-right: 20px;">
-                                        <div class="item">
-                                            <div class="new-development card-box"> <a href="#">
-                                                    <figure> <img src="{{ asset('img/1(2).png') }}" class=""
-                                                            alt="">
-                                                        <div class="Wishlist"><img class="heart-o-icon"
-                                                                src="{{ asset('img/heart-o.svg') }}"><img
-                                                                src="{{ asset('img/heart.svg') }}" class="heart-icon">
-                                                        </div>
-                                                    </figure>
-                                                </a>
-                                                <figcaption> <a href="#">
-                                                        <h3>Bugatti Residences at Business Bay</h3>
-                                                        <p><img src="{{ asset('img/map.svg') }}">75 Prince St, NY, USA
-                                                        </p>
-                                                    </a> </figcaption>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="owl-item cloned" style="width: 297.5px; margin-right: 20px;">
-                                        <div class="item">
-                                            <div class="new-development card-box"> <a href="#">
-                                                    <figure> <img src="{{ asset('img/1(2).png') }}" class=""
-                                                            alt="">
-                                                        <div class="Wishlist"><img class="heart-o-icon"
-                                                                src="{{ asset('img/heart-o.svg') }}"><img
-                                                                src="{{ asset('img/heart.svg') }}" class="heart-icon">
-                                                        </div>
-                                                    </figure>
-                                                </a>
-                                                <figcaption> <a href="#">
-                                                        <h3>Bugatti Residences at Business Bay</h3>
-                                                        <p><img src="{{ asset('img/map.svg') }}">75 Prince St, NY, USA
-                                                        </p>
-                                                    </a> </figcaption>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="owl-item cloned" style="width: 297.5px; margin-right: 20px;">
-                                        <div class="item">
-                                            <div class="new-development card-box"> <a href="#">
-                                                    <figure> <img src="{{ asset('img/2(2).png') }}" class=""
-                                                            alt="">
-                                                        <div class="Wishlist"><img class="heart-o-icon"
-                                                                src="{{ asset('img/heart-o.svg') }}"><img
-                                                                src="{{ asset('img/heart.svg') }}" class="heart-icon">
-                                                        </div>
-                                                    </figure>
-                                                </a>
-                                                <figcaption> <a href="#">
-                                                        <h3>Bugatti Residences at Business Bay</h3>
-                                                        <p><img src="{{ asset('img/map.svg') }}">75 Prince St, NY, USA
-                                                        </p>
-                                                    </a> </figcaption>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="owl-item cloned" style="width: 297.5px; margin-right: 20px;">
-                                        <div class="item">
-                                            <div class="new-development card-box"> <a href="#">
-                                                    <figure> <img src="{{ asset('img/3(2).png') }}" class=""
-                                                            alt="">
-                                                        <div class="Wishlist"><img class="heart-o-icon"
-                                                                src="{{ asset('img/heart-o.svg') }}"><img
-                                                                src="{{ asset('img/heart.svg') }}" class="heart-icon">
-                                                        </div>
-                                                    </figure>
-                                                </a>
-                                                <figcaption> <a href="#">
-                                                        <h3>Bugatti Residences at Business Bay</h3>
-                                                        <p><img src="{{ asset('img/map.svg') }}">75 Prince St, NY, USA
-                                                        </p>
-                                                    </a> </figcaption>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="owl-item cloned" style="width: 297.5px; margin-right: 20px;">
-                                        <div class="item">
-                                            <div class="new-development card-box"> <a href="#">
-                                                    <figure> <img src="{{ asset('img/4(2).png') }}" class=""
-                                                            alt="">
-                                                        <div class="Wishlist"><img class="heart-o-icon"
-                                                                src="{{ asset('img/heart-o.svg') }}"><img
-                                                                src="{{ asset('img/heart.svg') }}" class="heart-icon">
-                                                        </div>
-                                                    </figure>
-                                                </a>
-                                                <figcaption> <a href="#">
-                                                        <h3>Bugatti Residences at Business Bay</h3>
-                                                        <p><img src="{{ asset('img/map.svg') }}">75 Prince St, NY, USA
-                                                        </p>
-                                                    </a> </figcaption>
-                                            </div>
-                                        </div>
+             <div class="row">
+                    <div class="col-12">
+                        <div class="cards-main">
+                            <div class="owl-carousel" id="NewDevelopment">
+                                
+                                @if(isset($project_propertie) && !empty($project_propertie))
+                                        @foreach($project_propertie as $item)
+                                <div class="item">
+                                    <div class="new-development card-box"> 
+                                              <figure><a href="{{ route('devlopment.detail_page',$item->slug) }}"><img src="{{ asset($item->featured_image) }}" class=""
+                                                                alt=""></a>
+                                                                <div class="Wishlist {{ in_array(route('devlopment.detail_page',$item->slug), $wish) ? 'added' : '' }}" 
+                                                                    data-id="{{ $item->id }}" 
+                                                                    data-type="{{ $item->property_source }}" 
+                                                                    data-url="{{ route('devlopment.detail_page', $item->slug) }}"  
+                                                                    data-auth="{{ isset(auth()->user()->id) ? auth()->user()->id : '' }}">
+                                                                    <img class="heart-o-icon" src="{{ asset('img/heart-o.svg') }}">
+                                                                    <img src="{{ asset('img/heart.svg') }}" class="heart-icon">
+                                                                </div>
+                                                        </figure>
+                                         <figcaption> <a href="{{ route('devlopment.detail_page',$item->slug) }}">
+                                                            <h3>{{ $item->name }}</h3>
+                                                            <p><img src="{{ asset('img/map.svg') }}">{!! strip_tags($item->address) !!}</p>
+                                                        </a> </figcaption>
                                     </div>
                                 </div>
+                                @endforeach
+                                @endif
                             </div>
-                            <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><span
-                                        aria-label="Previous">‹</span></button><button type="button" role="presentation"
-                                    class="owl-next"><span aria-label="Next">›</span></button></div>
-                            <div class="owl-dots disabled"></div>
                         </div>
                     </div>
-                </div>
-            </div> <!-- view all -->
+                </div> <!-- view all -->
             <div class="view-all">
                 <div class="row">
                     <div class="col-12"> 
@@ -1011,106 +499,19 @@
     </section> <!-- section -->
     @endif
     @if($home->section_7)
-    <section class="Brands-sec">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-3 col-md-4 col-12">
-                    <div class="heading-pnel m-0">
-                        <h2 class="m-0">
-                            @php
-                            $new_heading = "";
-                            $heading = $home->seventh_heading;
-                            $words = explode(' ', $heading);
-                            $last_word = array_pop($words);
-                            $new_heading = implode(' ', $words) . ' <br>' . $last_word ;
-                            @endphp
-
-                            {!! $new_heading !!}
-                        </h2>
-                        <div class="headingBorder"></div>
-                    </div>
-                </div>
-                <div class="col-lg-9 col-md-8 col-12">
-                    <div class="owl-carousel owl-loaded owl-drag" id="Brands">
+    @php
+        $new_heading = "";
+        $heading = $home->seventh_heading;
+        $words = explode(' ', $heading);
+        $last_word = array_pop($words);
+        $new_heading = implode(' ', $words) . ' <br>' . $last_word ;
+        @endphp
 
 
-
-
-
-                        <div class="owl-stage-outer owl-height" style="height: 60px;">
-                            <div class="owl-stage"
-                                style="transform: translate3d(-950px, 0px, 0px); transition: 0.25s; width: 2850px;">
-                                <div class="owl-item cloned" style="width: 170px; margin-right: 20px;">
-                                    <div class="brand-box"> <img src="{{ asset('img/1(3).png') }}" class=""
-                                            alt=""> </div>
-                                </div>
-                                <div class="owl-item cloned" style="width: 170px; margin-right: 20px;">
-                                    <div class="brand-box"> <img src="{{ asset('img/2(3).png') }}" class=""
-                                            alt=""> </div>
-                                </div>
-                                <div class="owl-item cloned" style="width: 170px; margin-right: 20px;">
-                                    <div class="brand-box"> <img src="{{ asset('img/3(3).png') }}" class=""
-                                            alt=""> </div>
-                                </div>
-                                <div class="owl-item cloned" style="width: 170px; margin-right: 20px;">
-                                    <div class="brand-box"> <img src="{{ asset('img/4(3).png') }}" class=""
-                                            alt=""> </div>
-                                </div>
-                                <div class="owl-item cloned" style="width: 170px; margin-right: 20px;">
-                                    <div class="brand-box"> <img src="{{ asset('img/5.png') }}" class=""
-                                            alt=""> </div>
-                                </div>
-                                <div class="owl-item active" style="width: 170px; margin-right: 20px;">
-                                    <div class="brand-box"> <img src="{{ asset('img/1(3).png') }}" class=""
-                                            alt=""> </div>
-                                </div>
-                                <div class="owl-item active" style="width: 170px; margin-right: 20px;">
-                                    <div class="brand-box"> <img src="{{ asset('img/2(3).png') }}" class=""
-                                            alt=""> </div>
-                                </div>
-                                <div class="owl-item active" style="width: 170px; margin-right: 20px;">
-                                    <div class="brand-box"> <img src="{{ asset('img/3(3).png') }}" class=""
-                                            alt=""> </div>
-                                </div>
-                                <div class="owl-item active" style="width: 170px; margin-right: 20px;">
-                                    <div class="brand-box"> <img src="{{ asset('img/4(3).png') }}" class=""
-                                            alt=""> </div>
-                                </div>
-                                <div class="owl-item active" style="width: 170px; margin-right: 20px;">
-                                    <div class="brand-box"> <img src="{{ asset('img/5.png') }}" class=""
-                                            alt=""> </div>
-                                </div>
-                                <div class="owl-item cloned" style="width: 170px; margin-right: 20px;">
-                                    <div class="brand-box"> <img src="{{ asset('img/1(3).png') }}" class=""
-                                            alt=""> </div>
-                                </div>
-                                <div class="owl-item cloned" style="width: 170px; margin-right: 20px;">
-                                    <div class="brand-box"> <img src="{{ asset('img/2(3).png') }}" class=""
-                                            alt=""> </div>
-                                </div>
-                                <div class="owl-item cloned" style="width: 170px; margin-right: 20px;">
-                                    <div class="brand-box"> <img src="{{ asset('img/3(3).png') }}" class=""
-                                            alt=""> </div>
-                                </div>
-                                <div class="owl-item cloned" style="width: 170px; margin-right: 20px;">
-                                    <div class="brand-box"> <img src="{{ asset('img/4(3).png') }}" class=""
-                                            alt=""> </div>
-                                </div>
-                                <div class="owl-item cloned" style="width: 170px; margin-right: 20px;">
-                                    <div class="brand-box"> <img src="{{ asset('img/5.png') }}" class=""
-                                            alt=""> </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="owl-nav disabled"><button type="button" role="presentation" class="owl-prev"><span
-                                    aria-label="Previous">‹</span></button><button type="button" role="presentation"
-                                class="owl-next"><span aria-label="Next">›</span></button></div>
-                        <div class="owl-dots disabled"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> <!-- section -->
+    
+        {!! mediaSection('all',$new_heading); !!}
+        
+     <!-- section -->
     @endif
     @if($home->section_8)
     <section class="space full-width-sec" style="background-image:url(img/full-img.png);">
@@ -1119,7 +520,7 @@
                 <div class="col-12">
                     <div class="heading-pnel fff">
                         <h2 class="m-0">{{$home->eighth_heading}}</h2>
-                        <p>{{ Str::words($home->eighth_description, 45, '...') }}</p>
+                        <p>{!! Str::words($home->eighth_description, 45, '...') !!}</p>
                         <div class="btn-grp"> 
                               @php
                                 $jsonData = [];
@@ -1151,48 +552,38 @@
                     <div class="col-lg-8 col-12">
                         <h2 class="m-0">{{ $home->ninth_heading }}</h2>
                     </div>
+                    @if($home->blog_section_button && $home->blog_section_button_2)
                     <div class="col-lg-4 col-12 mobile-none">
-                        <div class="head-btn"> <a href="#" class="border-btn">View all blogs</a> </div>
+                        <div class="head-btn"> <a href="{{ $home->blog_section_button_2 }}" class="border-btn">{{ $home->blog_section_button }}</a> </div>
                     </div>
+                    @endif
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-3 col-md-6 col-6">
-                    <div class="blog-box">
-                        <figure> <img src="{{ asset('img/1(4).png') }}" class="" alt=""> </figure>
-                        <figcaption> <span>20 APR 2024</span> <a href="#">
-                                <h4>Luxurious Al Barari: A Premier Choice in Dubai's Real Estate Market</h4>
-                            </a> </figcaption>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-6">
-                    <div class="blog-box">
-                        <figure> <img src="{{ asset('img/2(4).png') }}" class="" alt=""> </figure>
-                        <figcaption> <span>20 APR 2024</span> <a href="#">
-                                <h4>Luxurious Al Barari: A Premier Choice in Dubai's Real Estate Market</h4>
-                            </a> </figcaption>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-6">
-                    <div class="blog-box">
-                        <figure> <img src="{{ asset('img/3(4).png') }}" class="" alt=""> </figure>
-                        <figcaption> <span>20 APR 2024</span> <a href="#">
-                                <h4>Luxurious Al Barari: A Premier Choice in Dubai's Real Estate Market</h4>
-                            </a> </figcaption>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-6">
-                    <div class="blog-box">
-                        <figure> <img src="{{ asset('img/4(4).png') }}" class="" alt=""> </figure>
-                        <figcaption> <span>20 APR 2024</span> <a href="#">
-                                <h4>Luxurious Al Barari: A Premier Choice in Dubai's Real Estate Market</h4>
-                            </a> </figcaption>
-                    </div>
-                </div>
+                @if(isset($posts) && !empty($posts))
+                    @foreach($posts as $item)
+                        @php 
+                            $imageLinks = $item->images;
+
+                            $imageArray = explode(',', $imageLinks);
+
+                            $firstImage = isset($imageArray[0]) ? $imageArray[0] : null;
+                        @endphp
+                        <div class="col-lg-3 col-md-6 col-6">
+                            <div class="blog-box">
+                                <figure> <a href="{{ $item->slug ? route('blog', ['slug' => $item->slug]) : '#' }}"><img alt="Image not found" onerror="this.onerror=null; this.src='{{ asset('featured_images/featured_image_1731072533.jpg') }}';"  src="{{ asset('post/'.$firstImage) }}" class="w-100" alt=""></a> </figure>
+                                <figcaption> <span>{{ $item->created_at->format('d M Y') }}</span> <a href="{{ $item->slug ? route('blog', ['slug' => $item->slug]) : '#' }}">
+                                        <h4>{{ $item->name }}</h4>
+                                    </a> </figcaption>
+                            </div>
+                        </div>        
+                    @endforeach
+                @endif
+               
             </div> <!-- view all -->
             <div class="view-all desktop-none">
                 <div class="row">
-                    <div class="col-12"> <a href="#" class="green-btn">View all blogs</a> </div>
+                    <div class="col-12"> <a href="{{ $home->blog_section_button_2 }}" class="green-btn">>{{ $home->blog_section_button }}</a> </div>
                 </div>
             </div>
         </div>
@@ -1206,7 +597,7 @@
                 <div class="col-lg-6">
                     <div class="heading-pnel fff m-0">
                         <h2 class="m-0">{{ $home->tenth_heading }}</h2>
-                        <p>{{ $home->tenth_description }}</p> 
+                        <p>{!! $home->tenth_description !!}</p> 
                             @php
                                 $jsonData = [];
                                 $name = $url = "";
@@ -1222,8 +613,8 @@
         </div>
     </section>
     @endif
-    <div class="mt-4">
-        @include('faq')        
+    <div class="mt-4 home_page">
+        @include('faq', ['page_name' => 'home'])        
     </div>
     <!-- back to top -->
 
@@ -1327,5 +718,18 @@
         </div>
     </div>
 </div>
-
+@endsection
+@section('scripts')   
+<script>
+    // Ensure the document is ready before executing the script
+    jQuery(document).ready(function() {
+        // On tab click
+        $('#myTab0 a').on('click', function() {
+            // Get the background image URL from the clicked tab's data-image attribute
+            var newImage = $(this).data('image');
+            // Set the background image of the international-main div
+            $('#international-main').css('background-image', 'url(' + newImage + ')');
+        });
+    });
+</script>
 @endsection

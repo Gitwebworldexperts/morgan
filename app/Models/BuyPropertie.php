@@ -35,6 +35,10 @@ class BuyPropertie extends Model
         'type',
         'tag',
         'status',
+        'reference_number',
+        'geopoints',
+        'XML',
+        'iframe'
     ];
 
     public function country()
@@ -55,7 +59,7 @@ class BuyPropertie extends Model
 
     public function banners()
     {
-        return $this->hasMany(Banners::class, 'property_id'); // Specify the foreign key
+        return $this->hasMany(Banners::class, 'property_id')->where('page_type', 'buy'); // Specify the foreign key
     }
 
     public static function getFeaturedProperties()

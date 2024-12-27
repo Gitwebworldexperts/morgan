@@ -55,8 +55,21 @@ class ProjectPropertie extends Model
 
     public function banners()
     {
-        return $this->hasMany(Banners::class, 'property_id'); // Specify the foreign key
+        return $this->hasMany(Banners::class, 'property_id')->where('page_type', 'project');
+        // return $this->hasMany(Banners::class, 'property_id'); // Specify the foreign key
     }
+
+    public function plans()
+    {
+        return $this->hasMany(PaymentPlan::class, 'project_id');
+    }
+
+    
+    public function company()
+    {
+        return $this->hasOne(Company::class, 'id', 'company_id');
+    }
+    
 
     public static function getFeaturedProperties()
     {
@@ -72,5 +85,9 @@ class ProjectPropertie extends Model
                    ->orderBy($orderBy, $direction)
                    ->limit($limit)
                    ->get();
+    }
+    public function paymentPlans()
+    {
+        return $this->hasMany(PaymentPlan::class);
     }
 }

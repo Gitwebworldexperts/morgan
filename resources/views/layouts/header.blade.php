@@ -66,7 +66,16 @@
                             </a>
                         </div>
                     @endif
+{{-- 
 
+                    <div class="schedule-call">
+                           
+                        </div>
+                         --}}
+                        
+                        
+                        
+                        
                     @if ($second_button_name && $second_button_url)
                         <div class="schedule-call">
                             <a class="btn green-btn" href="{{ $second_button_url }}">
@@ -88,13 +97,29 @@
                                     <span>Log in</span>
                                 </a>
                             @else
-                                <a class="btn green-btn" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <a class="btn green-btn profile" href="#">
+                                <div class="btn-icon">
+                                    <img src="{{ asset('img/user.svg') }}" class="mobile-none" alt="User Icon Mobile">
+                                    <img src="{{ asset('img/user2.svg') }}" class="desktop-none" alt="User Icon Desktop">
+                                </div>
+                                <span>{{ ucfirst(Auth::user()->name) }}</span>
+                            </a>
+                            
+                            <div class="profile-dropdown">
+                                <ul>
+
+                                    <li><a href="{{ route('wishlist.index') }}">Wishlist</a></li>
+                                    <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log Out</a></li>
+                                </ul>
+                            </div>
+
+                                 {{-- <a class="btn green-btn" >
                                     <div class="btn-icon">
                                         <img src="{{ asset('img/user.svg') }}" class="mobile-none" alt="User Icon Mobile">
                                         <img src="{{ asset('img/user2.svg') }}" class="desktop-none" alt="User Icon Desktop">
                                     </div>
                                     <span>Log Out</span>
-                                </a>
+                                </a> --}}
 
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                     @csrf

@@ -54,13 +54,13 @@
                 @endforeach
             @endif
         </tbody>
-        <tfoot>
+<!--         <tfoot>
             <tr>
                 <th>Heading</th>
                 <th>Slug</th>
                 <th>Action</th>
             </tr>
-        </tfoot>
+        </tfoot> -->
     </table>
 
     </div>

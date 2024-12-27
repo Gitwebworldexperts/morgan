@@ -21,7 +21,7 @@ class ImageUploadService
         $extension = $file->getClientOriginalExtension();
         $newFileName = 'image_' . $timestamp . $key . '.' . $extension;
         // Move the image to the public path
-        $file->move(public_path($path), $newFileName);
+        $file->move($path, $newFileName);
 
         return $path . '/' . $newFileName; // Return the relative path
     }

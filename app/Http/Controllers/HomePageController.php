@@ -154,7 +154,10 @@ class HomePageController extends Controller
         }
         // var_dump(isset($request->section_1)?$request->section_1:0);die;
         // Create a new HomePage entry
+        
         $homePage = HomePage::create([
+            'meta_title' => $request->meta_title,
+            'meta_description' => $request->meta_description,
             'section_1' => isset($request->section_1)?(string)$request->section_1:'0',
             'first_section_image' => $first_section_image ?? '',
             'list_property' => $jsonToggles ?? json_encode([]),
@@ -189,6 +192,8 @@ class HomePageController extends Controller
             'section_9' => $request->section_9?(string)$request->section_9:'0',
             'ninth_heading' => $validatedData['ninth_heading'],
             'toggle_blog_list' => isset($validatedData['toggle_blog_list']) ? $validatedData['toggle_blog_list'] : 1,
+            'blog_section_button' => $request->blog_section_button,
+            'blog_section_button_2' => $request->blog_section_button_2,
             'section_10' => $request->section_10?(string)$request->section_10:'0',
             'tenth_heading' => $validatedData['tenth_heading'],
             'tenth_description' => $validatedData['tenth_description'],
