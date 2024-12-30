@@ -11,7 +11,7 @@ use App\Models\Agent;
 use App\Models\Community;
 use App\Models\Wishlist;
 use App\Models\HomePage;
-
+use App\Models\Option;
 
 use App\Models\RentPropertie;
 use App\Models\ProjectPropertie;
@@ -631,6 +631,28 @@ if (!function_exists('getPropertyDeatil')) {
                 
         return "";
     }
+
+    function getOption($optionName, $default = null)
+    {
+        $option = Option::where('option_name', $optionName)->first();
+
+        if ($option) {
+            return unserialize($option->option_value);  // Assuming data is serialized
+        }
+
+        return $default;
+    }
+
+    function setOption($optionName, $value)
+    {
+        $option = Option::updateOrCreate(
+            ['option_name' => $optionName],
+            ['option_value' => serialize($value)]  // Store serialized data
+        );
+
+        return $option;
+    }
+
 }
 
 

@@ -292,6 +292,7 @@
               <h5>Developer Track Record</h5>
               @php 
                 $records = json_decode($foundProperty->company->track_record);
+                $company_by = route('devlopment.listing') . '?company=' . base64_encode($foundProperty->company->id);
               @endphp
               @if(isset($records->data) && !empty($records->data))
               <div class="record-boxes">
@@ -303,8 +304,8 @@
                 @endforeach
               </div>
               @endif
-              @if(isset($foundProperty->compnay_listing) && isset($foundProperty->compnay_listing_2))
-                <a href="{{ $foundProperty->compnay_listing_2 }}" class="link-btn">{{ $foundProperty->compnay_listing }}</a>
+              @if(isset($foundProperty->compnay_listing))
+                <a href="{{ $foundProperty->compnay_listing_2 ? $foundProperty->compnay_listing_2 : $company_by }}" class="link-btn">{{ $foundProperty->compnay_listing }}</a>
               @endif
             </div>
             @endif

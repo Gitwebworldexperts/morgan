@@ -170,6 +170,13 @@
                                     class="ms-1 d-none d-sm-inline">Agents</span>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('companies.index') }}"
+                                class="@if (request()->is('companies*') || Route::is('companies.index')) active_nav @endif nav-link align-middle px-0">
+                                <i class="fa-solid fa-building"></i> <span
+                                    class="ms-1 d-none d-sm-inline">Companies</span>
+                            </a>
+                        </li>
 
                         <li class="nav-item">
                             <a href="{{ route('communities.index') }}"

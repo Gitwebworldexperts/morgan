@@ -20,6 +20,7 @@ class Company extends Model
         'track_record',
     ];
 
-    // Alternatively, you can use guarded to specify which attributes should NOT be mass assignable.
-    // protected $guarded = [];
+    protected $casts = [
+        'track_record' => 'json',
+    ];
 }

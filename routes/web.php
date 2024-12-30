@@ -45,6 +45,8 @@ use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\XMLController;
 use App\Http\Controllers\ReportIndividualController;
 use App\Http\Controllers\CareerPageController;
+use App\Http\Controllers\CompanyController;
+
 
 
 require base_path('routes/static.php');
@@ -62,7 +64,7 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
     Route::post('admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
 
 Route::prefix('admin')->middleware('admin')->group(function () {
-
+    Route::resource('companies', CompanyController::class);
     Route::resource('regions', RegionController::class);
     Route::get('/upload_file', function () {
         return view('uploadFile'); 

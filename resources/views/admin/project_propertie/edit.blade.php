@@ -358,7 +358,7 @@
 
                 <div class="row">
                     <div class="form-group col-md-6">
-                        <label for="company_id">Company<span class="mandatory">*</span></label>
+                        <label for="company_id">Company<span class="mandatory">*</span> <a href="{{ route('companies.index') }}" target="_blank">Add Company</a></label>
                         <select class="form-control" name="company_id" id="company_id">
                             <option value="">Select an Company</option>
                             @if ($companies)

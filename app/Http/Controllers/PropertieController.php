@@ -505,6 +505,10 @@ class PropertieController extends Controller
     
 
     public function DevelopmentListing(Request $request){
+        
+        if($request->query('company')){
+            $companyId = base64_decode($request->query('company'));
+        }
         $propertyTypes = PropertyType::where('property',$this->property)->get();
         $this->page_title = 'Development Listing';
         $propFor = 'project';
@@ -528,7 +532,11 @@ class PropertieController extends Controller
         // Check if the requested property type exists
         if (array_key_exists($propFor, $propertyTypes)) {
             // Fetch properties with pagination
-            $properties = $propertyTypes[$propFor]::orderBy('id', 'desc')->with('propertyType')->paginate(12); // Change to your desired items per page
+            if(isset($companyId)){
+                $properties = $propertyTypes[$propFor]::where('company_id',$companyId)->orderBy('id', 'desc')->with('propertyType')->paginate(12); // Change to your desired items per page
+            }else{
+                $properties = $propertyTypes[$propFor]::orderBy('id', 'desc')->with('propertyType')->paginate(12); // Change to your desired items per page
+            }
         
                 $top_listing = $propertyTypes[$propFor]::orderBy('id', 'desc')->with('propertyType')->latest()->take(5)->get()->map(function ($item) {
                     $item['property_source'] = 'project';

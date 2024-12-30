@@ -16,18 +16,21 @@
 						                <th>Email</th>
 						                <th>Contact No</th>
 						                <th>Message</th>
+										<th>Source Url</th>
 						            </tr>
 						        </thead>
 						        <tbody>
 						        	@php $count = 0; @endphp
 						            @foreach ($contact as $item)
-						            @php $count = $count+1; @endphp
+						            @php $count = $count+1;
+									@endphp
 						                <tr>
 						                	<td>{{ $count }}</td>
 						                    <td>{{ $item->full_name }}</td>
 						                    <td>{{ $item->email }}</td>
 						                    <td>{{ $item->contact_number }}</td>
 						                    <td>{{ $item->message }}</td>
+											<td><a href="{{ $item->page_name }}" target="_blank" rel="noopener noreferrer">URL</a></td>
 						                </tr>
 						            @endforeach
 						        </tbody>
