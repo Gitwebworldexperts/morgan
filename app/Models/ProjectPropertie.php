@@ -28,6 +28,7 @@ class ProjectPropertie extends Model
         'price',
         'sale_price',
         'is_featured',
+        'is_branded',
         'is_private',
         'country_id',
         'category_id',

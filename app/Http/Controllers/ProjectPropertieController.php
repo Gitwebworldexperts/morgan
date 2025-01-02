@@ -80,6 +80,7 @@ class ProjectPropertieController extends Controller
             $property->price = $request->price;
             $property->sale_price = $request->sale_price;
             $property->is_featured = $request->has('is_featured');
+            $property->is_branded = $request->has('is_branded');
             $property->is_private = $request->has('is_private');
             $property->country_id = $request->country_id;
             $property->category_id = $request->category_id;
@@ -229,6 +230,7 @@ class ProjectPropertieController extends Controller
             $property->price = $request->price;
             $property->is_featured = ($request->has('is_featured'))?$request->has('is_featured'):0;
             $property->is_private = ($request->has('is_private'))?$request->has('is_private'):0;
+            $property->is_branded = ($request->has('is_branded'))?$request->has('is_branded'):0;
             $property->sale_price = $request->sale_price;
             $property->country_id = $request->country_id;
             $property->category_id = $request->category_id;
@@ -310,6 +312,7 @@ class ProjectPropertieController extends Controller
     $property->jacuzzi = $request->has('jacuzzi');
     $property->is_featured = $request->has('is_featured') ? $request->has('is_featured') : 0;
     $property->is_private = $request->has('is_private') ? $request->has('is_private') : 0;
+    $property->is_branded = ($request->has('is_branded'))?$request->has('is_branded'):0;
     $property->country_id = $request->country_id;
     $property->category_id = $request->category_id;
 

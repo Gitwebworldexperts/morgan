@@ -254,3 +254,6 @@ Route::get('/thank-you', function () {
 
 Route::post('/wishlist', [WishlistController::class, 'store'])->name('wishlist.store')->middleware('auth');
 Route::get('/wishlist_page', [WishlistController::class, 'index'])->name('wishlist.index')->middleware('auth');
+
+Route::get('/sendRequest', [FormController::class, 'sendRequest']);
+

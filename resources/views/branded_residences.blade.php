@@ -173,7 +173,14 @@
                                           <figure>
                                               <div class="VillaText">
                                                   <p>{{ ucfirst(isset($property->propertyType->type_name) ? $property->propertyType->type_name: "Villa") }}</p>
-                                              </div> <a href="{{ route('detail.page', $property->slug ?? '#') }}"><img src="{{ asset($property->featured_image) }}"
+                                              </div> 
+                                              @if(isset($property->is_branded) && !empty($property->is_branded))
+                                                <a href="{{ route('devlopment.detail_page', $property->slug ?? '#') }}">
+                                              @else
+                                                <a href="{{ route('detail.page', $property->slug ?? '#') }}">                                              
+                                              @endif
+                                                
+                                              <img src="{{ asset($property->featured_image) }}"
                                                   onerror="this.onerror=null; this.src='{{ asset('img/list/4.png') }}';"
                                                   alt=""></a>
 
@@ -188,10 +195,16 @@
 
 
                                           </figure>
+                                          <figcaption>
                                       
-                                      <figcaption>
-                                          <a href="{{ route('detail.page', $property->slug ?? '#') }}">
-                                              <h3>{{ $property->name }}</h3>
+                                      @if(isset($property->is_branded) && !empty($property->is_branded))
+                                                <a href="{{ route('devlopment.detail_page', $property->slug ?? '#') }}">
+                                              @else
+                                                <a href="{{ route('detail.page', $property->slug ?? '#') }}">                                              
+                                              @endif
+
+                                              
+                                          <h3>{{ $property->name }}</h3>
                                               <p><img src="{{ asset('img/hotel/map.svg') }}">{!! strip_tags($property->address) !!}</p>
                                               <div class="HotelViews">
                                                   <ul>

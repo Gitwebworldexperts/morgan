@@ -147,6 +147,16 @@
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
 
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="is_branded" id="is_branded" value="1" {{ old('is_branded',$property->is_branded) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="is_branded">Is Branded</label>
+                    </div>
+                    @error('is_branded')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+
+                    
+
                     <!-- <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" name="is_private" id="is_private" value="1" {{ old('is_private',$property->is_private) ? 'checked' : '' }}>
                         <label class="form-check-label" for="is_private">Is Private</label>

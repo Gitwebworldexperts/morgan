@@ -124,6 +124,15 @@
                     @enderror
 
                     <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="is_branded" id="is_branded" value="1"
+                            {{ old('is_branded') ? 'checked' : '' }}>
+                        <label class="form-check-label" for="is_branded">Is Branded</label>
+                    </div>
+                    @error('is_branded')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+
+                    <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" name="jacuzzi" id="jacuzzi" value="1"
                             {{ old('jacuzzi') ? 'checked' : '' }}>
                         <label class="form-check-label" for="jacuzzi">Jacuzzi</label>

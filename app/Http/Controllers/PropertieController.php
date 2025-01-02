@@ -24,6 +24,8 @@ use App\Models\BrandedPropertie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class PropertieController extends Controller
 {
@@ -602,25 +604,56 @@ class PropertieController extends Controller
         ];
         $pageBrandedResidence = PageBrandedResidence::latest()->first();
         
-        $properties = $propertyTypes[$propFor]::orderBy('id', 'desc')->with('propertyType')->paginate(12); // Change to your desired items per page
+        // $properties = $propertyTypes[$propFor]::orderBy('id', 'desc')->with('propertyType')->paginate(12); // Change to your desired items per page
         
+
+        $properties = BrandedPropertie::where('status', 'active')
+        ->where('is_featured',1)
+        ->take(10)
+        ->get()->map(function ($item) {
+            $item['property_source'] = 'branded';
+            return $item;
+        })
+        ->merge(
+            ProjectPropertie::where('status', 'active')
+                ->where(['is_featured' => 1,'is_branded' => 1])
+                ->take(10)
+                ->get()->map(function ($item) {
+                    $item['property_source'] = 'project';
+                    return $item;
+                })
+        )
+        ->sortByDesc('created_at');
+        $page = request()->get('page', 1); // Get the current page or default to 1
+        $perPage = 100; // Number of items per page
+        $paginatedProperties = new LengthAwarePaginator(
+            $properties->forPage($page, $perPage), // Slice the collection for the current page
+            $properties->count(), // Total number of items
+            $perPage, // Items per page
+            $page, // Current page
+            ['path' => request()->url(), 'query' => request()->query()] // Pagination URL and query params
+        );
+        
+
+
             $property_type = PropertyType::where('status',1)->where('property','branded')->get();
             
             $data = [
                 'page_title' => ucfirst($propFor) . " Properties",
                 'page_type' => $propFor,
-                'property' => $properties,
+                'property' => $paginatedProperties,
                 'property_type' => $property_type,
                 'property_name' => $propFor,
                 'title' => ucfirst($propFor) . " ",
+                'propFor' => $propFor,
                 'page_data' => $pageBrandedResidence
             ];
 
             // Pass 'prop_for' through the pagination links
-            $properties->appends(['prop_for' => $propFor]);
+            // $properties->appends(['prop_for' => $propFor]);
             
-        return view('branded_residences', compact('data'));
-    }
+        return view('branded_residences', compact('data','propFor'));
+    } 
 
     public function PrivateOffices(Request $request){
         $propertyTypes = PropertyType::where('property',$this->property)->get();
