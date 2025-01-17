@@ -1,4 +1,18 @@
 @extends('layouts.app')
+<section class="breadcrumb-sec">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="bread-container">
+                    <ul>
+                        <li><a href="{{ asset('/') }}" class="">Home</a></li>
+                        <li><span class="">Reset Password</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 @section('content')
 <div class="container">

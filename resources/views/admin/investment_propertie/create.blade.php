@@ -245,7 +245,7 @@
 
                     <div class="form-group col-md-6">
                         <label for="category_id">Property Type <span class="mandatory">*</span> <span class="help_url"><a
-                                    href="{{ route('property-type.create', 'private') }}" target="_blank">Add Property
+                                    href="{{ route('property-type.create', 'investment') }}" target="_blank">Add Property
                                     Type</a></label>
                         <select class="form-control" name="category_id" id="category_id">
                             <option value="">Select a property type</option>

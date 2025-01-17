@@ -35,6 +35,7 @@
                                     <option value="mortgage" {{ ($faq->page == "mortgage") ? "selected": ''; }}> Mortgage Calculator </option>
                                     <option value="report" {{ ($faq->page == "report") ? "selected": ''; }}> Report </option>
                                     <option value="career" {{ ($faq->page == "career") ? "selected": ''; }}> Career </option>
+                                    <option value="propertyManagement" {{ ($faq->page == "propertyManagement") ? "selected": ''; }}> PropertyManagement </option>
                                     <option value="communities" {{ ($faq->page == "communities") ? "selected": ''; }}> Communities </option>
                                     @php
                                     if (isset($blogs) && !empty($blogs)) {

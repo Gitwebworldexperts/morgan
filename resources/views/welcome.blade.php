@@ -144,7 +144,7 @@
                                                         @endif
                                                     </ul>
                                                 </div>
-                                                <h6><span>$</span> {{ number_format($featured->sale_price) }}/-</h6>
+                                                <h6><span>AED</span> {{ number_format($featured->sale_price) }}/-</h6>
                                             </a>
                                         </figcaption>
                                     </div>
@@ -191,6 +191,60 @@
                         </div>
                     </div>
                     <div class="col-12">
+                        <p>{!! $home->fourth_description !!}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                @if(isset($private_properties) && !empty($private_properties))
+                    @foreach($private_properties as $private)
+                        <div class="col">
+                            <div class="office-box"> <a href="{{ route('private.detail_page',$private->slug) }}"> 
+                                    <figure> <img src="{{ asset($private->featured_image) }}" class="" alt=""></figure>
+                                        <figcaption>
+                                            <div class="add-grp">
+                                                @if(isset($private->propertyType->type_name) && $private->propertyType->type_name)
+                                                    <div class="VillaText">{{ $private->propertyType->type_name ?? "" }}</div>
+                                                @endif
+                                                @if($private->address)
+                                                <p><img src="{{ asset('img/map.svg') }}">{!! strip_tags($private->address) !!}</p>
+                                                @endif
+                                            </div>
+                                            <h3>{{ $private->name }}</h3>
+                                            <div class="HotelViews">
+                                                <ul>
+                                                    @if($private->area)
+                                                    <li><img src="img/hotel/1.svg"> {{ number_format($private->area) }} SQ FT</li>
+                                                    @endif
+                                                    @if($private->bed)
+                                                    <li><img src="img/hotel/2.svg"> {{ $private->bed }}</li>
+                                                    @endif
+                                                    @if($private->jacuzzi)
+                                                    <li><img src="img/hotel/3.svg"> {{ $private->jacuzzi }}</li>
+                                                    @endif
+                                                </ul>
+                                            </div>
+                                            <h6><span>AED</span> {{ number_format($private->sale_price) }}/-</h6>
+                                        </figcaption>
+                                    
+                                </a> </div>
+                        </div>                        
+                    @endforeach
+                @endif
+            </div>
+        </div>
+    </section> <!-- section -->
+    <section class="space private-office-sec bg-black desktop-none">
+        <div class="container">
+            <div class="heading-pnel HeadingMiddleBorder fff">
+                <div class="row">
+                    <div class="col-lg-8 col-12">
+                        <h2 class="m-0">{{$home->fourth_heading}}</h2>
+                    </div>
+                    <div class="col-lg-4 col-12 mobile-none">
+                        <div class="head-btn"> <a href="{{ $buttonUrl_2 }}" class="border-btn fff">{{ $buttonName_1 }}</a> </div>
+                    </div>
+                    <div class="col-12">
                         <p>{!! Str::words($home->fourth_description, 45, '...') !!}</p>
                     </div>
                 </div>
@@ -215,157 +269,13 @@
                                                     <li><img src="{{ asset('img/3.svg') }}"> {{ $private->jacuzzi }}</li>
                                                 </ul>
                                             </div>
-                                            <h6><span>$</span> {{ number_format($private->sale_price) }}/-</h6>
+                                            <h6><span>AED</span> {{ number_format($private->sale_price) }}/-</h6>
                                         </figcaption>
                                     </figure>
                                 </a> </div>
                         </div>                        
                     @endforeach
                 @endif
-            </div>
-        </div>
-    </section> <!-- section -->
-    <section class="space private-office-sec bg-black desktop-none">
-        <div class="container">
-            <div class="heading-pnel HeadingMiddleBorder fff">
-                <div class="row">
-                    <div class="col-lg-8 col-12">
-                        <h2 class="m-0">{{$home->fourth_heading}}</h2>
-                    </div>
-                    <div class="col-lg-4 col-12 mobile-none">
-                        <div class="head-btn"> <a href="{{ $buttonUrl_2 }}" class="border-btn fff">{{ $buttonName_1 }}</a> </div>
-                    </div>
-                    <div class="col-12">
-                        <p>{{ Str::words($home->fourth_description, 45, '...') }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row owl-carousel owl-loaded owl-drag" id="private-office">
-
-
-
-
-
-                <div class="owl-stage-outer owl-height" style="height: 0px;">
-                    <div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all;">
-                        <div class="owl-item">
-                            <div class="office-box"> <a href="#">
-                                    <figure> <img src="{{ asset('img/1(1).png') }}" class="" alt="">
-                                    </figure>
-                                    <figcaption>
-                                        <div class="add-grp">
-                                            <div class="VillaText">Villa</div>
-                                            <p><img src="{{ asset('img/map.svg') }}">75 Prince St, NY, USA</p>
-                                        </div>
-                                        <h3>Stunning 4-Bedroom I Full Sea View</h3>
-                                        <div class="HotelViews">
-                                            <ul>
-                                                <li><img src="{{ asset('img/1.svg') }}"> 7228 SQ FT</li>
-                                                <li><img src="{{ asset('img/2.svg') }}"> 2</li>
-                                                <li><img src="{{ asset('img/3.svg') }}"> 2</li>
-                                            </ul>
-                                        </div>
-                                        <h6><span>$</span> 195,000,000/-</h6>
-                                    </figcaption>
-                                </a> </div>
-                        </div>
-                        <div class="owl-item">
-                            <div class="office-box"> <a href="#">
-                                    <figure> <img src="{{ asset('img/2(1).png') }}" class="" alt="">
-                                    </figure>
-                                    <figcaption>
-                                        <div class="add-grp">
-                                            <div class="VillaText">Villa</div>
-                                            <p><img src="{{ asset('img/map.svg') }}">75 Prince St, NY, USA</p>
-                                        </div>
-                                        <h3>Stunning 4-Bedroom I Full Sea View</h3>
-                                        <div class="HotelViews">
-                                            <ul>
-                                                <li><img src="{{ asset('img/1.svg') }}"> 7228 SQ FT</li>
-                                                <li><img src="{{ asset('img/2.svg') }}"> 2</li>
-                                                <li><img src="{{ asset('img/3.svg') }}"> 2</li>
-                                            </ul>
-                                        </div>
-                                        <h6><span>$</span> 195,000,000/-</h6>
-                                    </figcaption>
-                                </a> </div>
-                        </div>
-                        <div class="owl-item">
-                            <div class="office-box"> <a href="#">
-                                    <figure> <img src="{{ asset('img/3(1).png') }}" class="" alt="">
-                                    </figure>
-                                    <figcaption>
-                                        <div class="add-grp">
-                                            <div class="VillaText">Villa</div>
-                                            <p><img src="{{ asset('img/map.svg') }}">75 Prince St, NY, USA</p>
-                                        </div>
-                                        <h3>Stunning 4-Bedroom I Full Sea View</h3>
-                                        <div class="HotelViews">
-                                            <ul>
-                                                <li><img src="{{ asset('img/1.svg') }}"> 7228 SQ FT</li>
-                                                <li><img src="{{ asset('img/2.svg') }}"> 2</li>
-                                                <li><img src="{{ asset('img/3.svg') }}"> 2</li>
-                                            </ul>
-                                        </div>
-                                        <h6><span>$</span> 195,000,000/-</h6>
-                                    </figcaption>
-                                </a> </div>
-                        </div>
-                        <div class="owl-item">
-                            <div class="office-box"> <a href="#">
-                                    <figure> <img src="{{ asset('img/4(1).png') }}" class="" alt="">
-                                    </figure>
-                                    <figcaption>
-                                        <div class="add-grp">
-                                            <div class="VillaText">Villa</div>
-                                            <p><img src="{{ asset('img/map.svg') }}">75 Prince St, NY, USA
-                                            </p>
-                                        </div>
-                                        <h3>Stunning 4-Bedroom I Full Sea View</h3>
-                                        <div class="HotelViews">
-                                            <ul>
-                                                <li><img src="{{ asset('img/1.svg') }}"> 7228 SQ FT</li>
-                                                <li><img src="{{ asset('img/2.svg') }}"> 2</li>
-                                                <li><img src="{{ asset('img/3.svg') }}"> 2</li>
-                                            </ul>
-                                        </div>
-                                        <h6><span>$</span> 195,000,000/-</h6>
-                                    </figcaption>
-                                </a> </div>
-                        </div>
-                        <div class="owl-item">
-                            <div class="office-box"> <a href="#">
-                                    <figure> <img src="{{ asset('img/4(1).png') }}" class="" alt="">
-                                    </figure>
-                                    <figcaption>
-                                        <div class="add-grp">
-                                            <div class="VillaText">Villa</div>
-                                            <p><img src="{{ asset('img/map.svg') }}">75 Prince St, NY, USA
-                                            </p>
-                                        </div>
-                                        <h3>Stunning 4-Bedroom I Full Sea View</h3>
-                                        <div class="HotelViews">
-                                            <ul>
-                                                <li><img src="{{ asset('img/1.svg') }}"> 7228 SQ FT</li>
-                                                <li><img src="{{ asset('img/2.svg') }}"> 2</li>
-                                                <li><img src="{{ asset('img/3.svg') }}"> 2</li>
-                                            </ul>
-                                        </div>
-                                        <h6><span>$</span> 195,000,000/-</h6>
-                                    </figcaption>
-                                </a> </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><span
-                            aria-label="Previous">‹</span></button><button type="button" role="presentation"
-                        class="owl-next"><span aria-label="Next">›</span></button></div>
-                <div class="owl-dots disabled"></div>
-            </div> <!-- view all -->
-            <div class="view-all">
-                <div class="row">
-                    <div class="col-12"> <a href="#" class="green-btn fff">View all properties</a> </div>
-                </div>
             </div>
         </div>
     </section> <!-- section -->
@@ -526,18 +436,22 @@
                                 $jsonData = [];
                                 $name = $url = "";
                                 $jsonData = optional(json_decode($home->eighth_section_button, true))[0] ?? [];
-                                $name = $jsonData['buttonName'] ?? $button_name;
-                                $url = $jsonData['buttonUrl'] ?? $button_url;
+                                $name = $jsonData['buttonName'] ?? "";
+                                $url = $jsonData['buttonUrl'] ?? "";
                             @endphp
+                            @if($name && $url)
                             <a href="{{$url}}" class="border-btn fff">{{$name}}</a>
+                            @endif
                             @php
                                 $jsonData = [];
                                 $name = $url = "";
                                 $jsonData = optional(json_decode($home->eighth_section_button, true))[1] ?? [];
-                                $name = $jsonData['buttonName'] ?? $button_name;
-                                $url = $jsonData['buttonUrl'] ?? $button_url;
-                            @endphp 
+                                $name = $jsonData['buttonName'] ?? "";
+                                $url = $jsonData['buttonUrl'] ?? "";
+                            @endphp
+                            @if($name && $url)
                             <a href="{{$url}}" class="border-btn fff">{{$name}}</a> </div>
+                            @endif
                     </div>
                 </div>
             </div>
@@ -572,8 +486,8 @@
                         <div class="col-lg-3 col-md-6 col-6">
                             <div class="blog-box">
                                 <figure> <a href="{{ $item->slug ? route('blog', ['slug' => $item->slug]) : '#' }}"><img alt="Image not found" onerror="this.onerror=null; this.src='{{ asset('featured_images/featured_image_1731072533.jpg') }}';"  src="{{ asset('post/'.$firstImage) }}" class="w-100" alt=""></a> </figure>
-                                <figcaption> <span>{{ $item->created_at->format('d M Y') }}</span> <a href="{{ $item->slug ? route('blog', ['slug' => $item->slug]) : '#' }}">
-                                        <h4>{{ $item->name }}</h4>
+                                <figcaption> <span style="text-transform: uppercase;">{{ $item->created_at->format('d M Y') }}</span> <a href="{{ $item->slug ? route('blog', ['slug' => $item->slug]) : '#' }}">
+                                        <h4>{!! Str::words($item->name, 10, '...') !!}</h4> 
                                     </a> </figcaption>
                             </div>
                         </div>        
@@ -583,7 +497,7 @@
             </div> <!-- view all -->
             <div class="view-all desktop-none">
                 <div class="row">
-                    <div class="col-12"> <a href="{{ $home->blog_section_button_2 }}" class="green-btn">>{{ $home->blog_section_button }}</a> </div>
+                    <div class="col-12"> <a href="{{ $home->blog_section_button_2 }}" class="green-btn">{{ $home->blog_section_button }}</a> </div>
                 </div>
             </div>
         </div>
@@ -613,111 +527,12 @@
         </div>
     </section>
     @endif
-    <div class="mt-4 home_page">
+    <div class="mt-4 home_page_old">
         @include('faq', ['page_name' => 'home'])        
     </div>
     <!-- back to top -->
 
-<!-- Modal -->
-<div class="modal fade" id="search-modal" tabindex="-1" role="dialog"
-    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body"> <button type="button" class="close" data-dismiss="modal"
-                    aria-label="Close"> <span aria-hidden="true">×</span> </button>
-                <div class="search-container">
-                    <div class="TopTabsBar">
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item"> <a class="nav-link active" id="home-tab" data-toggle="tab"
-                                    href="#Buy-two" role="tab" aria-controls="home"
-                                    aria-selected="true">Buy</a> </li>
-                            <li class="nav-item"> <a class="nav-link" id="profile-tab" data-toggle="tab"
-                                    href="#Rent-two" role="tab" aria-controls="profile"
-                                    aria-selected="false">Rent</a> </li>
-                        </ul>
-                    </div> <!-- tab content -->
-                    <div class="tab-content" id="myTabContent">
-                        <div id="Buy-two" class="tab-pane fade show active" role="tabpanel"
-                            aria-labelledby="home-tab">
-                            <form action="#">
-                                <div class="BookingBox">
-                                    <div class="BookingLocation">
-                                        <div class="BookingFrom"> <input type="" name=""
-                                                class="form-control" placeholder="Search country and city...">
-                                        </div>
-                                        <div class="BookingFrom p-0"> <select class="form-control">
-                                                <option>Property Type</option>
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                            </select> </div>
-                                        <div class="BookingFrom p-0"> <select class="form-control">
-                                                <option>Buy</option>
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                            </select> </div>
-                                        <div class="BookingFrom p-0"> <select class="form-control">
-                                                <option>Beds</option>
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                            </select> </div>
-                                        <div class="BookingFrom p-0"> <select class="form-control">
-                                                <option>Price</option>
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                            </select> </div>
-                                        <div class="BookingFromBtn"> <a href="#"><img
-                                                    src="{{ asset('img/search.svg') }}"> Search</a> </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div id="Rent-two" class="tab-pane fade">
-                            <form action="#">
-                                <div class="BookingBox">
-                                    <div class="BookingLocation">
-                                        <div class="BookingFrom"> <input type="" name=""
-                                                class="form-control" placeholder="Search country and city...">
-                                        </div>
-                                        <div class="BookingFrom p-0"> <select class="form-control">
-                                                <option>Property Type</option>
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                            </select> </div>
-                                        <div class="BookingFrom p-0"> <select class="form-control">
-                                                <option>Buy</option>
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                            </select> </div>
-                                        <div class="BookingFrom p-0"> <select class="form-control">
-                                                <option>Beds</option>
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                            </select> </div>
-                                        <div class="BookingFrom p-0"> <select class="form-control">
-                                                <option>Price</option>
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                            </select> </div>
-                                        <div class="BookingFromBtn"> <a href="#"><img
-                                                    src="{{ asset('img/search.svg') }}"> Search</a> </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 @endsection
 @section('scripts')   
 <script>

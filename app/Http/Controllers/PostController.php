@@ -174,4 +174,35 @@ class PostController extends Controller
         $post->delete();
         return redirect()->route('posts.index');
     }
+
+
+    public function removeBlogImage(Request $request){
+        
+        if ($request->post_id && $request->image_path) {
+            $post = Post::where('id', $request->post_id)->first();
+        
+            if ($post) {
+                $remove = $request->image_path;
+        
+                if ($post->images) {
+                    $imageArray = explode(',', $post->images);
+                    $filteredImages = array_filter($imageArray, function ($image) use ($remove) {
+                        return $image !== $remove;
+                    });
+        
+                    $post->images = implode(',', $filteredImages);
+                    $post->save();
+                }
+            } else {
+                // Handle case where the post is not found
+                return response()->json(['error' => 'Post not found'], 404);
+            }
+        } else {
+            // Handle case where required parameters are missing
+            return response()->json(['error' => 'Invalid parameters'], 400);
+        }
+        
+
+        return redirect()->back()->with('success', 'The post has been updated successfully.');
+    }
 }

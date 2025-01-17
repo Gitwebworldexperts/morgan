@@ -107,11 +107,12 @@
                         </div>
                     </div>
                 </div>
-				
-                <div class="row">
+
+                <div class="row " >
+                    <div id="my_report"></div>
                     @if(isset($reports) && !empty($reports))
                         @foreach($reports as $item)
-                        <div class="col-lg-4">
+                        <div class="box home{{ $item->report_type }} col-lg-4" <?php if($item->report_type == 1){ ?> style="display: block;" <?php }else{ ?> style="display: none;" <?php } ?>>
                             <div class="studio-box">
                                 <a href="{{ route('report_inidividual.show', $item->slug) }}">
                                     <figure>
@@ -153,25 +154,7 @@
 		</section>
 
         <section class="Brands-sec pt-0">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-3 col-md-4 col-12">
-                        <div class="heading-pnel m-0">
-                            <h2 class="m-0">media <br>Mentions</h2>
-                            <div class="headingBorder"></div>
-                        </div>
-                    </div>
-                    <div class="col-lg-9 col-md-8 col-12">
-                        <div class="owl-carousel owl-loaded owl-drag" id="Brands">
-                            
-                            
-                            
-                            
-                            
-                        <div class="owl-stage-outer owl-height" style="height: 60px;"><div class="owl-stage" style="transform: translate3d(-1520px, 0px, 0px); transition: 0.25s; width: 2850px;"><div class="owl-item cloned" style="width: 170px; margin-right: 20px;"><div class="brand-box"> <img src="img/brands/1.png" class="" alt=""> </div></div><div class="owl-item cloned" style="width: 170px; margin-right: 20px;"><div class="brand-box"> <img src="img/brands/2.png" class="" alt=""> </div></div><div class="owl-item cloned" style="width: 170px; margin-right: 20px;"><div class="brand-box"> <img src="img/brands/3.png" class="" alt=""> </div></div><div class="owl-item cloned" style="width: 170px; margin-right: 20px;"><div class="brand-box"> <img src="img/brands/4.png" class="" alt=""> </div></div><div class="owl-item cloned" style="width: 170px; margin-right: 20px;"><div class="brand-box"> <img src="img/brands/5.png" class="" alt=""> </div></div><div class="owl-item" style="width: 170px; margin-right: 20px;"><div class="brand-box"> <img src="img/brands/1.png" class="" alt=""> </div></div><div class="owl-item" style="width: 170px; margin-right: 20px;"><div class="brand-box"> <img src="img/brands/2.png" class="" alt=""> </div></div><div class="owl-item" style="width: 170px; margin-right: 20px;"><div class="brand-box"> <img src="img/brands/3.png" class="" alt=""> </div></div><div class="owl-item active" style="width: 170px; margin-right: 20px;"><div class="brand-box"> <img src="img/brands/4.png" class="" alt=""> </div></div><div class="owl-item active" style="width: 170px; margin-right: 20px;"><div class="brand-box"> <img src="img/brands/5.png" class="" alt=""> </div></div><div class="owl-item cloned active" style="width: 170px; margin-right: 20px;"><div class="brand-box"> <img src="img/brands/1.png" class="" alt=""> </div></div><div class="owl-item cloned active" style="width: 170px; margin-right: 20px;"><div class="brand-box"> <img src="img/brands/2.png" class="" alt=""> </div></div><div class="owl-item cloned active" style="width: 170px; margin-right: 20px;"><div class="brand-box"> <img src="img/brands/3.png" class="" alt=""> </div></div><div class="owl-item cloned" style="width: 170px; margin-right: 20px;"><div class="brand-box"> <img src="img/brands/4.png" class="" alt=""> </div></div><div class="owl-item cloned" style="width: 170px; margin-right: 20px;"><div class="brand-box"> <img src="img/brands/5.png" class="" alt=""> </div></div></div></div><div class="owl-nav disabled"><button type="button" role="presentation" class="owl-prev"><span aria-label="Previous">‹</span></button><button type="button" role="presentation" class="owl-next"><span aria-label="Next">›</span></button></div><div class="owl-dots disabled"></div></div>
-                    </div>
-                </div>
-            </div>
+        {!! mediaSection('all'); !!}
         </section>
 
 
@@ -179,5 +162,49 @@
 @endsection
 
 @section('scripts')
+    <script>
+// Add an event listener to all nav-link elements
+document.querySelectorAll('.nav-link').forEach(tab => {
+    tab.addEventListener('click', function () {
+        // Get the value of aria-controls of the clicked tab
+        const targetClass = this.getAttribute('aria-controls');
 
+        // Hide all boxes
+        document.querySelectorAll('.box').forEach(box => {
+            box.style.display = 'none';
+        });
+
+        // Select all boxes with the corresponding class name
+        const matchingBoxes = document.querySelectorAll(`.${targetClass}`);
+        const element = document.getElementById('my_report');
+        if (element) {
+            element.innerHTML = "";
+        }
+        // Check if matching boxes are found
+        if (matchingBoxes.length > 0) {
+            // Show the boxes with the corresponding class name
+            matchingBoxes.forEach(box => {
+                box.style.display = 'block';
+            });
+        } else {
+            // If no matching boxes found, display an alert
+            const element = document.getElementById('my_report');
+            if (element) {
+                element.innerHTML = "No report found for the selected tab.";
+            }
+
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const africaTab = document.getElementById('Africa-tab1');
+    if (africaTab) {
+        africaTab.click();
+    } else {
+        console.error("Element with ID 'Africa-tab1' not found.");
+    }
+});
+
+    </script>
 @endsection

@@ -3,7 +3,7 @@
 @section('content')
     
     <section>
-        <p class="heading_for_admin_section">Faq's Section <a class="add_new_button" href="{{ route('faq.create') }}">+ Add New</a></p>
+        <p class="heading_for_admin_section">Faq's Section <a class="add_new_button" href="{{ route('faq.create') }}">+ Add New</a> <a class="add_new_button" href="{{ route('faq.settings') }}">Common Content</a></p>
         <div class="section_content">
             <div class="row">
                 <div class="col-12">
@@ -18,7 +18,7 @@
                               <div class="accordion-button {{ ($count != 1) ? 'collapsed':'' }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne{{$key}}" aria-expanded="true" aria-controls="collapseOne{{$key}}">
                                 {{ $count }}. {{ $question->question}}
                                     <div class="faq-actions">
-                                        <a class="faq_edit_button" href="{{ route('faq.edit', $question) }}"><i class="fa-solid fa-pencil"></i> Edit</a>
+                                        <a class="faq_edit_button" href="{{ route('faq.edit', $question) }}"><i class="fa-solid fa-pencil"></i><span>Edit</span></a>
                                         <form action="{{ route('faq.destroy', $question) }}" class="faq_delete_form" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')

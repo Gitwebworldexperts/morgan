@@ -47,7 +47,7 @@ class SearchController extends Controller
             'international' => InternationalPropertie::class,
             'sales' => BuyPropertie::class,
             'branded' => BrandedPropertie::class,
-            'investment' => InvestmentPropertie::class
+            'invest' => InvestmentPropertie::class
         ];
         $regions = [];
         // Check if the requested property type exists
@@ -109,10 +109,10 @@ class SearchController extends Controller
                 $property_type_name = 'branded';
                 $private_listing = ListingDetail::where('id',14)->first();
                 $property_type = PropertyType::where('status',1)->where('property','branded')->get();
-            }elseif($propFor == "investment"){
+            }elseif($propFor == "invest"){
                 $property_type_name = 'investment';
                 $private_listing = ListingDetail::where('id',15)->first();
-                $property_type = PropertyType::where('status',1)->where('property','branded')->get();
+                $property_type = PropertyType::where('status',1)->where('property','investment')->get();
             }
             $data = [
                 'page_title' => ucfirst($propFor) . " Properties",
@@ -145,7 +145,8 @@ class SearchController extends Controller
     public function CommonSearch(Request $request){
         $property_type_id = $request->property_type ? (int) $request->property_type : null;
         $buy = $request->buy ? (int) $request->buy : null;
-        $bed = $request->bed ? (int) $request->bed : null;
+        // $bed = $request->bed ? (int) $request->buy : null;
+        $bed = $request->buy ? (int) $request->buy : null;
         $price = $request->price ? (int) $request->price : null;
         $location = $request->location;
         
@@ -169,6 +170,8 @@ class SearchController extends Controller
                 'international' => InternationalPropertie::class,
                 'sales' => BuyPropertie::class,
                 'buy' => BuyPropertie::class,
+                'investment' => InvestmentPropertie::class,
+                'invest' => InvestmentPropertie::class,
             ];
             // var_dump($propFor);die;
             // Check if the requested property type exists
@@ -186,7 +189,11 @@ class SearchController extends Controller
                     $query->where('address', 'like', '%' . $location . '%');
                 })
                 ->when($bed, function ($query) use ($bed) {
-                    $query->where('bed', '=', $bed);
+                    if ($bed === "7") {
+                        $query->where('bed', '>=', 7);
+                    } else {
+                        $query->where('bed', $bed);
+                    }
                 })
                 ->orderBy('id', 'desc')
                 ->with('propertyType')
@@ -194,7 +201,8 @@ class SearchController extends Controller
                                 
                 $property_type = $request->property_type ? (int) $request->property_type : null;
                 $buy = $request->buy ? (int) $request->buy : null;
-                $bed = $request->bed ? (int) $request->bed : null;
+                // $bed = $request->bed ? (int) $request->bed : null;
+                $bed = $request->buy ? (int) $request->buy : null;
                 $price = $request->price ? (int) $request->price : null;
 
                 if($propFor == "rent"){
@@ -212,6 +220,9 @@ class SearchController extends Controller
                 }elseif($propFor == "sales" || $propFor ==  "buy"){
                     $private_listing = ListingDetail::where('id',9)->first();
                     $property_type = PropertyType::where('status',1)->where('property','buy')->get();
+                }elseif($propFor == "investment" || $propFor == "invest"){
+                    $private_listing = ListingDetail::where('id',15)->first();
+                    $property_type = PropertyType::where('status',1)->where('property','investment')->get();
                 }
 
 

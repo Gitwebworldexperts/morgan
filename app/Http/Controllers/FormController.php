@@ -19,7 +19,7 @@ class FormController extends Controller
         $this->apiRequestService = $apiRequestService;
     }
 
-    public function sendRequest()
+    public function sendRequest($data = [])
     {
         $APIusername = getOption('APIusername', 'eu20.prod.api.102@pr.com');
         $APIpassword = getOption('APIpassword', 'D55cZZtD');
@@ -36,48 +36,14 @@ class FormController extends Controller
             $date = new DateTime("now", new DateTimeZone("Asia/Singapore"));
             $token = $authResponse['data']['token'];
             $companyId = getOption('companyId', 'eu20_001');
-            $curl = curl_init();
-            // Prepare the array data
-            $data = array(
-                "companyId" => $companyId,
-                "userInfo" => array(
-                    "submitDateTime" => $date->format('Y-m-d H:i:s'),
-                    "sourceUniqueId" => "buy-1",
-                    "firstName" => "Yesvant",
-                    "lastName" => "Alaria",
-                    "phone" => "+91 9653720289",
-                    "email" => "yesvantalaria09@gmail.com",
-                    // "customerCompany" => "BAT",
-                    // "customerCompanySize" => 9999,
-                    // "jobTitle" => "Team Lead",
-                    // "message" => "First Test submit lead",
-                    "listingId" => "mir-RD8243",
-                    "allowEmailPromotion" => true,
-                    "subscribe" => true,
-                    "trackingItems" => array(
-                        array(
-                            "listingId" => "mir-RD8243",
-                            "sourceUniqueId" => "buy-1",
-                            "trackingDateTime" => $date->format('Y-m-d H:i:s'),
-                            "spentTime" => 10
-                        )
-                    ),
-                    "favoriteItems" => array(
-                        array(
-                            "listingId" => "mir-RD8243",
-                            "sourceUniqueId" => "rent-3",
-                            "favorite" => true,
-                            "trackingDateTime" => $date->format('Y-m-d H:i:s'),
-                            "spentTime" => 10
-                        )
-                    ),
-                    "extRemark" => "{}"
-                )
-            );
-            
-            // Convert array to JSON
+    
+            // Add mandatory fields
+            $data['companyId'] = $companyId;
+            $data['userInfo']['submitDateTime'] = $date->format('Y-m-d H:i:s');
+    
             $json_data = json_encode($data);
-            
+    
+            $curl = curl_init();
             curl_setopt_array($curl, array(
                 CURLOPT_URL => 'https://eu20.propertyraptor.com/hornet/portal/createLead',
                 CURLOPT_RETURNTRANSFER => true,
@@ -95,34 +61,26 @@ class FormController extends Controller
             ));
             $response = curl_exec($curl);
             curl_close($curl);
-            dd($response);                              
-        } 
+    
+            // Handle the response as needed
+            return $response;
+        }
+    
+        // Handle login failure
+        throw new Exception('Failed to authenticate and retrieve token.');
     }
     
-
     public function submit(Request $request)
     {
-        if(isset($request->type) && $request->type == 'dev'){
-                   $request->validate([
-            'fullName' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'contactNumber' => 'required|string|max:20',
-            // 'pageName' => 'required|string|max:255',
-            // 'pageId' => 'required|string|max:255',
-        ]); 
-        }else{
-                    $request->validate([
+        $request->validate([
             'fullName' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'contactNumber' => 'required|string|max:20',
             'message' => 'required|string',
-            // 'pageName' => 'required|string|max:255',
-            // 'pageId' => 'required|string|max:255',
-        ]);            
-        }
+        ]);
         $previousUrl = url()->previous();
 
-        FormData::create([
+        $formData = FormData::create([
             'full_name' => $request->fullName,
             'email' => $request->email,
             'contact_number' => $request->contactNumber,
@@ -130,8 +88,41 @@ class FormController extends Controller
             'page_name' => $previousUrl ?? "",
             'page_id' => $request->pageId ?? "",
             'ip_address' => $request->ip(),
+            'is_api' => false, 
         ]);
-
+    
+        $nameParts = explode(' ', trim($request->fullName));
+        $firstName = $nameParts[0];
+        $lastName = isset($nameParts[1]) ? implode(' ', array_slice($nameParts, 1)) : 'NA';
+    
+        // Prepare mandatory fields for `sendRequest`
+        $requestData = [
+            "userInfo" => [
+                "submitDateTime" => now()->setTimezone("Asia/Singapore")->format('Y-m-d H:i:s'),
+                "sourceUniqueId" => "form-" . $formData->id,
+                "firstName" => $firstName,
+                "lastName" => $lastName,
+                "phone" => $formData->contact_number,
+                "email" => $formData->email,
+                "listingId" => $request->listingId ?? "default-listing-id", // Replace with actual data or fallback
+                "allowEmailPromotion" => $request->allowEmailPromotion ?? true,
+                "subscribe" => $request->subscribe ?? true,
+                // "extRemark" => ['form_id' => $formData->id],
+            ]
+        ];
+        // $formData->update(['is_api' => true]);
+        try {
+            $response = $this->sendRequest($requestData);
+            // Decode the JSON response
+            $responseDecoded = json_decode($response, true);
+            if (isset($responseDecoded['result']) && $responseDecoded['result'] === true) {
+                $formData->update(['is_api' => true]);
+            }
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Failed to submit form: ' . $e->getMessage());
+        }
+    
         return redirect()->back()->with('success', 'Form submitted successfully!');
     }
+    
 }

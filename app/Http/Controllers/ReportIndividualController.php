@@ -24,8 +24,19 @@ class ReportIndividualController extends Controller
     {
         $report = ReportIndividual::where('slug',$slug)->first();
         if($report){
-            $testimonials = Testimonial::whereIn('id', json_decode($report->testimonial_description, true))->get();
-            return view('indireport', compact('report','testimonials'));
+            if($report->report_type == 3){
+                $testimonials = Testimonial::whereIn('id', json_decode($report->testimonial_description, true))->get();
+                return view('indireport', compact('report','testimonials'));
+            }elseif($report->report_type == 2){
+
+                return view('brandedReport', compact('report'));
+                echo "Temaplate 2 Desgin Not Found";die;
+            }elseif($report->report_type == 1){
+                echo "Temaplate Desgin Not Found";die;
+            }
+
+
+
         }
         return redirect()->route('report.list')->with('success', 'Report Not Found!');
     }
@@ -70,13 +81,30 @@ class ReportIndividualController extends Controller
         if ($request->hasFile('featured_image')) {
             $featured_image = $request->hasFile('featured_image') ? $imageUploadService->storeImage($request->file('featured_image'), 'images',97): "";
         }
+        $footer_image = null;
+        if ($request->hasFile('footer_image')) {
+            $footer_image = $request->hasFile('footer_image') ? $imageUploadService->storeImage($request->file('footer_image'), 'images',98): "";
+        }
+        
 
         // dd($request->section2_content);
 
+        $slug = Str::slug($validatedData['heading']);
+        $originalSlug = $slug; // Keep the original slug
+
+        // Check if the slug already exists in the database
+        $count = 1;
+        while (ReportIndividual::where('slug', $slug)->exists()) {
+            // Append a counter to the slug if it exists
+            $slug = $originalSlug . '-' . $count;
+            $count++;
+        }
+
         $report = ReportIndividual::create([
             'heading' => $validatedData['heading'],
-            'slug' => Str::slug($validatedData['heading']),
+            'slug' => $slug,
             'featured_image' => $featured_image,
+            'footer_image' => $footer_image,
             'subheading' => $validatedData['subheading'] ?? null,
             'file_upload' => $fileUploadPath,
             'background_image' => $backgroundImagePath,
@@ -90,6 +118,7 @@ class ReportIndividualController extends Controller
             'meta_title' => $validatedData['meta_title'] ?? null,
             'meta_description' => $validatedData['meta_description'] ?? null,
             'seo_heading' => $validatedData['seo_heading'] ?? null,
+            'report_type' => $request->report_type,
             'seo_description' => $validatedData['seo_description'] ?? null,
         ]);
 
@@ -127,10 +156,11 @@ class ReportIndividualController extends Controller
         ]);
         $report->update([
             'heading' => $validatedData['heading'],
-            'slug' => Str::slug($validatedData['heading']),
+            // 'slug' => Str::slug($validatedData['heading']),
             'subheading' => $validatedData['subheading'] ?? null,
             'file_upload' => $request->hasFile('file_upload') ? $imageUploadService->storeImage($request->file('file_upload'), 'images',97): $report->file_upload,
             'featured_image' => $request->hasFile('featured_image') ? $imageUploadService->storeImage($request->file('featured_image'), 'images',97): $report->featured_image,
+            'footer_image' => $request->hasFile('footer_image') ? $imageUploadService->storeImage($request->file('footer_image'), 'images',98): $report->footer_image,
             'background_image' => $request->hasFile('background_image') ? $imageUploadService->storeImage($request->file('background_image'), 'images',97): $report->background_image,
             'section_ii_background_image' => $request->hasFile('section_ii_background_image') ? $imageUploadService->storeImage($request->file('section_ii_background_image'), 'images',97): $report->section_ii_background_image, 
             'description' => $validatedData['description'],
@@ -142,6 +172,7 @@ class ReportIndividualController extends Controller
             'meta_title' => $validatedData['meta_title'] ?? null,
             'meta_description' => $validatedData['meta_description'] ?? null,
             'seo_heading' => $validatedData['seo_heading'] ?? null,
+            'report_type' => $request->report_type,
             'seo_description' => $validatedData['seo_description'] ?? null,
         ]);
         return redirect()->route('report_inidividual.index')->with('success', 'Report updated successfully!');

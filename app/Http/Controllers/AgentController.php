@@ -22,7 +22,7 @@ class AgentController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'username' => 'required|email|unique:agents',
+            // 'username' => 'required|email|unique:agents',
             'email' => 'required|email|unique:agents',
             'mobile' => 'nullable|numeric|digits_between:1,15',
             'phone' => 'nullable|numeric|digits_between:1,15',
@@ -50,7 +50,7 @@ class AgentController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'username' => 'required|email|unique:agents,username,' . $agent->id,
+            // 'username' => 'required|email|unique:agents,username,' . $agent->id,
             'email' => 'required|email|unique:agents,email,' . $agent->id,
             'mobile' => 'nullable|numeric|digits_between:1,15',
             'phone' => 'nullable|numeric|digits_between:1,15',

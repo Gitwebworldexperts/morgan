@@ -101,7 +101,12 @@
 
         <section class="CTA-strip">
             <div class="container">
+                @if($data['communities']->third_image)
+                <div class="row" style="background-image: url('{{ asset($data['communities']->third_image) }}');">
+                @else
                 <div class="row" style="background-image: url('{{ asset('img/strip-bg.png') }}');">
+                @endif
+
                     <div class="col-lg-6">
                         <div class="heading-pnel fff m-0">
                             {!! $data['communities']->section_iii_content !!}    
@@ -127,7 +132,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="cards-main">
-                            <div class="owl-carousel" id="instructor-slider">
+                            <div class="owl-carousel " id="instructor-slider">
                             
                             @if(isset($allProperties) && !empty($allProperties))
                               @foreach($allProperties as $item)
@@ -144,6 +149,7 @@
                                         $routeName = 'detail.page';
                                     }
                                 @endphp
+
                               <div class="item">
                                     <div class="card-box"> 
 										
@@ -170,22 +176,30 @@
                                             <span class="address_section d-flex align-items-start">
                                                 <img style="width:12px;margin-top:4px;margin-right:5px;" src="{{ asset('/img/hotel/map.svg')}}">{!! $item->address !!}
                                             </span>
+                                            @if($item->property_source != "branded")
                                             <div class="HotelViews">
                                                 <ul>
-                                                <li>
-                                                    <img src="{{ asset('/img/hotel/1.svg')}}"> {{ number_format($item->area) }} SQ FT
-                                                </li>
-                                                <li>
-                                                    <img src="{{ asset('/img/hotel/2.svg')}}"> {{ number_format($item->bed) }}
-                                                </li>
-                                                <li>
-                                                    <img src="{{ asset('/img/hotel/3.svg')}}"> {{ number_format($item->jacuzzi) }}
-                                                </li>
+                                                    @if(number_format($item->area))
+                                                    <li>
+                                                        <img src="{{ asset('/img/hotel/1.svg')}}"> {{ number_format($item->area) }} SQ FT
+                                                    </li>
+                                                    @endif
+                                                    @if(number_format($item->bed))
+                                                    <li>
+                                                        <img src="{{ asset('/img/hotel/2.svg')}}"> {{ number_format($item->bed) }}
+                                                    </li>
+                                                    @endif
+                                                    @if(number_format($item->jacuzzi))
+                                                    <li>
+                                                        <img src="{{ asset('/img/hotel/3.svg')}}"> {{ number_format($item->jacuzzi) }}
+                                                    </li>
+                                                    @endif
                                                 </ul>
                                             </div>
                                             <h6>
                                                 <span>$</span> {{ number_format($item->sale_price) }}/-
                                             </h6>
+                                            @endif
                                             </a>
                                         </figcaption>
                                     </div>
@@ -209,5 +223,9 @@
 <script>
 
 </script>
-
+<style>
+    ol li {
+    color: #fff;
+}
+</style>
 @endsection

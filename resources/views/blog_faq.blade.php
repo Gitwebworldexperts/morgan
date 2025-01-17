@@ -1,5 +1,5 @@
 <div class="blog-faqs">
-                                <h4 class="text-left">Frequently Asked Questions</h4>
+                                <h4 class="text-left">{{ getOption('faq_heading') }}</h4>
                                 <div class="accordion" id="accordionExample">
                                 @php $count = 0;
 

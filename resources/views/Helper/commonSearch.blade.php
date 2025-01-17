@@ -69,12 +69,18 @@
                                         @endforeach
                                     @endif
                                 </select> </div>
-                            <div class="BookingFrom p-0"> <select name="buy" class="form-control">
-                                    <option value="">Property Size</option>
+                            <div class="BookingFrom p-0"> 
+                                <select name="buy" class="form-control">
+                                    <option value="">Bedrooms</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
-                                </select> </div>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7+</option>
+                                </select> 
+                            </div>
                             <div class="BookingFrom p-0 d-none"> <select name="bed" class="form-control">
                                     <option value="">Property Size</option>
                                     <option value="1">1</option>
@@ -134,12 +140,19 @@
                                         @endforeach
                                     @endif
                                 </select> </div>
-                            <div class="BookingFrom p-0"> <select name="buy" class="form-control">
-                                    <option value="">Property Size</option>
+                            <div class="BookingFrom p-0"> 
+                            <select name="buy" class="form-control">
+                                    <option value="">Bedrooms</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
-                                </select> </div>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7+</option>
+                                </select> 
+                            
+                            </div>
                             <div class="BookingFrom p-0 d-none"> <select name="bed" class="form-control">
                                     <option value="">Property Size</option>
                                     <option value="1">1</option>
@@ -198,12 +211,16 @@
                                         @endforeach
                                     @endif
                                 </select> </div>
-                            <div class="BookingFrom p-0"> <select name="buy" class="form-control">
-                                    <option value="">Property Size</option>
+                            <div class="BookingFrom p-0">   <select name="buy" class="form-control">
+                                    <option value="">Bedrooms</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
-                                </select> </div>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7+</option>
+                                </select>  </div>
                             <div class="BookingFrom p-0 d-none"> <select name="bed" class="form-control">
                                     <option value="">Property Size</option>
                                     <option value="1">1</option>
@@ -248,12 +265,16 @@
                                         @endforeach
                                     @endif
                                 </select> </div>
-                            <div class="BookingFrom p-0"> <select name="buy" class="form-control">
-                                    <option value="">Property Size</option>
+                            <div class="BookingFrom p-0">   <select name="buy" class="form-control">
+                                    <option value="">Bedrooms</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
-                                </select> </div>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7+</option>
+                                </select>  </div>
                             <div class="BookingFrom p-0 d-none"> <select name="bed" class="form-control">
                                     <option value="">Property Size</option>
                                     <option value="1">1</option>
@@ -298,12 +319,16 @@
                                         @endforeach
                                     @endif
                                 </select> </div>
-                            <div class="BookingFrom p-0"> <select name="buy" class="form-control">
-                                    <option value="">Property Size</option>
+                            <div class="BookingFrom p-0">   <select name="buy" class="form-control">
+                                    <option value="">Bedrooms</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
-                                </select> </div>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7+</option>
+                                </select>  </div>
                             <div class="BookingFrom p-0 d-none"> <select name="bed" class="form-control">
                                     <option value="">Property Size</option>
                                     <option value="1">1</option>

@@ -8,7 +8,7 @@
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Username</th>
+                <!-- <th>Username</th> -->
                 <th>Email</th>
                 <th>Mobile</th>
                 <th>Status</th>
@@ -19,7 +19,7 @@
             @foreach ($agents as $agent)
                 <tr>
                     <td>{{ $agent->name }}</td>
-                    <td>{{ $agent->username }}</td>
+                    <!-- <td>{{ $agent->username }}</td> -->
                     <td>{{ $agent->email }}</td>
                     <td>{{ $agent->mobile }}</td>
                     <td>{{ $agent->status ? 'Active' : 'Inactive' }}</td>

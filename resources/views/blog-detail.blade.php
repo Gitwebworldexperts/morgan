@@ -29,7 +29,7 @@
                     <div class="bread-container">
                         <ul>
                             <li><a href="{{ asset('/') }}" class="">Home</a></li>
-                            <li><a href="{{ route('blogList') }}" class="">The Market</a></li>
+                            <li><span>The Market</span></li>
                         </ul>
                     </div>
                 </div>
@@ -50,6 +50,10 @@
                                         <img src="{{ asset('img/share.svg') }}" alt="">Share
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" href="#" onclick="copyCurrentUrl(event)">
+                                                <i class="fa-solid fa-copy"></i>
+                                                Current Page URL
+                                            </a>
                                             <!-- Facebook Share Button -->
                                             <a class="dropdown-item" href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank">
                                                 <i class="fa-brands fa-facebook"></i>
@@ -80,7 +84,14 @@
 
 							</div>
 							<div class="seperator"></div>
-                    
+                            @php 
+                                $imageLinks = $post->images;
+                                $imageArray = explode(',', $imageLinks);
+                                $firstImage = isset($imageArray[0]) ? $imageArray[0] : null;
+                            @endphp
+                            @if($firstImage)
+                                <img alt="Image not found" onerror="this.onerror=null; this.src='{{ asset('featured_images/featured_image_1731072533.jpg') }}';"  src="{{ asset('post/'.$firstImage) }}" class="w-100" alt=""> 
+                            @endif
 							<h2>{{ $post->name }}</h2>
                             {!! descriptionWithImages($post->description) !!}
   							
@@ -96,7 +107,7 @@
 						<div class="blog-thubnails">
 							
 							
-                            @if(isset($relatedPost) && !empty($relatedPost))
+                            @if(isset($relatedPost) && !empty($relatedPost) && count($relatedPost))
                             <div class="sub-head">
 								<h3>Related Posts</h3>
 							</div>
@@ -154,4 +165,15 @@
         padding: 15px 0;
     }
     </style>
+    @endsection
+    @section('scripts')
+    <script>
+    function copyCurrentUrl(event) {
+        event.preventDefault(); // Prevent the default action
+        const currentUrl = window.location.href; // Get the current page URL
+        navigator.clipboard.writeText(currentUrl) // Copy URL to clipboard
+            .then(() => alert('URL copied to clipboard!')) // Success message
+            .catch(err => alert('Failed to copy URL: ' + err)); // Error handling
+    }
+    </script>
     @endsection

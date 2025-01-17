@@ -54,8 +54,8 @@
     $ListName = "Branded Residences";
     $ListRouteName = route('branded_residences');
   }elseif($property_type == 'investment'){
-    $ListName = "Investment";
-    $ListRouteName = route('search', ['prop_for' => 'investment']);    
+    $ListName = "Investment";  
+    $ListRouteName = route('investment.listing');  
   }
 @endphp
 @section('meta')
@@ -90,6 +90,12 @@
     </div>
   </section>
   
+  @if(!$foundProperty->featured_image )
+    @if(isset($foundProperty->banners[0]->image_url) && $foundProperty->banners[0]->image_url)
+      <?php $foundProperty->featured_image =  $foundProperty->banners[0]->image_url; ?>
+    @endif
+  @endif
+
   
 
   @if($foundProperty->featured_image && !isset($private))
@@ -122,6 +128,10 @@
                                         <img src="{{ asset('img/share.svg') }}" alt="">Share
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" href="#" onclick="copyCurrentUrl(event)">
+                                                <i class="fa-solid fa-copy"></i>
+                                                Current Page URL
+                                            </a>
                                             <!-- Facebook Share Button -->
                                             <a class="dropdown-item" href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank">
                                                 <i class="fa-brands fa-facebook"></i>
@@ -231,7 +241,11 @@
               <h5>Description</h5>
               <div class="parent-section">
                 <div class="show_more_content">
-                {!! $foundProperty->description !!}
+                @if (strpos($foundProperty->description, "\n") !== false)
+                    {!! nl2br(e($foundProperty->description)) !!}
+                @else
+                    {!! $foundProperty->description !!}
+                @endif
                 </div>
                 <span id="toggleContentBtn" class="link-btn ">Show More</span>                           
               </div>
@@ -405,7 +419,7 @@
         @if(isset($foundProperty->information_description) && !empty($foundProperty->information_description) && $foundProperty->information_description)
         <div class="seperator"></div>
         <div class="col-12">
-          <div class="dark-report-sec">
+          <div class="dark-report-sec ">
             <div class="dark-report-main">
               <div class="row no-gutters">
                 <div class="col-lg-7 col-12">
@@ -418,7 +432,9 @@
                         @if($foundProperty->information_button_label && $foundProperty->information_button_url)
                           <a href="{{$foundProperty->information_button_url}}" class="light-btn">{{$foundProperty->information_button_label}}</a>
                         @endif
-                        <a href="" class="light-btn">Read more</a>
+                        @if($foundProperty->information_button_label_2 && $foundProperty->information_button_url_2)
+                        <a href="{{ $foundProperty->information_button_url_2 }}" class="light-btn">{{ $foundProperty->information_button_label_2 }}</a>
+                        @endif
                       </div>
                     </div>
                   </div>
@@ -436,6 +452,38 @@
             </div>
           </div>
         </div>
+        @elseif(isset($foundProperty->community) && !empty($foundProperty->community) && $foundProperty->community)
+        <div class="seperator"></div>
+        <div class="col-12">
+          <div class="dark-report-sec white_font_color">
+            <div class="dark-report-main">
+              <div class="row no-gutters">
+                <div class="col-lg-7 col-12">
+                  <div class="heading-pnel fff mb-0">
+                    <div class="dark-report-content">
+                      <h2 class="mb-3">{{ $foundProperty->community->community_name }}</h2>
+                      <div class="mb-4"><p>{!! \Illuminate\Support\Str::words(strip_tags($foundProperty->community->section_i_content), 100, '...') !!}</p></div>
+                      <img src="{{ asset('/img/stroke-building.png')}}" class="stroke-building" alt="">
+                      <div class="report-grp-btn d-flex" style="gap:10px;">
+                        <a href="{{ route('detail.communitie', base64_encode($foundProperty->community->id)) }}" class="light-btn">Read more</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-5 col-12 order--1">
+                  <div class="dark-report-img">
+                    @if($foundProperty->community->featured_image)
+                    <img src="{{ asset($foundProperty->community->featured_image)}}" class="w-100" alt="">
+                    @else
+                    <img src="{{ asset('/img/login-image.png')}}" class="w-100" alt="">
+                    @endif
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         @endif
       </div>
     </div>
@@ -448,7 +496,13 @@
       <div class="heading-pnel HeadingMiddleBorder">
         <div class="row">
           <div class="col-lg-8 col-12">
-            <h2 class="m-0">More Properties</h2>
+          
+          @if(isset($devlopment))
+          <h2 class="m-0">More New Developments</h2>
+          @else
+          <h2 class="m-0">More Properties</h2>
+          @endif
+            
           </div>
           <div class="col-lg-4 col-12"></div>
         </div>
@@ -488,22 +542,29 @@
                           <img src="{{ asset('/img/hotel/map.svg')}}">{!! $item->address !!}
                         </p>
                       </span>
+                      @if($property_type != 'project')
                       <div class="HotelViews">
                         <ul>
                           <li>
                             <img src="{{ asset('/img/hotel/1.svg')}}"> {{ number_format($item->area) }} SQ FT
                           </li>
+                          @if($item->bed)
                           <li>
                             <img src="{{ asset('/img/hotel/2.svg')}}"> {{ number_format($item->bed) }}
                           </li>
+                          @endif
+                          @if($item->jacuzzi)
                           <li>
                             <img src="{{ asset('/img/hotel/3.svg')}}"> {{ number_format($item->jacuzzi) }}
                           </li>
+                          @endif
                         </ul>
                       </div>
+
                       <h6>
                         <span>AED</span> {{ number_format($item->sale_price) }}/-
                       </h6>
+                      @endif
                     </a>
                   </figcaption>
                 </div>
@@ -539,7 +600,13 @@ span.address_section p {
 @section('scripts')
 
 <script>
- 
+function copyCurrentUrl(event) {
+    event.preventDefault(); // Prevent the default action
+    const currentUrl = window.location.href; // Get the current page URL
+    navigator.clipboard.writeText(currentUrl) // Copy URL to clipboard
+        .then(() => alert('URL copied to clipboard!')) // Success message
+        .catch(err => alert('Failed to copy URL: ' + err)); // Error handling
+}
 $(document).ready(function() {
     $('#contactForm_old').on('click', function(e) {
       e.preventDefault(); // Prevent the default form submission
@@ -571,4 +638,15 @@ $(document).ready(function() {
     });
 });
 </script>  
+<style>
+.dark-report-sec.white_font_color h1, 
+.dark-report-sec.white_font_color h2, 
+.dark-report-sec.white_font_color h3, 
+.dark-report-sec.white_font_color h4, 
+.dark-report-sec.white_font_color h5, 
+.dark-report-sec.white_font_color p, 
+.dark-report-sec.white_font_color span {
+  color: #fff !important;
+}
+</style>
 @endsection

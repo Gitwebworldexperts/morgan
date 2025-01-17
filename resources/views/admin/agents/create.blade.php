@@ -15,7 +15,7 @@
         </div>
 
         <div class="form-group">
-            <label for="detail">Detail:</label>
+            <label for="detail">Designation:</label>
             <textarea class="form-control @error('detail') is-invalid @enderror" name="detail" id="detail">{{ old('detail') }}</textarea>
             @error('detail')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -23,12 +23,20 @@
         </div>
 
         <div class="form-group">
+            <label for="description">Detail:</label>
+            <textarea class="form-control @error('description') is-invalid @enderror" name="description" id="description">{{ old('description') }}</textarea>
+            @error('description')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <!-- <div class="form-group">
             <label for="username">Username (Email):</label>
             <input type="email" class="form-control @error('username') is-invalid @enderror" id="username" name="username" value="{{ old('username') }}" required>
             @error('username')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
-        </div>
+        </div> -->
 
         <div class="form-group">
             <label for="email">Email:</label>
@@ -37,6 +45,15 @@
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
+
+        <div class="form-group">
+            <label for="linkedin">Linkedin:</label>
+            <input type="linkedin" class="form-control @error('linkedin') is-invalid @enderror" id="linkedin" name="linkedin" value="{{ old('linkedin') }}" >
+            @error('linkedin')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+        
 
         <div class="form-group">
             <label for="mobile">Mobile:</label>

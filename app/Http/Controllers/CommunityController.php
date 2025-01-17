@@ -46,6 +46,7 @@ class CommunityController extends Controller
         $featured_image = $request->hasFile('featured_image') ? $imageUploadService->storeImage($request->file('featured_image'), 'images') :"";
         $section_i_image = $request->hasFile('section_i_image') ? $imageUploadService->storeImage($request->file('section_i_image'), 'images') :"";
         $second_image = $request->hasFile('second_image') ? $imageUploadService->storeImage($request->file('second_image'), 'images') :"";
+        $third_image = $request->hasFile('third_image') ? $imageUploadService->storeImage($request->file('third_image'), 'images') :"";
 
         Community::create([
             'community_name' => $request->community_name,
@@ -58,6 +59,7 @@ class CommunityController extends Controller
             'button_i_url' => $request->button_i_url,
             'button_ii_url' => $request->button_ii_url,
             'second_image' => $second_image,
+            'third_image' => $third_image,
             'section_iii_content' => $request->section_iii_content,
             'section_iii_button_name' => $request->section_iii_button_name,
             'status' => $request->status
@@ -104,6 +106,12 @@ class CommunityController extends Controller
         if ($request->hasFile('second_image')) {
             $community->second_image = $request->hasFile('second_image') ? $imageUploadService->storeImage($request->file('second_image'), 'images') :"";
         }
+
+        if ($request->hasFile('third_image')) {
+            $community->third_image = $request->hasFile('third_image') ? $imageUploadService->storeImage($request->file('third_image'), 'images') :"";
+        }
+
+        
 
         $community->update([
             'community_name' => $request->community_name,

@@ -53,7 +53,7 @@
                                 </li>
 
                                 <li class="nav-item">
-                                    <a href="{{ route('career.edit') }}" class="@if (Route::is('career.edit') || Route::is('career.update') || Route::is('posts.create')) active_nav @endif nav-link align-middle px-0">
+                                    <a href="{{ route('career.edit') }}" class="@if (Route::is('career.edit') || Route::is('career.update')) active_nav @endif nav-link align-middle px-0">
                                         <span class="ms-1 d-none d-sm-inline">Career Page</span>
                                     </a>
                                 </li>
@@ -67,6 +67,11 @@
                                 <li class="nav-item">
                                     <a href="{{ route('about.index') }}" class="@if (Route::is('about.index') || Route::is('about.edit') || Route::is('about.create')) active_nav @endif nav-link align-middle px-0">
                                         <span class="ms-1 d-none d-sm-inline">About</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('private_offices.index') }}" class="@if (Route::is('private_offices.index') || Route::is('private_offices') || Route::is('private_offices')) active_nav @endif nav-link align-middle px-0">
+                                        <span class="ms-1 d-none d-sm-inline">Private Office</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -111,7 +116,7 @@
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('private_properties.index') }}"
-                                        class="@if (request()->is('private-properties*') || Route::is('private_properties.index')) active_nav @endif nav-link align-middle px-0">
+                                        class="@if (request()->is('private-properties*') || Route::is('private_properties.index') || Route::is('private_properties.create') || Route::is('private_properties.edit')) active_nav @endif nav-link align-middle px-0">
                                         <span class="ms-1 d-none d-sm-inline">Private</span>
                                     </a>
                                 </li>
@@ -164,6 +169,28 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="{{ route('mortgage_form_data') }}"
+                                class="@if (request()->is('form_data*') || Route::is('mortgage_form_data')) active_nav @endif nav-link align-middle px-0">
+                                <i class="fa-solid fa-calculator"></i> <span class="ms-1 d-none d-sm-inline">Mortgage Data</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('property-quote.view') }}"
+                                class="@if (request()->is('form_data*') || Route::is('property-quote.view')) active_nav @endif nav-link align-middle px-0">
+                                <i class="fa-solid fa-quote-right"></i> <span class="ms-1 d-none d-sm-inline">Property Quote</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('list-with-us.view') }}"
+                                class="@if (request()->is('form_data*') || Route::is('list-with-us.vie')) active_nav @endif nav-link align-middle px-0">
+                                <i class="fa-solid fa-link"></i> <span class="ms-1 d-none d-sm-inline">List-With-Us Data</span>
+                            </a>
+                        </li>
+                        
+
+                        
+
+                        <li class="nav-item">
                             <a href="{{ route('agents.index') }}"
                                 class="@if (request()->is('agents*') || Route::is('agents.index')) active_nav @endif nav-link align-middle px-0">
                                 <i class="fa-brands fa-teamspeak"></i> <span
@@ -215,7 +242,7 @@
                             <a href="{{ route('admin.users.index') }}"
                                 class="@if (request()->is('users*') || Route::is('admin.users.index')) active_nav @endif nav-link align-middle px-0">
                                 <!-- <i class="fa-solid fa-photo-film"></i>  -->
-                                <i class="fa-solid fa-thumbtack"></i>
+                                <i class="fa-solid fa-users"></i>
                                 <span
                                     class="ms-1 d-none d-sm-inline">Users</span>
                             </a>
@@ -225,7 +252,7 @@
                             <a href="{{ route('report_inidividual.index') }}"
                                 class="@if (request()->is('report_inidividual*') || Route::is('admin.report_inidividual') || Route::is('admin.report_inidividual.edit') || Route::is('admin.report_inidividual.create')) active_nav @endif nav-link align-middle px-0">
                                 <!-- <i class="fa-solid fa-photo-film"></i>  -->
-                                <i class="fa-solid fa-thumbtack"></i>
+                                <i class="fa-solid fa-flag"></i>
                                 <span class="ms-1 d-none d-sm-inline">Reports</span>
                             </a>
                         </li>
@@ -238,7 +265,7 @@
 
                         <li  class="nav-item">
                             <a href="{{ route('careers.index') }}" class="@if (Route::is('careers.edit') || Route::is('careers.create') || Route::is('careers.index')) active_nav @endif nav-link align-middle px-0">
-                                <span class="ms-1 d-none d-sm-inline"><i class="fa-solid fa-thumbtack"></i> Career</span>
+                                <span class="ms-1 d-none d-sm-inline"><i class="fa-solid fa-road"></i> Career</span>
                             </a>
                         </li>
                     </ul>

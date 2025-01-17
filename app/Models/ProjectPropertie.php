@@ -54,6 +54,12 @@ class ProjectPropertie extends Model
         return $this->belongsTo(PropertyType::class, 'category_id');
     }
 
+
+    public function community()
+    {
+        return $this->belongsTo(Community::class, 'community_id');
+    }
+
     public function banners()
     {
         return $this->hasMany(Banners::class, 'property_id')->where('page_type', 'project');

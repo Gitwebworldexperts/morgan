@@ -1,5 +1,91 @@
 /*!Main Css v1.54 by @Prem */
 
+document.querySelectorAll('.Wishlist').forEach(function(wishlist) {
+    wishlist.addEventListener('click', function() {
+        const productSlug = this.getAttribute('data-url'); // Extract the slug from the URL
+        const userId = this.getAttribute('data-auth');
+
+        const productId = this.getAttribute('data-id');
+        const producttype = this.getAttribute('data-type');
+    
+    if (!userId) {
+        alert('You must be logged in to add to the wishlist.');
+        return;
+    }
+
+    
+    // Send a POST request to the server to add the item to the wishlist
+    fetch('/development/morgan/web/wishlist', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+            product_slug: productSlug,
+            product_id: productId,
+            product_type: producttype,
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Toggle the heart icons based on the response
+     // Check the server response and update the wishlist icon accordingly
+if (data.message === 'Product added to wishlist!') {
+    // Hide the outlined heart icon and display the filled heart icon
+    const heartOutlined = this.querySelector('.heart-o-icon');
+    const heartFilled = this.querySelector('.heart-icon');
+    
+    if (heartOutlined && heartFilled) { // Ensure elements exist to avoid errors
+        heartOutlined.style.setProperty('display', 'none', 'important'); // Use !important
+        heartFilled.style.setProperty('display', 'inline', 'important'); // Use !important
+    } else {
+        console.error('Heart icons not found in the DOM.');
+    }
+} else if (data.message === 'Product removed from wishlist!') {
+    // Hide the filled heart icon and display the outlined heart icon
+    const heartOutlined = this.querySelector('.heart-o-icon');
+    const heartFilled = this.querySelector('.heart-icon');
+    
+    if (heartOutlined && heartFilled) { // Ensure elements exist to avoid errors
+        heartOutlined.style.setProperty('display', 'inline', 'important'); // Use !important
+        heartFilled.style.setProperty('display', 'none', 'important'); // Use !important
+    } else {
+        console.error('Heart icons not found in the DOM.');
+    }
+} else {
+    // Handle unexpected messages or errors
+    console.warn('Unexpected message:', data.message);
+}
+
+        
+
+    });
+    });
+});
+
+// document.querySelector('.Wishlist').addEventListener('click', function() {
+    
+// });
+
+
+(function() {
+    // Get all images on the page
+    const images = document.querySelectorAll('img');
+    
+    // Iterate through each image
+    images.forEach(img => {
+        // Check if the image has an alt attribute
+        if (!img.hasAttribute('alt') || img.alt.trim() === '') {
+            // Add or update the alt attribute
+            img.setAttribute('alt', 'morgan');
+            // console.log(`Alt attribute added to:`, img);
+        }
+    });
+
+    console.log('Alt attribute check completed.');
+})();
+
 
 var owl = $("#instructor-slider");
 owl.owlCarousel({
@@ -286,7 +372,7 @@ var owl = $("#testimonials");
 /*---- Bottom To Top Scroll Script ---*/
 $(window).on('scroll', function() {
     var height = $(window).scrollTop();
-    if (height > 300) {
+    if (height > 600) {
         $('#back2Top').fadeIn();
     } else {
         $('#back2Top').fadeOut();
@@ -363,7 +449,14 @@ $(window).scroll(function() {
 			document.getElementById("filters-sidebar").style.right = "-400px";
 			document.getElementById("filter-overlay").style.display = "none";
 		}
-		
+		//document.getElementById("filter-overlay").addEventListener("click", closeNav);
+		const filterOverlay = document.getElementById("filter-overlay");
+if (filterOverlay) {
+  filterOverlay.addEventListener("click", closeNav);
+} else {
+  console.warn("filter-overlay element not found.");
+}
+
 		
 		
 		 $(document).ready(function() {
@@ -388,3 +481,28 @@ $(window).scroll(function() {
             link.download = '';
             link.click();
         }
+        
+            document.addEventListener('DOMContentLoaded', function () {
+		const sections = document.querySelectorAll('.parent-section');
+
+		sections.forEach(function (section) {
+		    const toggleButton = section.querySelector('.link-btn');
+		    const contentDiv = section.querySelector('.show_more_content');
+		    const maxHeight = 300; // Set the maximum height for the initial view, adjust as needed.
+
+		    // Initially hide the content and show the "Show More" button
+		    contentDiv.style.maxHeight = `${maxHeight}px`;
+		    contentDiv.style.overflow = 'hidden';
+
+		    toggleButton.addEventListener('click', function () {
+			// Toggle content visibility
+			if (contentDiv.style.maxHeight === `${maxHeight}px`) {
+			    contentDiv.style.maxHeight = '20000px';  // Set a large value for smooth transition
+			    toggleButton.textContent = 'Show Less';  // Change button text
+			} else {
+			    contentDiv.style.maxHeight = `${maxHeight}px`;  // Collapse the content
+			    toggleButton.textContent = 'Show More';  // Change button text
+			}
+		    });
+		});
+	    });

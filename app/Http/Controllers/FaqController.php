@@ -17,7 +17,7 @@ class FaqController extends Controller
      */
     public function __construct()
     {
-        // $this->middleware('auth');
+        $this->middleware('auth');
     }
     public function index()
     {
@@ -84,4 +84,17 @@ class FaqController extends Controller
         $faq->delete();
         return redirect()->route('faq.index')->with('success', 'FAQs delete successfully!');
     }
+
+    public function settings(Request $request)
+    {
+        $method = $request->method();
+        if ($method == 'POST') {
+            setOption("faq_heading", $request->heading);
+            setOption("faq_sub_heading", $request->subheading);
+            return redirect()->route('faq.index')->with('success', 'FAQs stored successfully!');
+        } elseif ($method == 'GET') {
+            return view('admin.faq.common');
+        }
+    }
+
 }

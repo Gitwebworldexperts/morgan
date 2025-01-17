@@ -245,12 +245,12 @@ class PropertieController extends Controller
 
     public function DetailPage(Request $request,$pageName){
         $properties = [
-            RentPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType'])->first(),
-            PrivatePropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType'])->first(),
-            ProjectPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType','company','plans'])->first(),
-            InternationalPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType'])->first(),
-            BuyPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType'])->first(),
-            BrandedPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType'])->first()
+            RentPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType','community'])->first(),
+            PrivatePropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType','community'])->first(),
+            ProjectPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType','company','plans','community'])->first(),
+            InternationalPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType','community'])->first(),
+            BuyPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType','community'])->first(),
+            BrandedPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType','community'])->first()
         ];        
         
         $amenitie = Amenitie::where('status','1')->get();
@@ -496,15 +496,83 @@ class PropertieController extends Controller
 
             $private = ""; 
             $property_type_name = "private";
+            $filter_array = [
+                'sort' => !empty($request->sort) ? $request->sort : '',
+                'property_type' => !empty($request->property_type) ? $request->property_type : [],
+                'size' => !empty($request->size) ? $request->size : [],
+                'min_range' => !empty($request->min_range) ? $request->min_range : '',
+                'max_range' => !empty($request->max_range) ? $request->max_range : '',
+            ];
             // Return view directly with paginated data
-            return view('search', compact('data','private','property_type_name'));
+            return view('search', compact('data','private','property_type_name','filter_array'));
         } else {
             return redirect()->route('home');    
         }
         die;
     }
 
-    
+
+
+    public function InvestmentListing(Request $request){
+        $propertyTypes = PropertyType::where('property',$this->property)->get();
+        $this->page_title = 'Investment Listing';
+        $propFor = 'invest';
+        $pagination = $request->input('page');
+
+        // Check if pagination was requested and set propFor if needed
+        if ($pagination) {
+            $previousUrl = url()->previous();
+            parse_str(parse_url($previousUrl, PHP_URL_QUERY), $queryParams);
+            $propFor = $queryParams['prop_for'] ?? null;
+        }
+
+        // Redirect if propFor is empty
+        if (empty($propFor)) {
+            return redirect()->route('home');
+        }
+
+        $propertyTypes = [
+            'invest' => InvestmentPropertie::class
+        ];
+
+        // Check if the requested property type exists
+        if (array_key_exists($propFor, $propertyTypes)) {
+            // Fetch properties with pagination
+            $properties = $propertyTypes[$propFor]::orderBy('id', 'desc')->with('propertyType')->paginate(12); // Change to your desired items per page
+
+            $property_type = PropertyType::where('status',1)->where('property','investment')->get();
+            
+            $private_listing = ListingDetail::where('id',15)->first();
+
+            $data = [
+                'page_title' => ucfirst($propFor) . " Properties",
+                'page_type' => $propFor,
+                'detail' => $private_listing,
+                'property' => $properties,
+                'property_type' => $property_type,
+                'property_name' => $propFor,
+                'title' => ucfirst($propFor) . " "
+            ];
+
+            // Pass 'prop_for' through the pagination links
+            $properties->appends(['prop_for' => $propFor]);
+
+            $private = ""; 
+            $property_type_name = "investment";
+            $filter_array = [
+                'sort' => !empty($request->sort) ? $request->sort : '',
+                'property_type' => !empty($request->property_type) ? $request->property_type : [],
+                'size' => !empty($request->size) ? $request->size : [],
+                'min_range' => !empty($request->min_range) ? $request->min_range : '',
+                'max_range' => !empty($request->max_range) ? $request->max_range : '',
+            ];
+            // Return view directly with paginated data
+            return view('search', compact('data','property_type_name','filter_array'));
+        } else {
+            return redirect()->route('home');    
+        }
+        die;
+    }
 
     public function DevelopmentListing(Request $request){
         

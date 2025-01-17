@@ -70,6 +70,16 @@
                         @endif
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label for="">Get a Quote Image</label>
+                     <input type="file" class="form-control" name="get_an_quote_image" id="section_1_image">
+                        @if($pm->get_an_quote_image)
+                            <div id="image-preview" class="mt-3">
+                                <img src="{{ asset($pm->get_an_quote_image)}}" class="img-thumbnail mr-2" style="max-height: 150px;">
+                            </div>
+                        @endif
+                </div>
             </div>
         </div>
         <button type="submit" class="green-btn">Create Page</button>

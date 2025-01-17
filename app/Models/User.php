@@ -50,4 +50,10 @@ class User extends Authenticatable
         $this->is_active = !$this->is_active;
         $this->save();
     }
+
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
+    }
+
 }

@@ -38,7 +38,8 @@ class RentPropertie extends Model
         'reference_number',
         'geopoints',
         'XML',
-        'iframe'
+        'iframe',
+        'community_id'
     ];
 
     public function country()
@@ -55,6 +56,11 @@ class RentPropertie extends Model
     public function propertyType()
     {
         return $this->belongsTo(PropertyType::class, 'category_id');
+    }
+
+    public function community()
+    {
+        return $this->belongsTo(Community::class, 'community_id');
     }
 
     public function banners()

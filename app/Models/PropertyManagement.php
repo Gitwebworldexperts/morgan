@@ -17,6 +17,6 @@ class PropertyManagement extends Model
         'section_1_image',
         'section_2_title',
         'section_2_description',
-        'section_2_anchor_link',
+        'section_2_anchor_link','get_an_quote_image',
     ];
 }

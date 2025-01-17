@@ -148,26 +148,29 @@
 
                 <div class="col-12">
                     <div class="row">
-                        @if(isset($property->floor_plan) && !empty($property->floor_plan))
+                        
                         <div class="form-group col-md-6">
                             <label for="floor_plan">Floor Plan</label>
                             <input type="file" name="floor_plan" class="form-control">
+                            @if(isset($property->floor_plan) && !empty($property->floor_plan))
                             <a class="download_document" href="{{ asset($property->floor_plan) }}" download>Floor Plan</a>
+                            @endif
                             @error('floor_plan')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        @endif
-                        @if(isset($property->brochure) && !empty($property->brochure))
+
                         <div class="form-group col-md-6">
                             <label for="brochure">Brochure</label>
                             <input type="file" name="brochure" class="form-control">
+                            @if(isset($property->brochure) && !empty($property->brochure))
                             <a class="download_document" href="{{ asset($property->brochure) }}" download>Brochure</a>
+                            @endif
                             @error('brochure')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        @endif
+                        
                     </div>
                 </div>
 

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @php
-  $page_name = $data['detail']->page_name ?? $data['page_title'] ?? 'Properties';
+  $page_name = $data['detail']->page_name ?? $data['page_title'] ?? 'The Market';
 @endphp
 
 

@@ -5,7 +5,7 @@
                                   <div class="BookingBox">
                                       <div class="BookingLocation">
                                           <div class="BookingFrom">
-                                              <input type="text" name="" class="form-control"
+                                              <input type="text" name="location" class="form-control"
                                                   placeholder="Search country and city..." value="{{ (isset($searchData['location']) && !empty($searchData['location']))? $searchData['location'] : ''  }}" name="location">
                                           </div>
                                           <div class="BookingFrom p-0">
@@ -63,11 +63,15 @@
                                               </select>
                                           </div> -->
                                           <div class="BookingFrom p-0">
-                                              <select class="form-control" name="bed">
-                                                  <option>Property Size</option>
+                                              <select class="form-control" name="buy">
+                                                  <option>Bedrooms</option>
                                                   <option @if(isset($searchData['bed']) && $searchData['bed'] == 1) selected @endif>1</option>
                                                   <option @if(isset($searchData['bed']) && $searchData['bed'] == 2) selected @endif>2</option>
                                                   <option @if(isset($searchData['bed']) && $searchData['bed'] == 3) selected @endif>3</option>
+                                                  <option @if(isset($searchData['bed']) && $searchData['bed'] == 4) selected @endif>3</option>
+                                                  <option @if(isset($searchData['bed']) && $searchData['bed'] == 5) selected @endif>3</option>
+                                                  <option @if(isset($searchData['bed']) && $searchData['bed'] == 6) selected @endif>6</option>
+                                                  <option @if(isset($searchData['bed']) && $searchData['bed'] == 7) selected @endif>7+</option>
                                               </select>
                                           </div>
                                           <div class="BookingFrom p-0 d-none">

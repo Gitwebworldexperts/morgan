@@ -44,11 +44,15 @@ class PrivatePropertieController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'address' => 'required|string',
-            // 'google_maps_link' => 'nullable|url',
+            'meta_title' => 'required|string|max:255',
+            'meta_description2' => 'required|string|max:255',
+            // 'address' => 'max:255',
+            // 'google_maps_link' => 'max:255',
+            // 'property_description' => 'max:255',
+            // 'iframe' => 'max:255',
             // 'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'featured_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-            // 'area' => 'nullable|numeric',
+            'area' => 'nullable|numeric',
             'jacuzzi' => 'nullable|boolean',
             'bed' => 'nullable|integer',
             'price' => 'nullable|numeric',
@@ -56,7 +60,9 @@ class PrivatePropertieController extends Controller
             'is_featured' => 'nullable|boolean',
             'is_private' => 'nullable|boolean',
             // 'country_id' => 'nullable|exists:countries,id',
-            'category_id' => 'required',
+            // 'category_id' => 'required',
+            // 'eighth_heading' => 'max:255',
+            // 'eighth_description' => 'max:255',
         ]);
 
         $slug = generateSlug($request->name, \App\Models\PrivatePropertie::class);
@@ -257,20 +263,28 @@ class PrivatePropertieController extends Controller
     public function update(Request $request, $id)
     {
         // dd($request);
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'address' => 'required|string',
-        // 'google_maps_link' => 'nullable|url',
-        'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-        'featured_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-        'area' => 'nullable|numeric',
-        'jacuzzi' => 'nullable|boolean',
-        'bed' => 'nullable|integer',
-        'price' => 'nullable|numeric',
-        'sale_price' => 'nullable|numeric',
-        'country_id' => 'nullable|exists:countries,id',
-        'category_id' => 'required|exists:property_types,id',
-    ]);
+           $request->validate([
+            'name' => 'required|string|max:255',
+            'meta_title' => 'required|string|max:255',
+            'meta_description2' => 'required|string|max:255',
+            // 'address' => 'max:555',
+            // 'google_maps_link' => 'max:255',
+            // 'property_description' => 'max:255',
+            // 'iframe' => 'max:255',
+            // 'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'featured_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'area' => 'nullable|numeric',
+            'jacuzzi' => 'nullable|boolean',
+            'bed' => 'nullable|integer',
+            'price' => 'nullable|numeric',
+            'sale_price' => 'nullable|numeric',
+            'is_featured' => 'nullable|boolean',
+            'is_private' => 'nullable|boolean',
+            // 'country_id' => 'nullable|exists:countries,id',
+            // 'category_id' => 'required',
+            // 'eighth_heading' => 'max:255',
+            // 'eighth_description' => 'max:255',
+        ]);
 
     // Find the property to update
     $property = PrivatePropertie::findOrFail($id);
@@ -296,7 +310,8 @@ class PrivatePropertieController extends Controller
 
     // Update property description and other fields
     $property->description = $request->property_description;
-    $property->amenities_id = $request->has('amenities_id') ? implode(', ', $request->amenities_id) : $property->amenities_id;
+    $property->amenities_id = $request->has('amenities_id') ? implode(', ', $request->amenities_id) : "";
+    // $property->amenities_id = $request->has('amenities_id') ? implode(', ', $request->amenities_id) : $property->amenities_id;
     $property->agent = $request->agent_id;
     $property->meta_tags = $request->meta_tags;
 

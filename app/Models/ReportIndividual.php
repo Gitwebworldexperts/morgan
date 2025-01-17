@@ -13,7 +13,7 @@ class ReportIndividual extends Model
         'heading', 'slug','subheading', 'file_upload', 'background_image', 'description',
         'section2_heading', 'section2_content',
         'section3_heading', 'testimonial_description','html_code','featured_image',
-        'meta_title', 'meta_description', 'seo_heading', 'seo_description','section_ii_background_image'
+        'meta_title', 'meta_description', 'seo_heading', 'seo_description','section_ii_background_image','report_type','footer_image'
     ];
     
     protected $casts = [

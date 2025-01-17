@@ -24,15 +24,15 @@
 
                 <div class="row">
                     <div class="form-group">
-                        <label for="property_description">Property Description <span class="mandatory">*</span></label>
+                        <label for="property_description">Property Description </label>
                         <textarea class="form-control" name="property_description" id="property_description" rows="3" >{{ old('property_description',$property->description) }}</textarea>
                         @error('property_description')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="address">Address <span class="mandatory">*</span></label>
-                        <textarea class="form-control" name="address" id="address" rows="3" required>{{ old('address', $property->address) }}</textarea>
+                        <label for="address">Address </label>
+                        <textarea class="form-control" name="address" id="address" rows="3" >{{ old('address', $property->address) }}</textarea>
                         @error('address')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -45,7 +45,6 @@
                     @error('google_maps_link')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
-                    <small class="form-text text-muted">Please enter a valid URL.</small>
                 </div>
 
                 <div class="form-group">
@@ -59,7 +58,7 @@
 
                 <div class="form-group">
                     <label for="images">Choose Images</label>
-                    <input type="file" name="images[]" id="images" class="form-control" multiple>
+                    <input type="file" accept="image/*" name="images[]" id="images" class="form-control" multiple>
                     @error('images.*')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -87,7 +86,7 @@
 
                 <div class="form-group">
                     <label for="featured_image">Featured Image</label>
-                    <input type="file" name="featured_image" class="form-control">
+                    <input type="file" accept="image/*" name="featured_image" class="form-control">
                     @error('featured_image')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -107,7 +106,7 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="area">Area</label>
-                        <input type="text" class="form-control" name="area" id="area" value="{{ old('area', $property->area) }}">
+                        <input type="number" class="form-control" name="area" min="0" id="area" value="{{ old('area', $property->area) }}">
                         @error('area')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -115,7 +114,7 @@
 
                     <div class="form-group col-md-6">
                         <label for="bed">Bed</label>
-                        <input type="number" class="form-control" name="bed" id="bed" value="{{ old('bed', $property->bed) }}">
+                        <input type="number" class="form-control" name="bed" id="bed" min="0" value="{{ old('bed', $property->bed) }}">
                         @error('bed')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -167,33 +166,34 @@
 
                 <div class="col-12">
                     <div class="row">
-                        @if(isset($property->floor_plan) && !empty($property->floor_plan) && $property->floor_plan)
                         <div class="form-group">
                             <label for="floor_plan">Floor Plan</label>
                             <input type="file" name="floor_plan" class="form-control">
+                            @if(isset($property->floor_plan) && !empty($property->floor_plan) && $property->floor_plan)
                             <a class="download_document" href="{{ asset($property->floor_plan) }}" download >Floor Plan</a>
+                            @endif
                             @error('floor_plan')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        @endif
-                        @if(isset($property->brochure) && !empty($property->brochure) && $property->brochure)
                         <div class="form-group">
                             <label for="brochure">Brochure</label>
                             <input type="file" name="brochure" class="form-control">
+                            @if(isset($property->brochure) && !empty($property->brochure) && $property->brochure)
                             <a class="download_document" href="{{ asset($property->brochure) }}" download >Brochure</a>
+                            @endif
                             @error('brochure')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        @endif
+
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label>Facilities</label><br>
                     <div class="form-group">
-                        <label for="amenitie_id">Amenities <span class="mandatory">*</span></label>
+                        <label for="amenitie_id">Amenities </label>
                         <select class="form-control select2" multiple data-placeholder="Select a Amenity" name="amenities_id[]" id="amenities_id">
                             <option value="">Select amenities</option>
                             
@@ -234,7 +234,7 @@
                     </div>
                     <div class="form-group  col-md-12">
                         <label for="blog_background">Background</label>
-                        <input type="file" name="blog_background" id="blog_background" class="form-control">
+                        <input type="file" accept="image/*" name="blog_background" id="blog_background" class="form-control">
                         @error('blog_background')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -279,7 +279,7 @@
                     </div>
 
                     <div class="form-group col-md-6">
-                        <label for="category_id">Property Type <span class="mandatory">*</span> <span class="help_url"><a href="{{ route('property-type.create','private') }}" target="_blank">Add Property Type</a></span></label>
+                        <label for="category_id">Property Type  <span class="help_url"><a href="{{ route('property-type.create','private') }}" target="_blank">Add Property Type</a></span></label>
                         <select class="form-control @error('category_id') is-invalid @enderror" name="category_id" id="category_id">
                             <option value="">Select a property type</option>
                             @if($propertyTypes)

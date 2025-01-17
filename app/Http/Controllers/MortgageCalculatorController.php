@@ -43,4 +43,10 @@ class MortgageCalculatorController extends Controller
 
         return back()->with('success', 'Mortgage form submitted successfully!');
     }
+
+    
+    public function submitedForm(){
+    $contact = MortgageApplication::orderBy('id', 'desc')->paginate(10);
+    return view('admin.mortgage_data', compact('contact')); 
+    }
 }

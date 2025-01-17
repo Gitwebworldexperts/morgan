@@ -97,11 +97,13 @@ class BaseController extends Controller
     }
 
     public function BlogList(){
-        $posts = Post::with('tags')
-                ->whereHas('tags', function ($query) {
-                    $query->where('name', '!=', 'Region');
-                })
-                ->orWhereDoesntHave('tags')  // Include posts with no tags
+        // $posts = Post::with('tags')
+        //         ->whereHas('tags', function ($query) {
+        //             $query->where('name', '!=', 'Region');
+        //         })
+        //         ->orWhereDoesntHave('tags')  // Include posts with no tags
+        //         ->paginate(13);
+                $posts = Post::latest()  // Include posts with no tags
                 ->paginate(13);
 
 
@@ -125,13 +127,18 @@ class BaseController extends Controller
 
     public function PropertyManagement(){
         $data = PropertyManagement::latest()->first();
+        // $posts = Post::with('tags')
+        // ->whereHas('tags', function ($query) {
+        //     $query->where('name', '!=', 'Region');
+        // })
+        // ->orWhereDoesntHave('tags')  // Include posts with no tags
+        // ->take(4)  // Limit the result to 4 posts
+        // ->get();  // Get the results
+
         $posts = Post::with('tags')
-        ->whereHas('tags', function ($query) {
-            $query->where('name', '!=', 'Region');
-        })
-        ->orWhereDoesntHave('tags')  // Include posts with no tags
-        ->take(4)  // Limit the result to 4 posts
-        ->get();  // Get the results
+        ->latest()                   // Orders by 'created_at' in descending order
+        ->take(4)                    // Limits the result to 4 posts
+        ->get();
     
 
         return view('property_management')->with(['data' =>$data,"posts" => $posts]);        

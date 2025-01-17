@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Wishlist;
+use App\Models\FormData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,6 +16,13 @@ class WishlistController extends Controller
            
            return view('wishList', compact('wishList'));
     }
+
+    public function myInquiries(){
+        $user = Auth::user();
+        $inquiries = FormData::where('email', $user->email)->get();       
+       return view('inquirie', compact('inquiries'));
+    }
+
     public function store(Request $request)
     {
         if (Auth::check()) {

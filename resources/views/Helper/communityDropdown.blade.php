@@ -1,5 +1,5 @@
 <div class="form-group col-md-6">
-    <label for="community_id">Community<span class="mandatory">*</span></label>
+    <label for="community_id">Community</label>
     <select class="form-control" name="community_id" id="community_id">
         <option value="">Select a Community</option>
         @if ($communities)

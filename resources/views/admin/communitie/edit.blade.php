@@ -100,6 +100,14 @@
                             <input type="text" name="section_iii_button_name" id="section_iii_button_name" class="form-control" value="{{ old('section_iii_button_name', $community->section_iii_button_name) }}" required>
                         </div>
 
+                        <div class="form-group">
+                            <label for="">Section III Image</label>
+                            <input type="file" name="third_image" id="third_image" class="form-control">
+                            @if ($community->third_image)
+                                <img src="{{ asset($community->third_image) }}" alt="Section III Image" class="img-thumbnail mt-2" width="150">
+                            @endif
+                        </div>
+
                         <!-- Status -->
                         <div class="form-group">
                             <label for="status">Status</label>

@@ -32,6 +32,19 @@
                     @enderror
                 </div>
 
+                <div class="form-group">
+                    <label for="testimonial_description">Select Report Type</label>
+                    <select class="form-control" name="report_type"  id="report_type" required>
+                        <option value="" > Select Report Type</option>
+                        <option value="1" >Dubai Real Estate Market Reports</option>
+                        <option value="2" >Branded Residences Market Reports</option>
+                        <option value="3" >Quarterly Community Reports</option>
+                    </select>
+                    @error('report_type')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
                 <!-- Subheading -->
                 <div class="form-group">
                     <label for="subheading">Subheading</label>
@@ -147,7 +160,13 @@
                 </div>
 
                 
-
+                <div class="form-group">
+                    <label for="footer_image">Footer Image (For Branded Residences Market Reports)</label>
+                    <input type="file" class="form-control" name="footer_image" >
+                    @error('footer_image')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
 
                 <!-- SEO -->
                 <h5>SEO</h5>

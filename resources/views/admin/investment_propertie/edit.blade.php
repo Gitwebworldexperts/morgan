@@ -167,26 +167,28 @@
 
                 <div class="col-12">
                     <div class="row">
-                        @if(isset($property->floor_plan) && !empty($property->floor_plan) && $property->floor_plan)
                         <div class="form-group">
                             <label for="floor_plan">Floor Plan</label>
                             <input type="file" name="floor_plan" class="form-control">
+                            @if(isset($property->floor_plan) && !empty($property->floor_plan) && $property->floor_plan)
                             <a class="download_document" href="{{ asset($property->floor_plan) }}" download >Floor Plan</a>
+                            @endif
+
                             @error('floor_plan')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        @endif
-                        @if(isset($property->brochure) && !empty($property->brochure) && $property->brochure)
                         <div class="form-group">
                             <label for="brochure">Brochure</label>
                             <input type="file" name="brochure" class="form-control">
+                            @if(isset($property->brochure) && !empty($property->brochure) && $property->brochure)
                             <a class="download_document" href="{{ asset($property->brochure) }}" download >Brochure</a>
+                            @endif
                             @error('brochure')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
-                        @endif
+
                     </div>
                 </div>
 
@@ -279,7 +281,7 @@
                     </div>
 
                     <div class="form-group col-md-6">
-                        <label for="category_id">Property Type <span class="mandatory">*</span> <span class="help_url"><a href="{{ route('property-type.create','private') }}" target="_blank">Add Property Type</a></span></label>
+                        <label for="category_id">Property Type <span class="mandatory">*</span> <span class="help_url"><a href="{{ route('property-type.create','investment') }}" target="_blank">Add Property Type</a></span></label>
                         <select class="form-control @error('category_id') is-invalid @enderror" name="category_id" id="category_id">
                             <option value="">Select a property type</option>
                             @if($propertyTypes)

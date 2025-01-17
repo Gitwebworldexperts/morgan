@@ -8,11 +8,18 @@ use DB;
 use App\Models\PropertyType;
 use App\Models\Amenitie;
 use App\Models\Banners;
+use App\Models\Community;
 use App\Models\Agent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
+use App\Jobs\DownloadImageJob;
+
+
+use Illuminate\Support\Facades\Artisan;
+use Symfony\Component\Process\Process;
+
 
 class XMLController extends Controller
 {
@@ -25,310 +32,263 @@ class XMLController extends Controller
     {
         // $this->middleware('auth');
     }
-    public function getXml()
+   
+
+    public function startWorker()
     {
-        ini_set('max_execution_time', 0); // Increase execution time
-        set_time_limit(0);
-        $url = "https://myprojectdemonstration.net/development/morgan/web/xml/RfDataFeed.xml";
-        $response = Http::get($url);
-    
-        if ($response->successful()) {
-            $xmlContent = simplexml_load_string($response->body());
-            $xmlArray = json_decode(json_encode($xmlContent), true);
-            $count = $update = 0;
-    
-            if (isset($xmlArray['property']) && !empty($xmlArray['property']) && count($xmlArray['property'])) {
-                foreach ($xmlArray['property'] as $item) {
-                    $count++;
-                    $buy = BuyPropertie::where('reference_number', $item['reference_number'])->first();
-                    if ($buy) {
-                        $update++;
-                        // Only continue if the property hasn't been updated
-                        if (isset($item['@attributes']['last_update']) && $item['@attributes']['last_update'] <= $buy->updated_at) {
-                            continue;
-                        }
-                    }
-                    $amenities = explode(",", $item['private_amenities']);
-                    $amenities_ids = [];
-                    foreach ($amenities as $amenitie) {
-                        $amenitie_data = Amenitie::where('amenity_name', $amenitie)->first();
-                        if (empty($amenitie_data)) {
-                            $amenitie_data = new Amenitie();
-                            $amenitie_data->amenity_name = $amenitie;
-                            $amenitie_data->status = '1';
-                            $amenitie_data->save();
-                        }
-                        // Collect the ID of the found or newly created amenity
-                        $amenities_ids[] = $amenitie_data->id;
-                    }
-                    
-                   
-    
-                    
-    
-                    // Extract longitude and latitude
-                    $geopoints = isset($item['geopoints']) ? explode(",", $item['geopoints']) : [null, null];
-                    $longitude = $geopoints[0] ?? null;
-                    $latitude = $geopoints[1] ?? null;
-                    $iframeUrl = "https://www.google.com/maps?q=$latitude,$longitude&hl=en&z=12&output=embed";
-                    $iframe = "<iframe width='600' height='450' frameborder='0' style='border:0' src='$iframeUrl' allowfullscreen></iframe>";
-    
-                    // Generate a unique slug for the property
-                    $slug = generateSlug($item['property_name'] ?? 'default_name' . "_buy", \App\Models\BuyPropertie::class);
-                        echo $slug ."<br>";
-                    // Create or update the property instance
-                    $property = $buy ?: new BuyPropertie();
-    
-                    // Set property attributes
-                    $property->status = "active";
-                    $property->iframe = $iframe;
-                    $property->name = $item['property_name'] ?? 'No name available';
-                    $property->meta_title = $item['title_en'] ?? '';
-                    $property->slug = $slug;
-                    $property->address = ($item['location_lv1'] ?? '') . ', ' . ($item['location_lv2'] ?? '');
-                    $property->google_maps_link = implode(', ', [
-                        $item['location_lv1'] ?? '',
-                        $item['location_lv2'] ?? '',
-                        $item['location_lv3'] ?? '',
-                        $item['location_lv4'] ?? '',
-                        $item['location_lv5'] ?? ''
-                    ]);
-                    $property->area = $item['size'] ?? 'N/A';
-                    $property->jacuzzi = $item['bathroom'] ?? 0;
-                    $property->bed = $item['bedroom'] ?? 0;
-                    $property->price = $item['price']['yearly'] ?? 0;
-                    $property->amenities_id = implode(",", $amenities_ids);
-                    $property->sale_price = $item['price']['yearly'] ?? 0;
-                    $property->updated_at = $item['@attributes']['last_update'] ?? now();
-                    $property->description = $item['description_en'] ?? 'No description available';
-                    $property->reference_number = $item['reference_number'] ?? '';
-                    $property->geopoints = $item['geopoints'] ?? '';
-                    $property->XML = json_encode($item);
-    
-                    if (!$buy) {
-                        if(isset($item['agent']) && !empty($item['agent'])){
-                            if(isset($item['agent']['email']) && !empty($item['agent']['email'])){
-                                $agent = Agent::where('email',$item['agent']['email'])->first();
-                                if(!$agent){
-                                    $agent = new Agent();
-                                    $agent->detail = $item['agent']['title']; 
-                                    $agent->email = $item['agent']['email']; 
-                                    $agent->mobile = $item['agent']['phone'];
-                                    $agent->phone = $item['agent']['phone'];
-                                    $agent->name = $item['agent']['name'];
-                                    
-                                    $imageResponse = Http::get($item['agent']['photo']['url']);
-                                    $timestamp = now()->timestamp;
-                                    $extension = 'png';
-                                    $newFileName = 'image_' . $timestamp . '.' . $extension;
-                                    $imagePath = 'images/' . $newFileName;
-                                    file_put_contents($imagePath, $imageResponse->body());
-                                    $agent->photo = $imagePath;
-                                    $agent->save();
-                                }
-                                $property->agent = $agent->id;
-                            }
-                        }
-                    }
-                    if (!$buy) {
-                        if($item['category']){
-                            $property_type = PropertyType::where(['type_name'=>$item['category'],'property'=>'buy'])->first();
-                            if(!$property_type){
-                                $property_type = new PropertyType();
-                                $property_type->type_name = $item['category']; 
-                                $property_type->property = 'buy';
-                                $property_type->status = '1';
-                                $property_type->save();
-                            }
-                            $property->category_id = $property_type->id;
-                        }
-                    }
+        // Using Artisan::call
+        Artisan::call('queue:work', [
+            '--tries' => 3,
+        ]);
 
-                    // Save the property
-                    $property->save();
-                    if (!$buy) {
-                        if (isset($item['photo']) && is_array($item['photo'])) {
-                            foreach ($item['photo'] as $key => $pic) {
-                                if (count($pic)) {
-                                    foreach ($pic as $keys => $i_pic) {
-                                        $imageResponse = Http::get($i_pic);
-                                        $timestamp = now()->timestamp;
-                                        $extension = 'png';
-                                        $newFileName = 'image_' . $timestamp . '.' . $extension;
-                                        $imagePath = 'images/' . $newFileName;
-                                        file_put_contents($imagePath, $imageResponse->body());
-
-                                        // Store the image in the banners table
-                                        $banner = new Banners();
-                                        $banner->image_url = 'images/' . $newFileName;
-                                        $banner->page_type = 'buy'; // Set the appropriate page_id if needed
-                                        $banner->property_id = $property->id; // Associate with the property
-                                        $banner->save();
-        
-                                        // Set the first image as featured
-                                        if ($keys == 1) {
-                                            $property->featured_image = 'images/' . $newFileName;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-    
-                    // Save the property again after handling the photos
-                    $property->save();
-                }
-            }
-    
-            return "Newly Inserted properties: " . $count . " and updated properties: " . $update;
-        } else {
-            \Log::error('Failed to retrieve XML data from ' . $url);
-            return response()->json(['error' => 'Failed to retrieve XML data'], 500);
-        }
+        return response()->json([
+            'message' => 'Queue worker started successfully!',
+            'output' => Artisan::output(),
+        ]);
     }
 
-    public function getXml__old()
-{
-    ini_set('max_execution_time', 0); // Increase execution time
-    set_time_limit(0); // Adjust PHP's time limit
+   
 
-    $url = "https://myprojectdemonstration.net/development/morgan/web/xml/RfDataFeed.xml";
+    public function getXml()
+{
+    ini_set('max_execution_time', 0); // Unlimited execution time
+    ini_set('memory_limit', '2G'); // Increase memory limit to 2 GB
+
+    // $url = "https://myprojectdemonstration.net/development/morgan/web/xml/RfDataFeed.xml";
+    $url = "https://feed.propertyraptor.com/raptorfeed/df/eu20_001/xml/RfDataFeed.xml";
+    
     $response = Http::get($url);
 
     if ($response->successful()) {
         $xmlContent = simplexml_load_string($response->body());
         $xmlArray = json_decode(json_encode($xmlContent), true);
 
+        $batchSize = 50; // Batch size for chunking data
+        $properties = array_chunk($xmlArray['property'], $batchSize);
+
         $count = $update = 0;
 
-        if (isset($xmlArray['property']) && !empty($xmlArray['property']) && count($xmlArray['property'])) {
-            $chunkSize = 50; // Process in smaller chunks
-            $properties = array_chunk($xmlArray['property'], $chunkSize);
-
-            foreach ($properties as $propertyBatch) {
-                foreach ($propertyBatch as $item) {
-                    $count++;
-                    $buy = BuyPropertie::where('reference_number', $item['reference_number'])->first();
-                    if ($buy) {
-                        $update++;
-                        // Skip update if the property is already updated
-                        if (isset($item['@attributes']['last_update']) && $item['@attributes']['last_update'] <= $buy->updated_at) {
-                            continue;
-                        }
-                    }
-
-                    // Handle amenities efficiently
-                    $amenities = explode(",", $item['private_amenities']);
-                    $amenities_ids = array_map(function ($amenitie) {
-                        $amenitie_data = Amenitie::firstOrCreate(
-                            ['amenity_name' => $amenitie],
-                            ['status' => '1']
-                        );
-                        return $amenitie_data->id;
-                    }, $amenities);
-
-                    // Extract longitude and latitude
-                    $geopoints = isset($item['geopoints']) ? explode(",", $item['geopoints']) : [null, null];
-                    $longitude = $geopoints[0] ?? null;
-                    $latitude = $geopoints[1] ?? null;
-                    $iframeUrl = "https://www.google.com/maps?q=$latitude,$longitude&hl=en&z=12&output=embed";
-                    $iframe = "<iframe width='600' height='450' frameborder='0' style='border:0' src='$iframeUrl' allowfullscreen></iframe>";
-
-                    // Generate a unique slug for the property
-                    $slug = generateSlug($item['property_name'] ?? 'default_name' . "_buy", \App\Models\BuyPropertie::class);
-
-                    // Create or update the property instance
-                    $property = $buy ?: new BuyPropertie();
-
-                    // Set property attributes
-                    $property->status = "active";
-                    $property->iframe = $iframe;
-                    $property->name = $item['property_name'] ?? 'No name available';
-                    $property->meta_title = $item['title_en'] ?? '';
-                    $property->slug = $slug;
-                    $property->address = ($item['location_lv1'] ?? '') . ', ' . ($item['location_lv2'] ?? '');
-                    $property->google_maps_link = implode(', ', [
-                        $item['location_lv1'] ?? '',
-                        $item['location_lv2'] ?? '',
-                        $item['location_lv3'] ?? '',
-                        $item['location_lv4'] ?? '',
-                        $item['location_lv5'] ?? ''
-                    ]);
-                    $property->area = $item['size'] ?? 'N/A';
-                    $property->jacuzzi = $item['bathroom'] ?? 0;
-                    $property->bed = $item['bedroom'] ?? 0;
-                    $property->price = $item['price']['yearly'] ?? 0;
-                    $property->amenities_id = implode(",", $amenities_ids);
-                    $property->sale_price = $item['price']['yearly'] ?? 0;
-                    $property->updated_at = $item['@attributes']['last_update'] ?? now();
-                    $property->description = $item['description_en'] ?? 'No description available';
-                    $property->reference_number = $item['reference_number'] ?? '';
-                    $property->geopoints = $item['geopoints'] ?? '';
-                    $property->XML = json_encode($item);
-
-                    if (!$buy) {
-                        // Handle agent creation or retrieval
-                        if (isset($item['agent']) && !empty($item['agent']['email'])) {
-                            $agent = Agent::firstOrCreate(
-                                ['email' => $item['agent']['email']],
-                                [
-                                    'detail' => $item['agent']['title'],
-                                    'mobile' => $item['agent']['phone'],
-                                    'phone' => $item['agent']['phone'],
-                                    'name' => $item['agent']['name'],
-                                    'photo' => $this->downloadImage($item['agent']['photo']['url'] ?? null)
-                                ]
-                            );
-                            $property->agent = $agent->id;
-                        }
-
-                        // Handle property type creation or retrieval
-                        if ($item['category']) {
-                            $property_type = PropertyType::firstOrCreate(
-                                ['type_name' => $item['category'], 'property' => 'buy'],
-                                ['status' => '1']
-                            );
-                            $property->category_id = $property_type->id;
-                        }
-                    }
-
-                    // Save the property
-                    $property->save();
-
-                    // Handle property photos
-                    if (!$buy && isset($item['photo']) && is_array($item['photo'])) {
-                        foreach ($item['photo'] as $key => $pic) {
-                            foreach ((array)$pic as $i_pic) {
-                                $imagePath = $this->downloadImage($i_pic);
-                                if ($imagePath) {
-                                    $banner = new Banners();
-                                    $banner->image_url = $imagePath;
-                                    $banner->page_type = 'buy';
-                                    $banner->property_id = $property->id;
-                                    $banner->save();
-
-                                    // Set the first image as featured
-                                    if ($key == 0) {
-                                        $property->featured_image = $imagePath;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    // Save the property again after handling the photos
-                    $property->save();
-                }
-                // Optional sleep to avoid overwhelming the server
-                sleep(1);
+        foreach ($properties as $batch) {
+            foreach ($batch as $item) {
+                // Process each property item
+                $this->processProperty($item, $count, $update);
             }
+
+            // Pause for a short time to avoid overwhelming the server
+            usleep(500000); // 0.5 second delay between batches
         }
 
-        return "Newly Inserted properties: $count and updated properties: $update";
+        return "Newly Inserted properties: " . $count . " and updated properties: " . $update;
     } else {
+        \Log::error('Failed to retrieve XML data from ' . $url);
         return response()->json(['error' => 'Failed to retrieve XML data'], 500);
     }
 }
+
+public function processProperty($item, &$count, &$update)
+{
+    // Determine if this is a rental or purchase offering
+    if ($item['offering_type'] == "Rental") {
+        $existingProperty = RentPropertie::where('reference_number', $item['reference_number'])->first();
+        $slug = generateSlug($item['property_name'] ?? 'default_name' . "_rent", \App\Models\RentPropertie::class);
+        $property = $existingProperty ?: new RentPropertie();
+    } elseif ($item['offering_type'] == "Purchase") {
+        $existingProperty = BuyPropertie::where('reference_number', $item['reference_number'])->first();
+        $slug = generateSlug($item['property_name'] ?? 'default_name' . "_buy", \App\Models\BuyPropertie::class);
+        $property = $existingProperty ?: new BuyPropertie();
+    } else {
+        return; // Skip non-rental/purchase items
+    }
+
+    // If the property exists and is up-to-date, skip it
+    if ($existingProperty && isset($item['@attributes']['last_update']) && $item['@attributes']['last_update'] <= $existingProperty->updated_at) {
+        $update++;
+        return;
+    }
+
+    // Handle amenities
+    $amenitiesIds = [];
+    if(isset($item['private_amenities']) && !empty($item['private_amenities'])){
+        $amenitiesIds = $this->handleAmenities($item['private_amenities']);
+    }
+    
+
+    // Handle location and geopoints
+    $iframe = $this->getIframe($item['geopoints']);
+
+    // Set property attributes
+    $property->status = "active";
+    $property->iframe = $iframe;
+    // $property->name = $item['property_name'] ?? 'No name available';
+    $property->name = $item['title_en'] ?? 'No name available';
+    $property->meta_title = $item['title_en'] ?? '';
+    $property->slug = $slug;
+    // $property->address = ($item['location_lv5'] ?? '') . ', ' . ($item['location_lv4'] ?? '');
+    $property->address = $item['location_lv4'];
+    // $property->google_maps_link = $this->getGoogleMapsLink($item);
+    $property->google_maps_link = $item['location_lv4'];
+    $property->area = $item['size'] ?? 'N/A';
+    $property->jacuzzi = $item['bathroom'] ?? 0;
+    $property->bed = $item['bedroom'] ?? 0;
+    $property->price = $item['price']['yearly'] ?? $item['price'];
+    $property->amenities_id = implode(",", $amenitiesIds);
+    $property->sale_price = $item['price']['yearly'] ?? $item['price'];
+    $property->updated_at = $item['@attributes']['last_update'] ?? now();
+    $property->description = $item['description_en'] ?? 'No description available';
+    $property->reference_number = $item['reference_number'] ?? '';
+    $property->geopoints = $item['geopoints'] ?? '';
+    $property->XML = json_encode($item);
+
+    // Handle agent details
+    $this->handleAgent($item, $property);
+
+    // Handle property type/category
+    $this->handlePropertyType($item, $property);
+
+    // Save the property
+    $property->save();
+    $count++;
+
+    // Handle images (async or bulk)
+    $this->handleImages($item, $property);
+
+    // Save again after handling images
+    $property->save();
+}
+
+public function handleAmenities($amenitiesStr)
+{
+    $amenities = explode(",", $amenitiesStr);
+    $amenitiesIds = [];
+
+    foreach ($amenities as $amenitie) {
+        $amenitieData = Amenitie::firstOrCreate(['amenity_name' => $amenitie], ['status' => '1']);
+        $amenitiesIds[] = $amenitieData->id;
+    }
+
+    return $amenitiesIds;
+}
+
+public function getIframe($geopointsStr)
+{
+    $geopoints = explode(",", $geopointsStr);
+    $longitude = $geopoints[0] ?? null;
+    $latitude = $geopoints[1] ?? null;
+    return "<iframe width='600' height='450' frameborder='0' style='border:0' src='https://www.google.com/maps?q=$latitude,$longitude&hl=en&z=12&output=embed' allowfullscreen></iframe>";
+}
+
+public function getGoogleMapsLink($item)
+{
+    return implode(', ', [
+        $item['location_lv5'] ?? '',
+        $item['location_lv4'] ?? '',
+        $item['location_lv3'] ?? '',
+        $item['location_lv2'] ?? '',
+        $item['location_lv1'] ?? ''
+    ]);
+}
+
+public function handleAgent($item, &$property)
+{
+    if (isset($item['agent']) && !empty($item['agent'])) {
+        if (isset($item['agent']['email']) && !empty($item['agent']['email'])) {
+            $agent = Agent::where('email', $item['agent']['email'])->first();
+
+            if (!$agent) {
+                $agent = new Agent();
+                $agent->detail = $item['agent']['title'];
+                $agent->email = $item['agent']['email'];
+                $agent->mobile = $item['agent']['phone'];
+                $agent->phone = $item['agent']['phone'];
+                $agent->name = $item['agent']['name'];
+
+                // Download and store agent photo asynchronously or via job
+                $this->handleAgentPhoto($item['agent']['photo']['url'], $agent);
+
+                $agent->save();
+            }
+
+            $property->agent = $agent->id;
+        }
+    }
+}
+
+public function handleAgentPhoto($photoUrl, $agent)
+{
+    // Handle agent photo download and saving logic here (consider queueing this task)
+    $imageResponse = Http::get($photoUrl);
+    $timestamp = now()->timestamp;
+    $extension = 'png';
+    $newFileName = 'image_' . $timestamp . '.' . $extension;
+    $imagePath = 'images/' . $newFileName;
+    file_put_contents($imagePath, $imageResponse->body());
+    $agent->photo = $imagePath;
+}
+
+public function handlePropertyType($item, &$property)
+{
+    if (isset($item['category'])) {
+        $propertyType = PropertyType::firstOrCreate(
+            ['type_name' => $item['category'], 'property' => $item['offering_type'] == "Rental" ? 'rent' : 'buy'],
+            ['status' => '1']
+        );
+        $property->category_id = $propertyType->id;
+    }
+}
+
+public function handleImages_old($item, &$property)
+{
+    $tableName = $property->getTable();
+    if (isset($item['photo']) && is_array($item['photo'])) {
+        foreach ($item['photo'] as $key => $pic) {
+            foreach ($pic as $mkey => $i_pic) {
+                // Download and save image asynchronously or in bulk
+                
+                $this->saveImage($i_pic, $property,($tableName == "rent_properties")? "rent":'buy',$mkey);
+            }
+        }
+    }
+}
+
+public function handleImages($item, &$property)
+{
+    $tableName = $property->getTable();
+    if (isset($item['photo']) && is_array($item['photo'])) {
+        foreach ($item['photo'] as $key => $pic) {
+            foreach ($pic as $mkey => $i_pic) {
+                // Dispatch the download image job to the queue
+                DownloadImageJob::dispatch($i_pic, $property, ($tableName == "rent_properties") ? "rent" : 'buy', $mkey);
+            }
+        }
+    }
+}
+
+
+public function saveImage($imageUrl, &$property,$property_type,$key)
+{
+    $imageResponse = Http::get($imageUrl);
+    $timestamp = now()->timestamp;
+    $extension = 'png';
+    $newFileName = 'image_' . $timestamp. $key . '.' . $extension;
+    $imagePath = 'images/' . $newFileName;
+    file_put_contents($imagePath, $imageResponse->body());
+
+    // Store image in the banners table
+    $banner = new Banners();
+    $banner->image_url = 'images/' . $newFileName;
+    $banner->page_type = $property_type; 
+
+    
+    $banner->property_id = $property->id;
+    $banner->save();
+
+    // echo "<pre>";var_dump($banner);
+    // Set the first image as featured
+    if (empty($property->featured_image)) {
+        $property->featured_image = 'images/' . $newFileName;
+    }
+}
+
 
 private function downloadImage($url)
 {
@@ -346,6 +306,6 @@ private function downloadImage($url)
     return null;
 }
 
-    
+
     
 }

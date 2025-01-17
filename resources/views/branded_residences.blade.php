@@ -206,19 +206,6 @@
                                               
                                           <h3>{{ $property->name }}</h3>
                                               <p><img src="{{ asset('img/hotel/map.svg') }}">{!! strip_tags($property->address) !!}</p>
-                                              <div class="HotelViews">
-                                                  <ul>
-                                                      <li><img src="{{ asset('img/hotel/1.svg') }}"> {{ number_format($property->area) }}
-                                                          SQ FT</li>
-                                                      @if ($property->bed)
-                                                          <li><img src="{{ asset('img/hotel/2.svg') }}"> {{ $property->bed }}</li>
-                                                      @endif
-                                                      @if ($property->jacuzzi)
-                                                          <li><img src="{{ asset('img/hotel/3.svg') }}"> {{ $property->jacuzzi }}</li>
-                                                      @endif
-                                                  </ul>
-                                              </div>
-                                              <h6><span>AED</span> {{ number_format($property->sale_price) }}/-</h6>
                                           </a>
                                       </figcaption>
                                   </div>

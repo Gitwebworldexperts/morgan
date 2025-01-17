@@ -20,8 +20,7 @@
               <div class="slider-info">
                   <div class="BannerBox">
                       <div class="banner-heading text-center">
-                         <h1>Properties</h1>
-                            
+                         <h1>My Favourites</h1>
                       </div>
 
                   </div>
@@ -37,6 +36,7 @@
                       <div class="bread-container">
                             <ul>
                                 <li><a href="{{ route('home') }}" class="">Home</a></li>
+                                <li><span  class="">Wishlist</span></li>
                             </ul>
                       </div>
                   </div>
@@ -65,6 +65,7 @@
                   <div class="row">
                       @if (isset($wishList) && !empty($wishList) && count($wishList))
                           @foreach ($wishList as $property)
+                            @if(getPropertyDeatil($property->product_type, $property->product_id, 'id'))                          
                               <div class="col-lg-3 col-md-6 col-12">
                                   <div class="card-box"> 
                                    
@@ -88,6 +89,7 @@
                                       </figcaption>
                                   </div>
                               </div>
+                              @endif
                           @endforeach
                       @endif
                   </div>

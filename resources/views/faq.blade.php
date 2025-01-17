@@ -3,8 +3,8 @@
                 <div class="row">
                     <div class="col-lg-8 mx-auto">
                         <div class="heading-pnel text-center">
-                            <h2>Frequently Asked Questions</h2>
-                            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae</p>
+                            <h2>{{ getOption('faq_heading') }}</h2>
+                            {!! getOption('faq_sub_heading') !!}
                         </div>
                     </div>
                     <div class="col-lg-7 mx-auto">

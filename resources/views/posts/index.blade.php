@@ -33,9 +33,10 @@
                     <tr>
                         <td>{{ $item->name }}</td>
                         <td>  
-                            @foreach($item->tags as $tag)
-                                {{ $tag->name }},
+                            @foreach($item->tags as $index => $tag)
+                                {{ $tag->name }}@if($index < count($item->tags) - 1), @endif
                             @endforeach
+
                         </td>
                         <td>
                             <div class="faq-actions">

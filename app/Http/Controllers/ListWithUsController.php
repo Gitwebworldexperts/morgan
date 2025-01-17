@@ -23,4 +23,9 @@ class ListWithUsController extends Controller
 
         return redirect()->back()->with('success', 'Your information has been submitted successfully!');
     }
+
+    public function listWithUsData(){
+        $contact = ListWithUs::orderBy('id', 'desc')->paginate(10);
+        return view('admin.list_with_us_data', compact('contact')); 
+    }
 }

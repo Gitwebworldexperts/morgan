@@ -34,6 +34,8 @@
                                     <option value="mortgage"> Mortgage Calculator </option>
                                     <option value="report"> Report </option>
                                     <option value="career"> Career </option>
+                                    <option value="propertyManagement"> PropertyManagement </option>
+                                    
                                     <option value="communities"> Communities </option>
                                     @php
                                         if(isset($blogs) && !empty($blogs)){

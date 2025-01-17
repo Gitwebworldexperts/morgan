@@ -96,7 +96,7 @@
                         </div>
 
                         <!-- Section 2 Images -->
-                        <div class="row">
+                        <div class="row d-none">
                             @for ($i = 1; $i <= 6; $i++)
                                 <div class="col-md-6">
                                     <div class="form-group">

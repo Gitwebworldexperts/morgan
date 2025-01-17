@@ -27,7 +27,7 @@
             </div>
 
             <div class="form-group">
-                <label for="description">Description <span class="mandatory">*</span></label>
+                <label for="description">Description </label>
                 <textarea name="description" id="description" class="form-control" rows="5" required>{{ old('description', $post->description) }}</textarea>
                 @error('description')
                     <div class="text-danger">{{ $message }}</div>
@@ -80,29 +80,7 @@
             </div>
 
 
-            <div class="form-group">
-                <label for="">Uploaded Images</label>
-                <div class="row">
-                @if(isset($post->images) && !empty($post->images))
-                    @php 
-                        $post->images = explode(",", $post->images);
-                    @endphp
-                    @foreach($post->images as $item)
-                        <div class="card col-md-4 p-4">
-                            <img src="{{ asset('post/'.$item) }}" alt="image" class="img-thumbnail">
-                            <!-- Button to copy image URL -->
-                            <button class="btn btn-primary btn-sm mt-2 copy-btn" type="button" data-image="{{ asset('post/'.$item) }}">
-                                Copy Image URL
-                            </button>
-                            <!-- Button to copy full img tag -->
-                            <button class="btn btn-secondary btn-sm mt-2 copy-img-tag-btn" type="button" data-img-tag='<img src="{{ asset("post/".$item) }}" alt="image">'>
-                                Copy Full Img Code
-                            </button>
-                        </div>
-                    @endforeach
-                @endif
-            </div>
-            </div>
+
 
             
             <div class="form-group">
@@ -125,6 +103,41 @@
                 <button class="green-btn" type="submit">Update Post</button>
             </div>
         </form>
+
+            <div class="col-12">
+            <div class="form-group">
+                <label for="">Uploaded Images</label>
+                <div class="row">
+                @if(isset($post->images) && !empty($post->images))
+                    @php 
+                        $post->images = explode(",", $post->images);
+                    @endphp
+
+                    @foreach($post->images as $item)
+                        <div class="card col-md-4 p-4 m-2">
+                            <img src="{{ asset('post/'.$item) }}" alt="image" class="img-thumbnail">
+                            <!-- Button to copy image URL -->
+                            <button class="btn btn-primary btn-sm mt-2 copy-btn" type="button" data-image="{{ asset('post/'.$item) }}">
+                                Copy Image URL
+                            </button>
+                            <!-- Button to copy full img tag -->
+                            <button class="btn btn-secondary btn-sm mt-2 copy-img-tag-btn" type="button" data-img-tag='<img src="{{ asset("post/".$item) }}" alt="image">'>
+                                Copy Full Img Code
+                            </button>
+                            <form action="{{ route('remove_blog_image') }}" method="POST" onsubmit="return confirm('Are you sure you want to remove this image?')">
+                                @csrf
+                                <input type="hidden" name="image_path" value="{{ $item }}">
+                                <input type="hidden" name="post_id" value="{{ $post->id }}">
+                                <button type="submit" class="btn btn-danger w-100 btn-sm mt-2">Remove</button>
+                            </form>
+                        </div>
+                    @endforeach
+                @endif
+            </div>
+            </div>
+            </div>
+
+        
     </div>
 </section>
 

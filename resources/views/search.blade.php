@@ -34,7 +34,7 @@
         }elseif($property_type_name == 'branded'){
             $ListName = "Branded Residences";
             $ListRouteName = route('branded_residences');
-        }elseif($property_type_name == 'investment'){
+        }elseif($property_type_name == 'investment' || $property_type_name == 'invest'){
             $ListName = "Investments";            
             $ListRouteName = route('search', ['prop_for' => 'investment']);
         }
@@ -47,7 +47,7 @@
                                             $routeName = 'private.detail_page';
                                         }elseif($property_type_name == 'international' && 0){
                                             $routeName = 'investment.detail_page';
-                                        }elseif($property_type_name == 'investment'){
+                                        }elseif($property_type_name == 'investment' || $property_type_name == 'invest'){
                                             $routeName = 'investment.detail_page';
                                         }
                                         else{
@@ -69,7 +69,6 @@
                             @endif
                         @endif
                       </div>
-
                         @if(isset($searchData) && !empty($searchData))
                             {!! innerSearchBox($searchData) !!}
                         @elseif(isset($data) && !empty($data))
@@ -129,7 +128,7 @@
     						<div class="text-grid-item">
     							<img src="img/about/building.svg" alt="" class="">
     							<h4>{{ $data['detail']->number_property }}</h4>
-    							<p>Properties For Sell</p>
+    							<p>Properties Sold</p>
     						</div>
     						<div class="text-grid-item">	
     							<h4>{{ $data['detail']->number_client }}</h4>
@@ -258,6 +257,11 @@
 
               <div class="listing-top-area">
                   <div class="row">
+                    @if(isset($devlopment) && 0)
+                    <div class="col">
+                        <h2 class="m-0">More New Developments</h2>
+                    </div>
+                    @endif
                       <div class="col-12">
                           <div class="listing-top-area-container">
                               <div class="item-counter">
@@ -320,6 +324,7 @@
                                                       @endif
                                                   </ul>
                                               </div>
+                                              <span class="d-none"> {{ var_dump($property); }}</span>
                                               <h6><span>AED</span> {{ number_format($property->sale_price) }}/-</h6>
                                               @endif
                                           </a>
@@ -419,7 +424,7 @@
          
     <div id="filters-sidebar" class="sidenav">
 		  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">
-			<img src="img/cross.svg" alt="" class="" />
+			<img src="{{ asset('img/cross.svg') }}" alt="" class="" />
 		  </a>
 		  @csrf
 		  <div class="filter-head">

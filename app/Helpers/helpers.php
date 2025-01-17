@@ -572,6 +572,25 @@ if (!function_exists('searchBox')) {
     }
 }
 
+if (!function_exists('allPropertyType')) {
+    /**
+     * Generate HTML for search Box.
+     * 
+     * Created by: Yesvant Alaria
+     * Created at: 18 Nov 2024
+     *
+     * @param string $name The name attribute for the input.
+     * @param string $id The id attribute for the input.
+     */
+    function allPropertyType()
+    {
+        $property_type = PropertyType::all()->groupBy('property');
+        return $property_type;
+    }
+}
+
+
+
 
 
 if (!function_exists('innerSearchBox')) {

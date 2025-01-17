@@ -8,8 +8,8 @@
             <div class="col-12">
                 <div class="bread-container">
                     <ul>
-                        <li><a href="" class="">Home</a></li>
-                        <li><a href="" class="">Login</a></li>
+                    <li><a href="{{ asset('/') }}" class="">Home</a></li>
+                        <li><span href="" class="">Login</span></li>
                     </ul>
                 </div>
             </div>

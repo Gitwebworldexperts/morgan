@@ -36,6 +36,18 @@
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
+                <div class="form-group">
+                    <label for="testimonial_description">Select Report Type</label>
+                    <select class="form-control" name="report_type"  id="report_type" required>
+                        <option value="" disabled> Select Report Type</option>
+                        <option value="1" <?php if($report->report_type == "1") { echo "selected"; } ?> >Dubai Real Estate Market Reports</option>
+                        <option value="2" <?php if($report->report_type == "2") { echo "selected"; } ?>>Branded Residences Market Reports</option>
+                        <option value="3" <?php if($report->report_type == "3") { echo "selected"; } ?>>Quarterly Community Reports</option>
+                    </select>
+                    @error('report_type')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
 
                 <!-- Subheading -->
                 <div class="form-group">
@@ -187,6 +199,19 @@
                     @error('testimonial_description')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="footer_image">Footer Image (For Branded Residences Market Reports)</label>
+                    <input type="file" class="form-control" name="footer_image" >
+                    @error('footer_image')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                    @if($report->footer_image)
+                    <div class="col-12">
+                        <a href="{{ asset($report->footer_image) }}">Click here to open</a>
+                    </div>
+                    @endif
                 </div>
 
                 <!-- SEO -->

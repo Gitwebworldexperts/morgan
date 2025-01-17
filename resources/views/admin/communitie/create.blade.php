@@ -58,7 +58,7 @@
                         <!-- Button I url -->
                         <div class="form-group">
                             <label for="button_i_url">Button I Url</label>
-                            <input type="text" name="button_i_url" id="button_i_url" class="form-control" value="{{ old('button_i_url', $community->button_i_url) }}" required>
+                            <input type="text" name="button_i_url" id="button_i_url" class="form-control" value="{{ old('button_i_url') }}" required>
                         </div>
 
                         <!-- Button II Name -->
@@ -69,7 +69,7 @@
 
                         <div class="form-group">
                             <label for="button_ii_url">Button II Url</label>
-                            <input type="text" name="button_ii_url" id="button_ii_url" class="form-control" value="{{ old('button_ii_url', $community->button_ii_url) }}" required>
+                            <input type="text" name="button_ii_url" id="button_ii_url" class="form-control" value="{{ old('button_ii_url') }}" required>
                         </div>
 
                         <!-- Second Image -->
@@ -88,6 +88,11 @@
                         <div class="form-group">
                             <label for="section_iii_button_name">Section III Button Url</label>
                             <input type="text" name="section_iii_button_name" id="section_iii_button_name" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="">Section III Image</label>
+                            <input type="file" name="third_image" id="third_image" class="form-control">
                         </div>
 
                         <!-- Status -->

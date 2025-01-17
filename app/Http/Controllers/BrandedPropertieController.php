@@ -310,7 +310,8 @@ class BrandedPropertieController extends Controller
 
     // Update property description and other fields
     $property->description = $request->property_description;
-    $property->amenities_id = $request->has('amenities_id') ? implode(', ', $request->amenities_id) : $property->amenities_id;
+    $property->amenities_id = $request->has('amenities_id') ? implode(', ', $request->amenities_id) : "";
+    // $property->amenities_id = $request->has('amenities_id') ? implode(', ', $request->amenities_id) : $property->amenities_id;
     $property->agent = $request->agent_id;
     $property->meta_tags = $request->meta_tags;
 

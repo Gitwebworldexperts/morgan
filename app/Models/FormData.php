@@ -16,5 +16,6 @@ class FormData extends Model
         'page_name',
         'page_id',
         'ip_address',
+        'is_api'
     ];
 }

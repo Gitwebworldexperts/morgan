@@ -76,44 +76,45 @@
                 <div class="row no-gutters ">
                     <div class="col-lg-6">
 						<div class="login-img">
-							<img src="img/login-image.png" alt="" class="w-100">
+                            @if($data->get_an_quote_image)
+                            <img src="{{ asset($data->get_an_quote_image) }}" alt="" class="w-100">
+                            @else
+                            <img src="{{ asset('img/login-image.png') }}" alt="" class="w-100">
+                            @endif
 						</div>
                     </div>
                     <div class="col-lg-6">
                         <div class="login-from">
                             <h2 class="mb-2">Get a quote</h2>
 
-							
-                            <form action="">
+							@if(session('success'))
+                                <div class="alert alert-success">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+                            <form action="{{ route('property-quote.store') }}" method="POST">
+                                @csrf
                                 <div class="form-group"> 
-									<label>Full Name</label> 
-									<input class="form-control" placeholder="John Doe" name="" type="text"> 
-								</div>
-								
+                                    <label>Full Name</label> 
+                                    <input class="form-control" placeholder="John Doe" name="full_name" type="text" required> 
+                                </div>
                                 <div class="form-group"> 
-									<label>Password </label> 
-									<input class="form-control" placeholder="*****************" name="" type="text"> 
-								</div>
-								
-								<div class="form-group"> 
-									<label>Email Address </label> 
-									<input class="form-control" placeholder="example@gmail.com" name="" type="text"> 
-								</div>
-								
-								<div class="form-group"> 
-									<label>Property Location </label> 
-									<input class="form-control" placeholder="" name="" type="text"> 
-								</div>
-								
-								<div class="form-group"> 
-									<label>Message</label> 
-									<textarea class="form-control" placeholder="Enter your Message..." name="" type="text"> </textarea>
-								</div>
-								
+                                    <label>Email Address </label> 
+                                    <input class="form-control" placeholder="example@gmail.com" name="email" type="email" required> 
+                                </div>
                                 <div class="form-group"> 
-									<a href="" class="green-btn submit-btn">Submit Details <img src="img/arrow-right3.svg" class=""></a> 
-								</div>
+                                    <label>Property Location </label> 
+                                    <input class="form-control" placeholder="Property Location" name="property_location" type="text"> 
+                                </div>
+                                <div class="form-group"> 
+                                    <label>Message</label> 
+                                    <textarea class="form-control" placeholder="Enter your Message..." name="message"></textarea>
+                                </div>
+                                <div class="form-group"> 
+                                    <button type="submit" class="green-btn submit-btn">Submit Details</button>
+                                </div>
                             </form>
+
                         </div>
                     </div>
                 </div>
@@ -155,7 +156,7 @@
             </div>
     </section>
 
-    @include('faq')
+    @include('faq', ['page_name' => 'propertyManagement'])
 
 
 

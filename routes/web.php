@@ -46,8 +46,10 @@ use App\Http\Controllers\XMLController;
 use App\Http\Controllers\ReportIndividualController;
 use App\Http\Controllers\CareerPageController;
 use App\Http\Controllers\CompanyController;
-
-
+use App\Http\Controllers\TestController;
+use App\Http\Controllers\ProfileController;
+use App\Jobs\DownloadImageJob;
+use Illuminate\Support\Facades\Queue;
 
 require base_path('routes/static.php');
 
@@ -95,6 +97,8 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 
 
     Route::get('settings', [BaseController::class, 'settings'])->name('settings');
+    Route::any('faq_settings', [FaqController::class, 'settings'])->name('faq.settings');
+
 
     Route::resource('property-types', PropertyTypeController::class);
     Route::get('property-type/create/{category}', [PropertyTypeController::class, 'create'])->name('property-type.create');
@@ -140,7 +144,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::resource('communities', CommunityController::class);
     Route::get('/report', [ReportController::class, 'index'])->name('reports.create');
     Route::post('/reports', [ReportController::class, 'store'])->name('reports.store');
-    Route::get('/xml_data', [XMLController::class, 'getXml'])->name('xml');
+   
     Route::resource('report_inidividual', ReportIndividualController::class);
 
     Route::get('/career-page', [CareerPageController::class, 'edit'])->name('career.edit');
@@ -149,8 +153,19 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 
     Route::post('/career-page/delete-image', [CareerPageController::class, 'deleteImage'])->name('career.deleteImage');
 
+    Route::get('/mortgage_form_data', [MortgageCalculatorController::class, 'submitedForm'])->name('mortgage_form_data');
+    
+    Route::get('/quote_form_data', [PropertyManagementController::class, 'quoteData'])->name('property-quote.view');
+
+    Route::get('/list_with_us_data', [ListWithUsController::class, 'listWithUsData'])->name('list-with-us.view');
+
+    Route::post('/remove_blog_image', [PostController::class, 'removeBlogImage'])->name('remove_blog_image');
 
 });
+
+Route::get('/xml_data', [XMLController::class, 'getXml'])->name('xml');
+
+Route::get('/xml_image_download', [XMLController::class, 'startWorker'])->name('xmlImageDownload');
 
 
 Route::prefix('files')->group(function () {
@@ -162,11 +177,15 @@ Route::prefix('files')->group(function () {
 
 Route::any('/search', [SearchController::class, 'search'])->name('search');
 
-Route::post('/common_search', [SearchController::class, 'CommonSearch'])->name('common.search');
+Route::any('/common_search', [SearchController::class, 'CommonSearch'])->name('common.search');
+
 
 Route::get('/properties/view/{slug}', [PropertieController::class, 'DetailPage'])->name('detail.page');
 
 Route::get('privatelisting/lists', [PropertieController::class, 'PrivateListing'])->name('private.listing');
+
+Route::get('investment/lists', [PropertieController::class, 'InvestmentListing'])->name('investment.listing');
+
 
 Route::get('development/lists', [PropertieController::class,    'DevelopmentListing'])->name('devlopment.listing');
 
@@ -195,9 +214,10 @@ Route::get('/blogs/lists', [BaseController::class, 'BlogList'])->name('blogList'
 Route::get('/blogs/view/{slug}', [BaseController::class, 'BlogSingle'])->name('blog');
 
 Route::get('/property_management', [BaseController::class, 'PropertyManagement'])->name('property_management');
+Route::post('/quote_store', [PropertyManagementController::class, 'quoteStore'])->name('property-quote.store');
 
 
-    
+
 
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
@@ -236,6 +256,9 @@ Route::post('/submit-career', [CareerController::class, 'submit'])->name('career
 
 Route::get('/mortgage-calculator', [MortgageCalculatorController::class, 'index']);
 
+
+
+
 Route::post('/mortgage-form', [MortgageCalculatorController::class, 'submitForm'])->name('mortgage.submit');
 // Route::get('/mortgage-calculator', function () {
 //     return view('mortgage_calculator'); 
@@ -255,5 +278,18 @@ Route::get('/thank-you', function () {
 Route::post('/wishlist', [WishlistController::class, 'store'])->name('wishlist.store')->middleware('auth');
 Route::get('/wishlist_page', [WishlistController::class, 'index'])->name('wishlist.index')->middleware('auth');
 
+Route::get('/my_inquiries', [WishlistController::class, 'myInquiries'])->name('my.inquiries')->middleware('auth');
+
 Route::get('/sendRequest', [FormController::class, 'sendRequest']);
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+});
+
+
+
+
 

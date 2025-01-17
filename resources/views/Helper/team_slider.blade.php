@@ -33,9 +33,11 @@
                             <figcaption>
                             <h3>{{ $item->name }}</h3>
                             <p class="designation">{!! $item->detail !!}</p>
-                            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi.</p>
+                            <p>{!! $item->description !!}</p>
                             <ul>
-                                <li><a href=""><img src="{{ asset('img/linkedin.svg') }}" target="_blank"></a></li>
+                                @if($item->linkedin)
+                                    <li><a href="{{ $item->linkedin }}"><img src="{{ asset('img/linkedin.svg') }}" target="_blank"></a></li>
+                                @endif
                                 <li><a href="mailto: {{ $item->email }}"><img src="{{ asset('img/email.svg') }}" target="_blank"></a></li>
                             </ul>
                             </figcaption>

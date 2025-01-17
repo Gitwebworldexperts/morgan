@@ -1,11 +1,22 @@
 @extends('admin.adminLayout')
 @section('title', 'Pages: Add Properties')
 @section('content')
-    @if (session('success'))
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+  @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
+
+
     <section>
         <p class="heading_for_admin_section">New Properties</p>
         <div class="section_content">
@@ -22,14 +33,14 @@
                 </div>
                 <div class="row">
                     <div class="form-group">
-                        <label for="property_description">Property Description <span class="mandatory">*</span></label>
+                        <label for="property_description">Property Description </label>
                         <textarea class="form-control" name="property_description" id="property_description" rows="3" >{{ old('property_description') }}</textarea>
                         @error('property_description')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="address">Address <span class="mandatory">*</span></label>
+                        <label for="address">Address </label>
                         <textarea class="form-control" name="address" id="address" rows="3" >{{ old('address') }}</textarea>
                         @error('address')
                             <div class="text-danger">{{ $message }}</div>
@@ -60,7 +71,7 @@
 
                 <div class="form-group">
                     <label for="images">Choose Images</label>
-                    <input type="file" name="images[]" id="images" class="form-control" multiple>
+                    <input type="file" accept="image/*" name="images[]" id="images" class="form-control" multiple>
                     @error('images.*')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -69,7 +80,7 @@
 
                 <div class="form-group">
                     <label for="featured_image">Featured Image</label>
-                    <input type="file" name="featured_image" class="form-control">
+                    <input type="file" accept="image/*" name="featured_image" class="form-control">
                     @error('featured_image')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -78,7 +89,7 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="area">Area</label>
-                        <input type="text" class="form-control" name="area" id="area"
+                        <input type="number" class="form-control" name="area" id="area"
                             value="{{ old('area') }}">
                         @error('area')
                             <div class="text-danger">{{ $message }}</div>
@@ -204,7 +215,7 @@
                     </div>
                     <div class="form-group  col-md-12">
                         <label for="blog_background">Background</label>
-                        <input type="file" name="blog_background" id="blog_background" class="form-control">
+                        <input type="file" accept="image/*" name="blog_background" id="blog_background" class="form-control">
                         @error('blog_background')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -244,7 +255,7 @@
                    
 
                     <div class="form-group col-md-6">
-                        <label for="category_id">Property Type <span class="mandatory">*</span> <span class="help_url"><a
+                        <label for="category_id">Property Type  <span class="help_url"><a
                                     href="{{ route('property-type.create', 'private') }}" target="_blank">Add Property
                                     Type</a></label>
                         <select class="form-control" name="category_id" id="category_id">
@@ -263,7 +274,7 @@
                     </div>
 
                     <div class="form-group col-md-6">
-                        <label for="agent_id">Agent<span class="mandatory">*</span></label>
+                        <label for="agent_id">Agent</label>
                         <select class="form-control" name="agent_id" id="agent_id">
                             <option value="">Select an Agent</option>
                             @if ($agents)
@@ -286,6 +297,13 @@
                     @error('meta_tags')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
+                    @error('meta_title')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                    @error('meta_description2')
+                        <div class="text-danger">The meta description field is required.</div>
+                    @enderror
+                    
                 </div>
                 <label for="status">Status<span class="mandatory">*</span></label>
                 <select class="form-control" name="status" id="status">

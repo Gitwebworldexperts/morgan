@@ -58,7 +58,8 @@ class HomeController extends Controller
         $regionIds = InternationalPropertie::distinct('region')->pluck('region')->take(10);
         
         // Get the Region models that match the region IDs obtained from the first query.
-        $regions = Region::whereIn('id', $regionIds)->get();
+        // $regions = Region::whereIn('id', $regionIds)->get();
+        $regions = Region::all();
 
         
         // $private_properties = PrivatePropertie::getPrivateProperties(4,'id');
@@ -84,10 +85,7 @@ class HomeController extends Controller
         // ->take(5)
         // ->get();
 
-        $posts = Post::with('tags')->whereHas('tags', function($query) {
-            $query->where('name', '!=', 'Region');
-        })
-        ->latest()->take(4)->get();
+        $posts = Post::latest()->take(4)->get();
         // $posts = [];
         $project_properties = ProjectPropertie::where('status', 'active')->where('is_featured',1)->latest()->take(10)->get()->map(function ($item) {
             $item['property_source'] = 'project';

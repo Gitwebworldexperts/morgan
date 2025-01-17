@@ -107,8 +107,9 @@
                             
                             <div class="profile-dropdown">
                                 <ul>
-
-                                    <li><a href="{{ route('wishlist.index') }}">Wishlist</a></li>
+                                    <li><a href="{{ route('profile.show') }}">Profile</a></li>
+                                    <li><a href="{{ route('wishlist.index') }}">My Favourites</a></li>
+                                    <li><a href="{{ route('my.inquiries') }}">My Enquiries</a></li>
                                     <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log Out</a></li>
                                 </ul>
                             </div>

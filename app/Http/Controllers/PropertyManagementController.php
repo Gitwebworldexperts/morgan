@@ -6,6 +6,7 @@ use App\Models\PropertyManagement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Services\ImageUploadService;
+use App\Models\PropertyQuote;
 
 class PropertyManagementController extends Controller
 {
@@ -38,7 +39,10 @@ class PropertyManagementController extends Controller
         if(isset($pm->section_1_image) && !empty($pm->section_1_image)){
             $section_1_image = $pm->section_1_image;
         }
-        
+        if(isset($pm->get_an_quote_image) && !empty($pm->get_an_quote_image)){
+            $get_an_quote_image = $pm->get_an_quote_image;
+        }
+
         if(isset($pm->section_2_anchor_link) && !empty($pm->section_2_anchor_link)){
             $section_2_anchor_link = $pm->section_2_anchor_link;
         }
@@ -50,6 +54,7 @@ class PropertyManagementController extends Controller
             'section_1_description' => $request->section_1_description,
             'section_1_anchor_link' => $request->section_1_anchor_link,
             'section_1_image' => $request->hasFile('section_1_image') ? $imageUploadService->storeImage($request->file('section_1_image'), 'images'): $section_1_image,
+            'get_an_quote_image' => $request->hasFile('get_an_quote_image') ? $imageUploadService->storeImage($request->file('get_an_quote_image'), 'images'): $get_an_quote_image,
             'section_2_title' => $request->section_2_title,
             'section_2_description' => $request->section_2_description,
             // 'section_2_anchor_link' => $request->section_2_anchor_link,
@@ -107,4 +112,25 @@ class PropertyManagementController extends Controller
         return redirect()->route('PM.index')->with('success', 'Page updated successfully!');
     }
 
+    public function quoteStore(Request $request)
+    {
+        // Validate the incoming request data
+        $request->validate([
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'property_location' => 'nullable|string|max:255',
+            'message' => 'nullable|string',
+        ]);
+
+        // Save the data to the database
+        PropertyQuote::create($request->all());
+
+        // Redirect or respond with a success message
+        return back()->with('success', 'Details submitted successfully!');
+    }
+
+    public function quoteData(){
+        $contact = PropertyQuote::orderBy('id', 'desc')->paginate(10);
+        return view('admin.property_quote_data', compact('contact')); 
+    }
 }

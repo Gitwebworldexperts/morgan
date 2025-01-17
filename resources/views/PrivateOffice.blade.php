@@ -22,7 +22,7 @@
             <div class="bread-container">
               <ul>
               <li><a href="{{ route('home') }}" class="">Home</a></li>
-                <li><a href="" class="">Morgan’s Private Offices</a></li>
+                <li><span  class="">Morgan’s Private Office</span></li>
               </ul>
             </div>
           </div>
@@ -180,16 +180,26 @@
                                 <img src="{{ asset($private->featured_image) }}" class="" alt="">
                                 <figcaption>
                                 <div class="add-grp">
+                                  @if(isset($private->propertyType->type_name) && $private->propertyType->type_name)
                                     <div class="VillaText">{{ $private->propertyType->type_name ?? "" }}</div>
+                                  @endif
+                                  @if($private->address)
                                     <p><img src="img/hotel/map.svg">{!! strip_tags($private->address) !!}</p>
+                                  @endif
                                 </div>
                                 <h3>{{ $private->name }}</h3>
                                 <div class="HotelViews">
                                     <ul>
-                                    <li><img src="img/hotel/1.svg"> {{ number_format($private->area) }} SQ FT</li>
-                                    <li><img src="img/hotel/2.svg"> {{ $private->bed }}</li>
-                                    <li><img src="img/hotel/3.svg"> {{ $private->jacuzzi }}</li>
-                                    </ul>
+                                    @if($private->area)
+                                      <li><img src="img/hotel/1.svg"> {{ number_format($private->area) }} SQ FT</li>
+                                    @endif
+                                    @if($private->bed)
+                                      <li><img src="img/hotel/2.svg"> {{ $private->bed }}</li>
+                                    @endif
+                                    @if($private->jacuzzi)
+                                      <li><img src="img/hotel/3.svg"> {{ $private->jacuzzi }}</li>
+                                    @endif
+                                  </ul>
                                 </div>
                                 <h6><span>AED</span> {{ number_format($private->sale_price) }}/-</h6>
                                 </figcaption>

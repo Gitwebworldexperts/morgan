@@ -220,7 +220,7 @@
                     </div>
 
             <div class="form-group col-md-6">
-                <label for="category_id">Property Type <span class="mandatory">*</span> <span class="help_url"><a href="{{ route('property-type.create','rent') }}" target="_blank">Add Property Type</a></label>
+                <label for="category_id">Property Type <span class="mandatory">*</span> <span class="help_url"><a href="{{ route('property-type.create','branded') }}" target="_blank">Add Property Type</a></label>
                 <select class="form-control" name="category_id" id="category_id">
                     <option value="">Select a property type</option>
                     @if($propertyTypes)

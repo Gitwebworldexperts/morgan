@@ -10,7 +10,12 @@ class AdminAuthController extends Controller
 {
     public function showLoginForm()
     {
-        return view('admin.login'); // Create this view
+
+        if (Auth::check() && Gate::allows('isAdmin')) {
+            return redirect('/admin');
+        } else {
+            return view('admin.login'); 
+        }
     }
 
     public function login(Request $request)
