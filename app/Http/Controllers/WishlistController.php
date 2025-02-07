@@ -10,16 +10,15 @@ use Illuminate\Support\Facades\Auth;
 class WishlistController extends Controller
 {
     public function index(){
-
-            $user = Auth::user();
-            $wishList = Wishlist::where('user_id', $user->id)->get();
+        $user = Auth::user();
+        $wishList = Wishlist::where('user_id', $user->id)->paginate(9);
            
-           return view('wishList', compact('wishList'));
+        return view('wishList', compact('wishList'));
     }
 
     public function myInquiries(){
         $user = Auth::user();
-        $inquiries = FormData::where('email', $user->email)->get();       
+        $inquiries = FormData::where('email', $user->email)->paginate(10);       
        return view('inquirie', compact('inquiries'));
     }
 

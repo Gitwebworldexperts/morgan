@@ -65,7 +65,7 @@
 
                 <div class="form-group">
                     <label for="file_upload">Featured Image</label>
-                    <input type="file" class="form-control" name="featured_image" >
+                    <input type="file" accept="image/*" class="form-control" name="featured_image" >
                     @error('featured_image')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -74,7 +74,7 @@
                 <!-- Background Image -->
                 <div class="form-group">
                     <label for="background_image">Background Image</label>
-                    <input type="file" class="form-control" name="background_image" id="background_image">
+                    <input type="file" accept="image/*" class="form-control" name="background_image" id="background_image">
                     @error('background_image')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -100,7 +100,7 @@
                     &nbsp
                 <div class="w-100">
                     <label for="section_ii_background_image">Section 2 Background Image</label>
-                    <input type="file" class="form-control" name="section_ii_background_image" id="section_ii_background_image">
+                    <input type="file" accept="image/*" class="form-control" name="section_ii_background_image" id="section_ii_background_image">
                     @error('section_ii_background_image')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -126,9 +126,9 @@
                     &nbsp<span class="trash_button remove-row ml-2" onclick="removeSection2Row()"><i class="fas fa-trash-alt"></i></span>
                 </div> 
                 <!-- Section 3 -->
-                <h5>Section Snippet</h5>
+                <h5 class="d-none">Section Snippet</h5>
 
-                <div class="form-group">
+                <div class="form-group d-none">
                     <label for="meta_description">Html Code</label>
                     <textarea class="normal-textbox" name="html_code" id="html_code" rows="3">{{ old('html_code') }}</textarea>
                     @error('html_code')
@@ -162,11 +162,29 @@
                 
                 <div class="form-group">
                     <label for="footer_image">Footer Image (For Branded Residences Market Reports)</label>
-                    <input type="file" class="form-control" name="footer_image" >
+                    <input type="file" accept="image/*" class="form-control" name="footer_image" >
                     @error('footer_image')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
+
+                <!-- upload document -->
+                                        
+                <div class="form-group">
+                    <label for="thank_document">Thanks Page document</label>
+                    <input type="file" class="form-control" name="thank_document" >
+                    @error('thank_document')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label for="whatsapp">Whatsapp Number</label>
+                    <input type="number" class="form-control" name="whatsapp_number" id="whatsapp_number" value="{{ old('whatsapp_number', $report->whatsapp_number ?? '') }}">
+                    @error('whatsapp_number')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+                <!-- upload document -->
 
                 <!-- SEO -->
                 <h5>SEO</h5>
@@ -195,6 +213,17 @@
                     <label for="seo_description">SEO Description</label>
                     <textarea class="form-control" name="seo_description" id="seo_description" rows="3">{{ old('seo_description') }}</textarea>
                     @error('seo_description')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select class="form-control" name="status" id="status">
+                        <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
+                        <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                    </select>
+
+                    @error('status')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>

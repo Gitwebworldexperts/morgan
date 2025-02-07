@@ -1,6 +1,16 @@
 @extends('admin.adminLayout')
 @section('title', 'Pages: Buy Properties')
 @section('content')
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+    
     @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
@@ -21,15 +31,15 @@
         </div>
                 <div class="row">
                     <div class="form-group">
-                        <label for="property_description">Property Description <span class="mandatory">*</span></label>
+                        <label for="property_description">Property Description </label>
                         <textarea class="form-control" name="property_description" id="property_description" rows="3" >{{ old('property_description') }}</textarea>
                         @error('property_description')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="address">Address <span class="mandatory">*</span></label>
-                        <textarea class="form-control" name="address" id="address" rows="3" >{{ old('address') }}</textarea>
+                        <label for="address">Address </label>
+                        <textarea class="normal_textbox" name="address" id="address" rows="3" >{{ old('address') }}</textarea>
                         @error('address')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -40,7 +50,7 @@
 
                 <div class="form-group">
                     <label for="google_maps_link">Detailed Location</label>
-                    <textarea class="form-control" name="google_maps_link" id="google_maps_link" rows="3" >{{ old('google_maps_link') }}</textarea>
+                    <textarea class="normal_textbox" name="google_maps_link" id="google_maps_link" rows="3" >{{ old('google_maps_link') }}</textarea>
                     @error('google_maps_link')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -48,8 +58,18 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="images">Choose Images <span class="mandatory">*</span></label>
-                    <input type="file" name="images[]" id="images" class="form-control" multiple>
+                    <label for="iframe">Iframe</label>
+                    <input type="text" class="form-control" name="iframe" id="iframe" value="{{ old('iframe') }}" >
+                    @error('iframe')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                    <!-- <small class="form-text text-muted">Please enter a valid URL.</small> -->
+                </div>
+
+
+                <div class="form-group">
+                    <label for="images">Choose Images</label>
+                    <input type="file" accept="image/*" name="images[]" id="images" class="form-control" multiple>
                     @error('images.*')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -58,7 +78,7 @@
 
                 <div class="form-group">
                     <label for="featured_image">Featured Image</label>
-                    <input type="file" name="featured_image" class="form-control">
+                    <input type="file" accept="image/*" name="featured_image" class="form-control">
                     @error('featured_image')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -67,7 +87,7 @@
         <div class="row">
             <div class="form-group col-md-6">
                 <label for="area">Area</label>
-                <input type="text" class="form-control" name="area" id="area" value="{{ old('area') }}">
+                <input type="number" class="form-control" min="0" name="area" id="area" value="{{ old('area') }}">
                 @error('area')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
@@ -102,6 +122,15 @@
 
         <div class="form-group">
                     <label>Additional Settings</label><br>
+                    
+                    <div class="form-check form-check-inline col-md-6">
+                        <label class="form-check-label" for="jacuzzi">Jacuzzi</label>
+                        <input type="number" min="0" class="form-control" name="jacuzzi" id="jacuzzi" min="0" value="{{ old('jacuzzi') }}">    
+                    </div>
+                    @error('jacuzzi')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" name="is_featured" id="is_featured" value="1"
                             {{ old('is_featured') ? 'checked' : '' }}>
@@ -111,14 +140,7 @@
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
 
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="jacuzzi" id="jacuzzi" value="1"
-                            {{ old('jacuzzi') ? 'checked' : '' }}>
-                        <label class="form-check-label" for="jacuzzi">Jacuzzi</label>
-                    </div>
-                    @error('jacuzzi')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
+
                     <!-- <div class="form-check form-check-inline">
                     <input class="form-check-input" type="checkbox" name="is_private" id="is_private" value="1" {{ old('is_private') ? 'checked' : '' }}>
                     <label class="form-check-label" for="is_private">Is Private</label>
@@ -185,7 +207,7 @@
             </div>
                     <div class="form-group  col-md-12">
                         <label for="blog_background">Background</label>
-                        <input type="file" name="blog_background" id="blog_background" class="form-control">
+                        <input type="file" accept="image/*" name="blog_background" id="blog_background" class="form-control">
                         @error('blog_background')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -220,7 +242,7 @@
                     </div>
 
             <div class="form-group col-md-6">
-                <label for="category_id">Property Type <span class="mandatory">*</span> <span class="help_url"><a href="{{ route('property-type.create','buy') }}" target="_blank">Add Property Type</a></label>
+                <label for="category_id">Property Type  <span class="help_url"><a href="{{ route('property-type.create','buy') }}" target="_blank">Add Property Type</a></label>
                 <select class="form-control" name="category_id" id="category_id">
                     <option value="">Select a property type</option>
                     @if($propertyTypes)
@@ -234,7 +256,7 @@
                 @enderror
             </div>    
                     <div class="form-group col-md-6">
-                        <label for="agent_id">Agent<span class="mandatory">*</span></label>
+                        <label for="agent_id">Agent</label>
                         <select class="form-control" name="agent_id" id="agent_id">
                             <option value="">Select an Agent</option>
                             @if ($agents)
@@ -258,6 +280,7 @@
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
+                <div class="form-group">
                 <label for="status">Status<span class="mandatory">*</span></label>
                 <select class="form-control" name="status" id="status">
                     <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
@@ -267,6 +290,7 @@
                     @error('status')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
+                </div>
                 </div>
 
                 <button type="submit" class="green-btn">Submit</button>

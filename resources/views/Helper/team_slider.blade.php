@@ -8,8 +8,8 @@
                             <img src="{{ asset($item->photo) }}" alt="" class="" />
                         </figure>
                         <figcaption>
-                            <h4>{{ $item->name }}</h4>
-                            <p>{!! Str::words($item->detail, 6, '...') !!}</p>
+                            <h4>{!! Str::words($item->name, 4, '...') !!}</h4>
+                            <p>{!! Str::words($item->detail, 4, '...') !!}</p>
                         </figcaption>
                     </a>
                 </div>

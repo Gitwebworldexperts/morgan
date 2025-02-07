@@ -10,7 +10,8 @@ class ReportIndividualController extends Controller
 {
     public function index()
     {
-        $reports = ReportIndividual::all();
+        $reports = ReportIndividual::withCount('reportForms')->get();
+
         return view('reportindividual.index', compact('reports'));
     }
 
@@ -22,7 +23,7 @@ class ReportIndividualController extends Controller
 
     public function show($slug)
     {
-        $report = ReportIndividual::where('slug',$slug)->first();
+        $report = ReportIndividual::where(['slug'=>$slug,"status" => 'active'])->first();
         if($report){
             if($report->report_type == 3){
                 $testimonials = Testimonial::whereIn('id', json_decode($report->testimonial_description, true))->get();
@@ -32,11 +33,9 @@ class ReportIndividualController extends Controller
                 return view('brandedReport', compact('report'));
                 echo "Temaplate 2 Desgin Not Found";die;
             }elseif($report->report_type == 1){
-                echo "Temaplate Desgin Not Found";die;
+                $testimonials = Testimonial::whereIn('id', json_decode($report->testimonial_description, true))->get();
+                return view('indireport', compact('report','testimonials'));
             }
-
-
-
         }
         return redirect()->route('report.list')->with('success', 'Report Not Found!');
     }
@@ -60,12 +59,19 @@ class ReportIndividualController extends Controller
             'meta_description' => 'nullable|string',
             'seo_heading' => 'nullable|string',
             'seo_description' => 'nullable|string',
+            // 'whatsapp_number' => 'required|string|max:15',            
         ]);
 
         $fileUploadPath = null;
         if ($request->hasFile('file_upload')) {
             $fileUploadPath = $request->hasFile('file_upload') ? $imageUploadService->storeImage($request->file('file_upload'), 'images',97): "";
         }
+
+        $thank_document = null;
+        if ($request->hasFile('thank_document')) {
+            $thank_document = $request->hasFile('thank_document') ? $imageUploadService->storeImage($request->file('thank_document'), 'images',99): "";
+        }
+
 
         $backgroundImagePath = null;
         if ($request->hasFile('background_image')) {
@@ -111,6 +117,7 @@ class ReportIndividualController extends Controller
             'section_ii_background_image' => $sectionIIBgImagePath, 
             'description' => $validatedData['description'],
             'html_code'=> $request->html_code,
+            'status'=> $request->status,
             'section2_heading' => $validatedData['section2_heading'] ?? null,
             'section2_content' => $request->section2_content ? json_encode($request->section2_content) : null,
             'section3_heading' => $validatedData['section3_heading'] ?? null,
@@ -120,6 +127,8 @@ class ReportIndividualController extends Controller
             'seo_heading' => $validatedData['seo_heading'] ?? null,
             'report_type' => $request->report_type,
             'seo_description' => $validatedData['seo_description'] ?? null,
+            'whatsapp_number' => $request->whatsapp_number ?? null,
+            'thank_document' => $thank_document,
         ]);
 
 
@@ -153,6 +162,7 @@ class ReportIndividualController extends Controller
             'meta_description' => 'nullable|string',
             'seo_heading' => 'nullable|string',
             'seo_description' => 'nullable|string',
+            // 'whatsapp_number' => 'required|string|max:15',   
         ]);
         $report->update([
             'heading' => $validatedData['heading'],
@@ -162,10 +172,14 @@ class ReportIndividualController extends Controller
             'featured_image' => $request->hasFile('featured_image') ? $imageUploadService->storeImage($request->file('featured_image'), 'images',97): $report->featured_image,
             'footer_image' => $request->hasFile('footer_image') ? $imageUploadService->storeImage($request->file('footer_image'), 'images',98): $report->footer_image,
             'background_image' => $request->hasFile('background_image') ? $imageUploadService->storeImage($request->file('background_image'), 'images',97): $report->background_image,
+            
+            'thank_document' => $request->hasFile('thank_document') ? $imageUploadService->storeImage($request->file('thank_document'), 'images',99): $report->thank_document,
+            
             'section_ii_background_image' => $request->hasFile('section_ii_background_image') ? $imageUploadService->storeImage($request->file('section_ii_background_image'), 'images',97): $report->section_ii_background_image, 
             'description' => $validatedData['description'],
             'section2_heading' => $validatedData['section2_heading'] ?? null,
             'html_code'=> $request->html_code,
+            'status'=> $request->status,
             'section2_content' => $request->section2_content ? json_encode($request->section2_content) : null,
             'section3_heading' => $validatedData['section3_heading'] ?? null,
             'testimonial_description' => json_encode($validatedData['testimonial_description'] ?? []),
@@ -173,6 +187,7 @@ class ReportIndividualController extends Controller
             'meta_description' => $validatedData['meta_description'] ?? null,
             'seo_heading' => $validatedData['seo_heading'] ?? null,
             'report_type' => $request->report_type,
+            'whatsapp_number' => $request->whatsapp_number ?? null,
             'seo_description' => $validatedData['seo_description'] ?? null,
         ]);
         return redirect()->route('report_inidividual.index')->with('success', 'Report updated successfully!');

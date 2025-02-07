@@ -8,7 +8,7 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'description', 'related_post_id','images','slug','related_posts','meta_title','meta_description'];
+    protected $fillable = ['name', 'description', 'related_post_id','images','slug','related_posts','meta_title','meta_description','language','alt','keywords'];
 
     public function tags()
     {

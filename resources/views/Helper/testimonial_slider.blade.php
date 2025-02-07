@@ -10,7 +10,7 @@
                         @foreach ($testimonials as $item)
                             <div class="item">
                                 <div class="testimonial-box">
-                                    <h4>{{ strip_tags($item->detail) }}</h4>
+                                    <h4>{!! strip_tags($item->detail) !!}</h4>
                                     <div class="user-info">
                                         <h6>{{ $item->name }} / <span>{{ $item->location }}</span></h6>
                                     </div>

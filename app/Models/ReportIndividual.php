@@ -13,7 +13,7 @@ class ReportIndividual extends Model
         'heading', 'slug','subheading', 'file_upload', 'background_image', 'description',
         'section2_heading', 'section2_content',
         'section3_heading', 'testimonial_description','html_code','featured_image',
-        'meta_title', 'meta_description', 'seo_heading', 'seo_description','section_ii_background_image','report_type','footer_image'
+        'meta_title', 'meta_description', 'seo_heading', 'seo_description','section_ii_background_image','report_type','footer_image','thank_document','whatsapp_number','status'
     ];
     
     protected $casts = [
@@ -23,6 +23,11 @@ class ReportIndividual extends Model
     public function testimonials()
     {
         return $this->belongsToMany(Testimonial::class, 'report_testimonial', 'report_id', 'testimonial_id');
+    }
+
+    public function reportForms()
+    {
+        return $this->hasMany(ReportForm::class, 'report_id');
     }
     
 }

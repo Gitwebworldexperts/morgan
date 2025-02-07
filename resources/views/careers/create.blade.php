@@ -42,7 +42,7 @@
                         <select name="status" id="status" class="form-control">
                             <option value="open">Open</option>
                             <option value="closed">Closed</option>
-                            <option value="pending">Pending</option>
+                            <!-- <option value="pending">Pending</option> -->
                         </select>
                     </div>
                     <button type="submit" class="green-btn">Create Career</button>

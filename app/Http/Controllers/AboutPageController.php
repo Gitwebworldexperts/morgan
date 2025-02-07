@@ -47,7 +47,7 @@ class AboutPageController extends Controller
             'title' => $validated['title'],
             'description' => $validated['description'],
             'team_description' => $validated['team_description'],
-            'main_background' => $request->hasFile('main_background') ? $imageUploadService->storeImage($request->file('main_background'), 'images') : null,
+            'main_background' => $request->hasFile('main_background') ? $imageUploadService->storeImage($request->file('main_background'), 'images') : $aboutPage->main_background,
         ]);
 
         return redirect()->route('about.index');

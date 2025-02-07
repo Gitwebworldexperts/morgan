@@ -19,7 +19,7 @@
         @csrf
         @method('PUT')
         <div class="form-group">
-            <label for="name">Name:</label>
+            <label for="name">Name: <span class="mandatory">*</span></label>
             <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $agent->name) }}" required>
         </div>
 
@@ -45,7 +45,7 @@
         </div> -->
 
         <div class="form-group">
-            <label for="email">Email:</label>
+            <label for="email">Email: <span class="mandatory">*</span></label>
             <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $agent->email) }}" required>
         </div>
 
@@ -58,7 +58,7 @@
         </div>
 
         <div class="form-group">
-            <label for="mobile">Mobile:</label>
+            <label for="mobile">Mobile: <span class="mandatory">*</span></label>
             <input type="text" class="form-control" id="mobile" name="mobile" value="{{ old('mobile', $agent->mobile) }}" required>
         </div>
 
@@ -69,7 +69,7 @@
 
         <div class="form-group">
             <label for="photo">Photo:</label>
-            <input type="file" class="form-control-file" id="photo" name="photo">
+            <input type="file" accept="image/*" class="form-control-file" id="photo" name="photo">
             @if ($agent->photo)
                 <div class="mt-3">
                     <img src="{{ asset($agent->photo) }}" alt="Current Photo" class="img-thumbnail" style="max-height: 150px;">

@@ -55,7 +55,7 @@
 
                         <!-- Anchor Link Field -->
                         <div class="form-group">
-                            <label for="anchor_link">Anchor Link</label>
+                            <label for="anchor_link">Booking Button Url</label>
                             <input 
                                 type="text" 
                                 name="anchor_link" 
@@ -65,7 +65,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="section_1_heading">Section 1 Heading</label>
+                            <label for="section_1_heading">Section I Heading</label>
                             <input 
                                 type="text" 
                                 name="section_1_heading" 
@@ -76,15 +76,15 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="section_1_description">Section 1 Description</label>
+                            <label for="section_1_description">Section I Description</label>
                             <textarea name="section_1_description" id="section_1_description" class="form-control" required>{{ old('section_1_heading', $section->section_1_description) }}</textarea>
                         </div>
 
                         <!-- Section 1 Image -->
                         <div class="form-group">
-                            <label for="section_1_image">Section 1 Image</label>
+                            <label for="section_1_image">Section I Image</label>
                             <input 
-                                type="file" 
+                                type="file"  accept="image/*"
                                 name="section_1_image" 
                                 id="section_1_image" 
                                 class="form-control">
@@ -95,11 +95,16 @@
 
                         <!-- Additional Fields for Section 2 -->
                         <!-- Section 2 Images and Titles -->
+
+                        <div class="row">
+
                         @foreach ([1, 2, 3] as $i)
-                            <div class="form-group">
+                        <div class="col-md-4">
+
+                        <div class="form-group">
                                 <label for="section_2_image_{{ $i }}">Section 2 Image {{ $i }}</label>
                                 <input 
-                                    type="file" 
+                                    type="file" accept="image/*"
                                     name="section_2_image_{{ $i }}" 
                                     id="section_2_image_{{ $i }}" 
                                     class="form-control">
@@ -133,8 +138,10 @@
                                 value="{{ old("section_2_url_$i", $section->{"section_2_url_$i"}) }}"
                                 class="form-control">
                             </div>
-                        @endforeach
+                        </div>
 
+                            @endforeach
+                        </div>
                         <!-- Section 3 Fields -->
                         <div class="form-group">
                             <label for="section_3_heading">Section 3 Heading</label>

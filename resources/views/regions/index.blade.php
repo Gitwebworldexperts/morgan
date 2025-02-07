@@ -29,9 +29,9 @@
                     @foreach($regions as $region)
                         <tr>
                             <td>{{ $region->name }}</td>
-                            <td>{!! Str::limit($region->description, 50) !!}</td>
+                            <td>{!! Str::limit($region->description, 20) !!}</td>
                             <td>
-                                <img src="{{ asset($region->image_url) }}" alt="{{ $region->name }}" style="width: 50px; height: 50px;">
+                                <img src="{{ asset($region->image_url) }}"  style="width: 50px; height: 50px;">
                             </td>
                             <td>
                                 <a class="edit_button" href="{{ route('regions.edit', $region->id) }}">

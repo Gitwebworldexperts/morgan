@@ -44,35 +44,43 @@ class BuyPropertieController extends Controller
         {
             $request->validate([
                 'name' => 'required|string|max:255',
-                'address' => 'required|string',
-            // 'google_maps_link' => 'nullable|url',
-            // 'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+                'meta_title' => 'required|string|max:255',
+                'meta_description2' => 'required|string|max:255',
+                // 'address' => 'max:255',
+                // 'google_maps_link' => 'max:255',
+                // 'property_description' => 'max:255',
+                // 'iframe' => 'max:255',
+                // 'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
                 'featured_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-                // 'area' => 'nullable|numeric',
-                'jacuzzi' => 'nullable|boolean',
+                'area' => 'nullable|numeric',
+                'jacuzzi' => 'nullable|integer',
                 'bed' => 'nullable|integer',
                 'price' => 'nullable|numeric',
                 'sale_price' => 'nullable|numeric',
                 'is_featured' => 'nullable|boolean',
                 'is_private' => 'nullable|boolean',
                 // 'country_id' => 'nullable|exists:countries,id',
-                'category_id' => 'required',
+                // 'category_id' => 'required',
+                // 'eighth_heading' => 'max:255',
+                // 'eighth_description' => 'max:255',
             ]);
+            
         $slug = generateSlug($request->name."_buy", \App\Models\BuyPropertie::class);
             // Create a new property instance
             // dd($request);
             $property = new BuyPropertie();
-        $property->status = $request->status; 
-        $property->property_size = $request->property_size;
+            $property->status = $request->status; 
+            $property->property_size = $request->property_size;
             $property->name = $request->name;
             $property->community_id = $request->community_id;
             $property->meta_title = $request->meta_title;
             $property->meta_description2 = $request->meta_description2;
-        $property->slug = $slug;
+            $property->slug = $slug;
+            $property->iframe = $request->iframe;
             $property->address = $request->address;
             $property->google_maps_link = $request->google_maps_link;
             $property->area = $request->area;
-            $property->jacuzzi = $request->has('jacuzzi');
+            $property->jacuzzi = $request->input('jacuzzi', 0);
             $property->bed = $request->input('bed', 0); // Default to 0 if not provided
             $property->price = $request->price;
             $property->sale_price = $request->sale_price;
@@ -81,17 +89,17 @@ class BuyPropertieController extends Controller
             $property->country_id = $request->country_id;
             $property->category_id = $request->category_id;
 
-        $property->description = $request->property_description;
-        $property->amenities_id =  ($request->amenities_id)? implode(', ', $request->amenities_id) :'';
-        $property->agent = $request->agent_id;
-        $property->meta_tags = $request->meta_tags;
+            $property->description = $request->property_description;
+            $property->amenities_id =  ($request->amenities_id)? implode(', ', $request->amenities_id) :'';
+            $property->agent = $request->agent_id;
+            $property->meta_tags = $request->meta_tags;
 
-        $property->information_heading = $request->eighth_heading;
-        $property->information_description = $request->eighth_description;
-        $property->information_button_label = $request->eighth_section_button;
-        $property->information_button_url = $request->eighth_section_button_2;
-        $property->information_button_label_2 = $request->eighth_section_button_3;
-        $property->information_button_url_2 = $request->eighth_section_button_3_2;
+            $property->information_heading = $request->eighth_heading;
+            $property->information_description = $request->eighth_description;
+            $property->information_button_label = $request->eighth_section_button;
+            $property->information_button_url = $request->eighth_section_button_2;
+            $property->information_button_label_2 = $request->eighth_section_button_3;
+            $property->information_button_url_2 = $request->eighth_section_button_3_2;
             $property->save();
 
             // Store regular images and create banners
@@ -272,20 +280,28 @@ class BuyPropertieController extends Controller
     public function update(Request $request, $id)
     {
         // dd($request);
-        $request->validate([
-        'name' => 'required|string|max:255',
-        'address' => 'required|string',
-        // 'google_maps_link' => 'nullable|url',
-        'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-        'featured_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-        'area' => 'nullable|numeric',
-        'jacuzzi' => 'nullable|boolean',
-        'bed' => 'nullable|integer',
-        'price' => 'nullable|numeric',
-        'sale_price' => 'nullable|numeric',
-        'country_id' => 'nullable|exists:countries,id',
-        'category_id' => 'required|exists:property_types,id',
-    ]);
+           $request->validate([
+            'name' => 'required|string|max:255',
+            'meta_title' => 'required|string|max:255',
+            'meta_description2' => 'required|string|max:255',
+            // 'address' => 'max:555',
+            // 'google_maps_link' => 'max:255',
+            // 'property_description' => 'max:255',
+            // 'iframe' => 'max:255',
+            // 'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'featured_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'area' => 'nullable|numeric',
+            'jacuzzi' => 'nullable|integer',
+            'bed' => 'nullable|integer',
+            'price' => 'nullable|numeric',
+            'sale_price' => 'nullable|numeric',
+            'is_featured' => 'nullable|boolean',
+            'is_private' => 'nullable|boolean',
+            // 'country_id' => 'nullable|exists:countries,id',
+            // 'category_id' => 'required',
+            // 'eighth_heading' => 'max:255',
+            // 'eighth_description' => 'max:255',
+        ]);
 
     // Find the property to update
     $property = BuyPropertie::findOrFail($id);
@@ -298,11 +314,12 @@ class BuyPropertieController extends Controller
     $property->meta_description2 = $request->meta_description2;
     $property->address = $request->address;
     $property->google_maps_link = $request->google_maps_link;
+    $property->iframe = $request->iframe;
     $property->area = $request->area;
     $property->bed = $request->input('bed', 0);
     $property->price = $request->price;
     $property->sale_price = $request->sale_price;
-    $property->jacuzzi = $request->has('jacuzzi');
+    $property->jacuzzi = $request->input('jacuzzi', 0);
     $property->is_featured = $request->has('is_featured') ? $request->has('is_featured') : 0;
     $property->is_private = $request->has('is_private') ? $request->has('is_private') : 0;
     $property->country_id = $request->country_id;
@@ -395,20 +412,25 @@ class BuyPropertieController extends Controller
 
     public function destroy($id)
     {
+        // temp
+            // $buy = BuyPropertie::all();
+            // foreach($buy as $item){
+            //     $property = BuyPropertie::findOrFail($item->id);
+            //     deletePropertyFiles($property,'buy');
+            //     if(!$property){
+            //         return redirect()->back()->with('error', 'Private property not found!');
+            //     }
+            //     $property->delete();
+            // }
+
+        // temp
+
         $property = BuyPropertie::findOrFail($id);
+        deletePropertyFiles($property,'buy');
         if(!$property){
             return redirect()->back()->with('error', 'Private property not found!');
         }
         $property->delete();
-        // $existingBanners = Banners::where('property_id', $property->id)->get();
-        // // Delete existing banners and unlink their images
-        // foreach ($existingBanners as $banner) {
-        //     $imagePath = public_path($banner->image_url);
-        //     if (file_exists($imagePath)) {
-        //         unlink($imagePath);
-        //     }
-        //     $banner->delete();
-        // }
-            return redirect()->back()->with('success', 'Property delete successfully');
-        }
+        return redirect()->back()->with('success', 'Property delete successfully');
+    }
 }

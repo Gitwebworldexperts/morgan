@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FooterSections;
 use App\Models\User;
+use App\Models\PropertyType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -20,8 +21,10 @@ class FooterSectionController extends Controller
     }
     public function index()
     {
-        $footerSections = FooterSections::first(    );
-        return view('admin.footer', compact('footerSections'));
+        $footerSections = FooterSections::first();
+        $propertyTypes = PropertyType::whereIn('property', ['buy', 'rent'])->get();
+
+        return view('admin.footer', compact('footerSections','propertyTypes'));
      }
 
     public function create()
@@ -59,6 +62,7 @@ class FooterSectionController extends Controller
         foreach ($urls as $index => $url) {
             $url_json[$url] = $actions[$index];
         }
+
 
 
         $new_actions  = $data['new_nav_name'];
@@ -111,6 +115,7 @@ class FooterSectionController extends Controller
         $headerSection->copyright = $request->copyright; 
         $headerSection->newsletter_section = $request->newslatter;
         $headerSection->phone = $request->phone;
+        $headerSection->whatsapp_number = $request->whatsapp_number;
         $headerSection->email = $request->email;
         $headerSection->address = $request->address;
         $headerSection->meta_tags = $request->meta_tags;

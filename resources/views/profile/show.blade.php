@@ -1,4 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.app')      
+@section('content')
+
 <section class="banner inr-banner" style="background-image: url(img/inr-banner.png);">
       <div class="container">
         <div class="slider-info">
@@ -9,7 +11,20 @@
           </div>
         </div>
     </div></section>
-@section('content')
+<section class="breadcrumb-sec">
+          <div class="container">
+              <div class="row">
+                  <div class="col-12">
+                      <div class="bread-container">
+                            <ul>
+                                <li><a href="{{ route('home') }}" class="">Home</a></li>
+                                <li><span class="">My Profile</span></li>
+                            </ul>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </section>
 <section class="space">
 <div class="container"> 
 <div class="row">
@@ -20,7 +35,7 @@
                 <li><a href="{{ route('profile.show') }}">Profile</a></li>
                 <li><a href="{{ route('wishlist.index') }}">My Favourites</a></li>
                 <li><a href="{{ route('my.inquiries') }}">My Enquiries</a></li>
-                <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log Out</a></li>
+                <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a></li>
             </ul>
             </div>
         </div>
@@ -59,7 +74,7 @@
       </tr>
       <tr>
         <td>Address</td>
-        <td>{{ $profile->address ?? "" }}</td>
+        <td>{!! strip_tags($profile->address ?? "") !!}</td>
         
       </tr>
       <tr>
@@ -79,4 +94,9 @@
 </div>
 </div>
 </section>
+<style>
+  .my-account-Card .table tr td:first-child {
+    width: 15%;
+  }
+</style>
 @endsection

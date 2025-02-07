@@ -43,7 +43,7 @@
                 </div>
                 <div class="col-lg-4 col-12">
                     <div class="head-btn"> 
-                        <a href="{{ $careerPage['button_link'] ?? '#' }}" class="green-btn ml-auto">Current job oppening</a> 
+                        <a href="{{ $careerPage['button_link'] ?? '#' }}" target="_blank" class="green-btn ml-auto">Current job oppening</a> 
                     </div>
                 </div>
                 <div class="col-12">
@@ -54,7 +54,7 @@
         <div class="row">
         @if(isset($career) && !empty($career))
             @foreach($career as $item)
-            @if($item->status != "pending")
+            @if($item->status   == "open")
                 <div class="col-lg-6 col-md-6 col-12">
                     <div class="job-box">
                         <div class="company-logo">
@@ -70,7 +70,8 @@
                                 </ul>
                             </div>
                         </div>
-                        <a href="{{ route('detail.career', base64_encode($item->id)) }}" class="link-btn">Apply Now</a>
+                        <!-- <a href="{{ route('detail.career', base64_encode($item->id)) }}" class="link-btn">Apply Now</a> -->
+                        <a href="{{ route('detail.career', $item->id) }}" class="link-btn">Apply Now</a>
                     </div>
                 </div>
                 @endif
@@ -104,7 +105,7 @@
 				</div>
             </div>
         </section>
-        @include('faq', ['page_name' => 'career'])
+
 
         <section class="gallery-section space pt-0">
             <div class="container">
@@ -133,6 +134,8 @@
 				</div>
             </div>
         </section>
+
+        @include('faq', ['page_name' => 'career'])
 
         {!! mediaSection('all',"media Mentions"); !!}
 

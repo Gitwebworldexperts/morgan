@@ -13,29 +13,64 @@ use App\Models\ListingDetail;
 use App\Models\InvestmentPropertie;
 use App\Models\Banners;
 use App\Models\Region;
+use Illuminate\Support\Facades\Session;
 
 use Illuminate\Http\Request;
 
 class SearchController extends Controller
 {
     public function search(Request $request) {
-    //   dd($request);
-        $this->page_title = '';
-        $propFor = $request->input('prop_for');
-        $region = $request->query('region'); 
-         
+ 
+        
+        
 
-         
-        $pagination = $request->input('page');
+
+        $this->page_title = '';
+        $propFor = $request->input('prop_for') ?? $_GET['prop_for'];
+        
+        $sub_type = $request->input('sub_type') ?? "";
+        if($sub_type){
+            $request->property_type = [$sub_type]; 
+        }
+        
+        $propertyTypeId = session('property_type_id'); 
+        $bed = session('bed'); 
+        $is_pass = session('is_pass'); 
+        $custom_bed = null;
+        if($is_pass){
+            session()->forget('is_pass');
+            if($propertyTypeId){
+                if(!$request->property_type){
+                    $request->property_type = $propertyTypeId; 
+                }
+            }
+            if($bed){
+                if(!$request->bed){
+                    $custom_bed = $request->bed = [$bed]; 
+                }
+            }
+        }
+
+        $region = $request->query('region'); 
+        if (!$request->has('page') && isset($_GET['page'])) {
+            $request->merge(['page' => $_GET['page']]);
+        }
+        if(isset($_GET['page'])){
+            $pagination = $request->input('page') ?? $_GET['page'];
+        }else{
+            $pagination = $request->input('page') ?? "";
+        }
+
 
         // Check if pagination was requested and set propFor if needed
         if ($pagination) {
             $previousUrl = url()->previous();
             parse_str(parse_url($previousUrl, PHP_URL_QUERY), $queryParams);
-            $propFor = $queryParams['prop_for'] ?? null;
+            $propFor = $queryParams['prop_for'] ?? $_GET['prop_for'];
         }
-
+         
         // Redirect if propFor is empty
+
         if (empty($propFor)) {
             return redirect()->route('home');
         }
@@ -75,9 +110,16 @@ class SearchController extends Controller
                     return $query->where('sale_price', '>=', $request->min_range); // Filter by min_range
                 })
                 ->when($request->max_range, function ($query) use ($request) {
-                    return $query->where('sale_price', '<=', $request->max_range); // Filter by max_range
+                    return $query->where('sale_price', '<=', $request->max_range); // Filter by min_range
                 })
-                ->with('propertyType')
+                ->when($custom_bed, function ($query) use ($custom_bed) {
+                    if ($custom_bed === "7") {
+                        $query->where('bed', '>=', 7);
+                    } else {
+                        $query->where('bed', $custom_bed);
+                    }
+                })
+                ->with('propertyType','banners')
                 ->paginate(12);
 
 
@@ -143,13 +185,35 @@ class SearchController extends Controller
     }
 
     public function CommonSearch(Request $request){
+        
+        $propFor = $request->input('prop_for');
+        $page = $request->input('page');
+        if($propFor && $page){
+            if($propFor == 'buy'){
+                $propFor = "sales";
+            }
+            // $url = url('search') . '?prop_for=' . $propFor . '&page=' . $page;
+            session(['is_pass' => 1]);
+            return redirect()->route('search', [
+                'prop_for' => $propFor,
+                'page' => $page,
+            ]);
+            // dd($url);
+            // Redirect to the generated URL
+            return redirect($url);    
+        }
+
+
         $property_type_id = $request->property_type ? (int) $request->property_type : null;
+        
         $buy = $request->buy ? (int) $request->buy : null;
         // $bed = $request->bed ? (int) $request->buy : null;
         $bed = $request->buy ? (int) $request->buy : null;
+        session(['property_type_id' => $property_type_id,"bed" => $bed]);
+        
         $price = $request->price ? (int) $request->price : null;
         $location = $request->location;
-        
+
             $property_type = PropertyType::find($property_type_id);
 
             $this->page_title = '';
@@ -196,10 +260,10 @@ class SearchController extends Controller
                     }
                 })
                 ->orderBy('id', 'desc')
-                ->with('propertyType')
-                ->paginate(12);
-                                
-                $property_type = $request->property_type ? (int) $request->property_type : null;
+                ->with('propertyType','banners')
+                ->paginate(24);
+            
+                 $property_type = $request->property_type ? (int) $request->property_type : null;
                 $buy = $request->buy ? (int) $request->buy : null;
                 // $bed = $request->bed ? (int) $request->bed : null;
                 $bed = $request->buy ? (int) $request->buy : null;
@@ -249,6 +313,7 @@ class SearchController extends Controller
                     'min_range' => !empty($request->min_range) ? $request->min_range : '',
                     'max_range' => !empty($request->max_range) ? $request->max_range : '',
                 ];
+
                 return view('search')->with(['data'=>$data,'searchData'=>$searchData,'property_type_name'=>$propFor,'filter_array'=>$filter_array]);
             } else {
                 return redirect()->route('home');    

@@ -12,7 +12,7 @@
     </div>
 @endif
     <section>
-        <p class="heading_for_admin_section">Add Properties 
+        <p class="heading_for_admin_section">Add International Properties 
             <a class="add_new_button m-0" href="{{ route('international_properties.create') }}">+ Add New Property</a>
             <a class="add_new_button m-0" href="{{ route('regions.index') }}">+ Add Regions</a>
             <a class="add_new_button  m-0" href="{{ route('property-type.create','international') }}">+ Add Property Type</a></p>
@@ -61,16 +61,6 @@
                     @endforeach
                 @endif
             </tbody>
-            <tfoot>
-                <tr>
-                    <th>Property</th>
-                    <th>Price</th>
-                    <th>Sale Price</th>
-                    <th>Status</th>
-                    <th>Category</th>
-                    <th>Action</th>
-                </tr>
-            </tfoot>
         </table>
 
         </div>

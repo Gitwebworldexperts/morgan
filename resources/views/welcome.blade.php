@@ -43,8 +43,7 @@
                                 $button_name = "Button";
                                 $button_url = "#";
                             @endphp
-
-                            {!! $new_heading !!}
+                            {!! Str::words($new_heading, 15, '...') !!}
                         </h1>
                     </div>
                     {!! searchBox() !!}
@@ -62,7 +61,7 @@
                 <div class="row">
                     <div class="col-lg-5 col-md-6 col-12">
                         <div class="heading-pnel m-0">
-                            <h2>{{$home->second_heading}}</h2>
+                            <h2>{!! Str::words($home->second_heading, 10, '...') !!}</h2>
                             <div class="headingBorder"></div>
                         </div>
                     </div>
@@ -96,7 +95,6 @@
                     <div class="col-lg-4 col-12"></div>
                 </div>
             </div>
-
               <div class="row">
                     <div class="col-12">
                         <div class="cards-main">
@@ -114,8 +112,10 @@
                                                 <a href="{{ route('detail.page',$featured->slug) }}">
                                                     @if($featured->featured_image)
                                                         <img src="{{ asset($featured->featured_image) }}" alt="Featured Image">
+                                                    @elseif(isset($featured->banners[0]->image_url) && $featured->banners[0]->image_url)
+                                                        <img src="{{ asset($featured->banners[0]->image_url) }}" alt="Featured Image">
                                                     @else
-                                                        <img src="{{ asset('img/list/3.png') }}" alt="Featured Image">
+                                                        <img src="{{ asset('img/thumbnail-placeholder-gallery.png') }}" alt="Featured Image">
                                                     @endif  
                                                 </a>
                                                 <div class="Wishlist {{ in_array(route('detail.page', $featured->slug), $wish) ? 'added' : '' }}" 
@@ -130,9 +130,11 @@
                                             </figure>
                                       
                                         <figcaption>
-                                            <a href="#">
+                                            <a href="{{ route('detail.page',$featured->slug) }}" >
                                                 <h3>{{ $featured->name }}</h3>
-                                                <span class="d-flex align-items-start"><img  style="width: 12px;margin-right: 7px;margin-top: 6px;" src="{{ asset('img/map.svg') }}"><span>{!! $featured->address !!}</span></span>
+                                                @if($featured->address)
+                                                <p ><img src="{{ asset('img/map.svg') }}">{!! Str::words($featured->address, 4, '...') !!}</p>
+                                                @endif
                                                 <div class="HotelViews">
                                                     <ul>
                                                         <li><img src="{{ asset('img/1.svg') }}"> {{ number_format($featured->area) }} SQ FT</li>
@@ -171,7 +173,7 @@
     </section> <!-- section -->
     @endif
     @if($home->section_4)
-    <section class="space private-office-sec bg-black mobile-none">
+    <section class="space private-office-sec bg-black ">
         <div class="container">
             <div class="heading-pnel HeadingMiddleBorder fff">
                 <div class="row">
@@ -200,14 +202,14 @@
                     @foreach($private_properties as $private)
                         <div class="col">
                             <div class="office-box"> <a href="{{ route('private.detail_page',$private->slug) }}"> 
-                                    <figure> <img src="{{ asset($private->featured_image) }}" class="" alt=""></figure>
+                                    <figure> <img src="{{ asset($private->featured_image) }}" onerror="this.onerror=null; this.src='{{ asset('img/thumbnail-placeholder-gallery.png') }}';" class="" alt=""></figure>
                                         <figcaption>
                                             <div class="add-grp">
                                                 @if(isset($private->propertyType->type_name) && $private->propertyType->type_name)
                                                     <div class="VillaText">{{ $private->propertyType->type_name ?? "" }}</div>
                                                 @endif
                                                 @if($private->address)
-                                                <p><img src="{{ asset('img/map.svg') }}">{!! strip_tags($private->address) !!}</p>
+                                                <p class="private_address"><img src="{{ asset('img/map.svg') }}">{!! Str::words(strip_tags($private->address), 4, '...') !!}</p>
                                                 @endif
                                             </div>
                                             <h3>{{ $private->name }}</h3>
@@ -234,7 +236,7 @@
             </div>
         </div>
     </section> <!-- section -->
-    <section class="space private-office-sec bg-black desktop-none">
+    <section class="space private-office-sec bg-black desktop-none d-none">
         <div class="container">
             <div class="heading-pnel HeadingMiddleBorder fff">
                 <div class="row">
@@ -259,7 +261,9 @@
                                             <div class="add-grp">
                                                 <div class="VillaText">                                                
                                                 Villa</div>
-                                                <p><img src="{{ asset('img/map.svg') }}">{!! strip_tags($private->address) !!}</p>
+                                                @if($private->address)
+                                                <p><img src="{{ asset('img/map.svg') }}">{!! Str::words($private->address, 4, '...') !!}</p>
+                                                @endif
                                             </div>
                                             <h3>{{ $private->name }}</h3>
                                             <div class="HotelViews">
@@ -382,7 +386,9 @@
                                                         </figure>
                                          <figcaption> <a href="{{ route('devlopment.detail_page',$item->slug) }}">
                                                             <h3>{{ $item->name }}</h3>
-                                                            <p><img src="{{ asset('img/map.svg') }}">{!! strip_tags($item->address) !!}</p>
+                                                            @if($item->address)
+                                                            <p><img src="{{ asset('img/map.svg') }}">{!! Str::words(strip_tags($item->address), 4, '...') !!}</p>
+                                                            @endif
                                                         </a> </figcaption>
                                     </div>
                                 </div>
@@ -424,7 +430,8 @@
      <!-- section -->
     @endif
     @if($home->section_8)
-    <section class="space full-width-sec" style="background-image:url(img/full-img.png);">
+    
+    <section class="space full-width-sec"  style="background-image: url('{{ $home->eigth_section_bg ? asset($home->eigth_section_bg) : asset('img/full-img.png') }}');">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-12">

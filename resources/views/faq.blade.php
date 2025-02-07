@@ -1,4 +1,12 @@
-        <section class="faq-sec  space bg-grey pr">
+@php $count = 0;
+    if(isset($page_name)){
+        $faqs = getFaqs($page_name);
+    }else{
+        $faqs = getFaqs();
+    }
+@endphp 
+@if(isset($faqs) && !empty($faqs) && count($faqs))
+<section class="faq-sec  space bg-grey pr">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 mx-auto">
@@ -9,14 +17,8 @@
                     </div>
                     <div class="col-lg-7 mx-auto">
                         <div class="accordion" id="accordionExample">
-                            @php $count = 0;
-                             if(isset($page_name)){
-                                    $faqs = getFaqs($page_name);
-                                }else{
-                                    $faqs = getFaqs();
-                                }
-                            @endphp
-                            @if(isset($faqs) && !empty($faqs))
+                            
+                            
                             @foreach ($faqs as $key => $question)
                             @php $count = $count+1; @endphp
                                 <div class="card">
@@ -26,10 +28,10 @@
                                     </div>
                                 </div>
                             @endforeach
-                            @endif
 
                         </div>
                     </div>
                 </div>
             </div>
         </section> 
+@endif

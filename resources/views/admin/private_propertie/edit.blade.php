@@ -8,7 +8,7 @@
     @endif
 
     <section>
-        <p class="heading_for_admin_section">Edit Property</p>
+        <p class="heading_for_admin_section">Edit Private Property</p>
         <div class="section_content">
             <form id="image-upload-form" action="{{ route('private_properties.update', $property->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -138,6 +138,15 @@
 
                 <div class="form-group">
                     <label>Additional Settings</label><br>
+    
+                    <div class="form-check form-check-inline col-md-6">
+                        <label class="form-check-label" for="jacuzzi">Jacuzzi</label>
+                        <input type="number" min="0" class="form-control" name="jacuzzi" id="jacuzzi" min="0" value="{{ old('jacuzzi', $property->jacuzzi) }}">    
+                    </div>
+                    @error('jacuzzi')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" name="is_featured" id="is_featured" value="1" {{ old('is_featured',$property->is_featured) ? 'checked' : '' }}>
                         <label class="form-check-label" for="is_featured">Is Featured</label>
@@ -153,15 +162,7 @@
                     @error('is_private')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror -->
-
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="jacuzzi" id="jacuzzi" value="1" {{ old('jacuzzi', $property->jacuzzi) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="jacuzzi">Jacuzzi</label>
-                    </div>
-                    @error('jacuzzi')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-
+    
                 </div>
 
                 <div class="col-12">

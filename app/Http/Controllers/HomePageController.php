@@ -137,8 +137,9 @@ class HomePageController extends Controller
             $first_section_image = $home->first_section_image;
             $fifth_section_image = $home->fifth_section_image;
             $tenth_section_image = $home->tenth_section_image;
+            $eigth_section_bg = $home->eigth_section_bg;
         }else{
-            $tenth_section_image = $first_section_image =  $tenth_section_image = "";            
+            $eigth_section_bg = $tenth_section_image = $first_section_image =  $tenth_section_image = "";            
         }
 
         if(!empty($request->file('first_section_image'))){
@@ -152,6 +153,10 @@ class HomePageController extends Controller
         if(!empty($request->file('tenth_section_image'))){
             $tenth_section_image = $imageUploadService->storeImage($request->file('tenth_section_image'), 'images',3);
         }
+        if(!empty($request->file('eigth_section_bg'))){
+            $eigth_section_bg = $imageUploadService->storeImage($request->file('eigth_section_bg'), 'images',4);
+        }
+        
         // var_dump(isset($request->section_1)?$request->section_1:0);die;
         // Create a new HomePage entry
         
@@ -198,6 +203,7 @@ class HomePageController extends Controller
             'tenth_heading' => $validatedData['tenth_heading'],
             'tenth_description' => $validatedData['tenth_description'],
             'tenth_section_image' => $tenth_section_image,
+            'eigth_section_bg' => $eigth_section_bg,
             'tenth_section_button' => json_encode($tenth_section_button) ?? json_encode([]),
         ]);
 

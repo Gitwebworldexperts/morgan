@@ -26,9 +26,11 @@
                     <label for="main_background" class="form-label">Background</label>
                     <input type="file" class="form-control" name="main_background">
                 </div>
+                @if($aboutPage->main_background)
                 <div class="mb-3 form-group">
                     <img style=" width: 150px; border: 1px solid #3b3527; " src="{{ asset($aboutPage->main_background) }}" alt="">
                 </div>
+                @endif
                 <button type="submit" class="green-btn">Save</button>
             </form>
 

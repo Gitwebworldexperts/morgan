@@ -50,7 +50,8 @@ class HomePage extends Model
         'tenth_section_button',
         'blog_section_button',
         'blog_section_button_2',
-        'meta_title','meta_description'
+        'meta_title','meta_description',
+        'eigth_section_bg'
     ];
 
     // If you need to cast JSON or ENUM types

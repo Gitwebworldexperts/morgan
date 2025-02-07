@@ -4,7 +4,7 @@
 <div class="container">
     <p class="heading_for_admin_section">Agents</p>
     <a href="{{ route('agents.create') }}" class="green-btn mb-4">Create Agent</a>
-    <table class="table table-bordered">
+    <table class="table table-bordered" id="example">
         <thead>
             <tr>
                 <th>Name</th>
@@ -36,4 +36,16 @@
         </tbody>
     </table>
 </div>
+@endsection
+@section('scripts')    
+    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.js"></script>
+    <script type="text/javascript">
+    jQuery(document).ready(function() {
+        new DataTable('#example', {
+            order: [] // Disables default ordering
+        });
+    });
+
+    </script>
 @endsection

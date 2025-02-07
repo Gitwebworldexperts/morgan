@@ -161,7 +161,7 @@
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 d-none">
                                     <div class="form-group">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="checkbox" name="toggle_private_property"
@@ -286,6 +286,10 @@
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
+                                <div class="col-md-6">
+                                    <label class="form-label d-block">Backgorund Image</label>
+                                    {!! getImage('eigth_section_bg', 'eigth_section_bg', 'eigth_section_bg',$home->eigth_section_bg) !!}
+                                </div>
                                 <div class="form-group col-md-12">
                                     <label>Description </label>
                                     <textarea class="form-control" name="eighth_description" id="eighth_description" rows="3">{{ old('eighth_description',$home->eighth_description) }}</textarea>
@@ -315,7 +319,7 @@
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 d-none">
                                     <div class="form-group">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="checkbox" name="toggle_blog_list"

@@ -10,8 +10,10 @@
     <link href="{{asset('css/owl.carousel.min.css')}}" rel="stylesheet" type="text/css">
     <link href="{{asset('css/owl.theme.default.css')}}" rel="stylesheet" type="text/css">
     <link href="{{asset('css/lightgallery.css')}}" rel="stylesheet" type="text/css">
-    <link href="{{asset('css/common.css?1.0')}}" rel="stylesheet" type="text/css">
+    <link href="{{asset('css/common.css?ver1234')}}" rel="stylesheet" type="text/css">
     <link href="{{asset('css/responsive.css')}}" rel="stylesheet" type="text/css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="canonical" href="{{ url()->full() }}"/>

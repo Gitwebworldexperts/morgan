@@ -90,7 +90,7 @@
                                 $firstImage = isset($imageArray[0]) ? $imageArray[0] : null;
                             @endphp
                             @if($firstImage)
-                                <img alt="Image not found" onerror="this.onerror=null; this.src='{{ asset('featured_images/featured_image_1731072533.jpg') }}';"  src="{{ asset('post/'.$firstImage) }}" class="w-100" alt=""> 
+                            <img alt="Image not found" onerror="this.parentNode.removeChild(this);" src="{{ asset('post/'.$firstImage) }}" class="w-100">
                             @endif
 							<h2>{{ $post->name }}</h2>
                             {!! descriptionWithImages($post->description) !!}
@@ -125,7 +125,7 @@
                                     </figure>
                                     <figcaption>
                                         <span>{{ $item->created_at->format('d M Y') }}</span>
-                                        <a href=""><h4>{{ $item->name }}</h4></a>
+                                        <a href="{{ $item->slug ? route('blog', ['slug' => $item->slug]) : '#' }}"><h4>{{ $item->name }}</h4></a>
                                     </figcaption>
                                 </div>
                             @endforeach
@@ -168,6 +168,17 @@
     @endsection
     @section('scripts')
     <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const accordion = document.getElementById("accordionExample");
+        const faqHeading = document.querySelector(".blog-faqs h4");
+
+        if (accordion && faqHeading) {
+            if (accordion.children.length === 0) {
+                faqHeading.style.display = "none";
+            }
+        }
+    });
+
     function copyCurrentUrl(event) {
         event.preventDefault(); // Prevent the default action
         const currentUrl = window.location.href; // Get the current page URL

@@ -177,14 +177,14 @@
                         <div class="private-list-box">
                             <a href="{{ route('private.detail_page',$private->slug) }}" target="_blank">
                             <figure>
-                                <img src="{{ asset($private->featured_image) }}" class="" alt="">
+                                <img src="{{ asset($private->featured_image) }}" onerror="this.onerror=null; this.src='{{ asset('img/thumbnail-placeholder-gallery.png') }}';" class="" alt="">
                                 <figcaption>
                                 <div class="add-grp">
                                   @if(isset($private->propertyType->type_name) && $private->propertyType->type_name)
                                     <div class="VillaText">{{ $private->propertyType->type_name ?? "" }}</div>
                                   @endif
                                   @if($private->address)
-                                    <p><img src="img/hotel/map.svg">{!! strip_tags($private->address) !!}</p>
+                                    <p><img src="img/hotel/map.svg">{!! Str::words(strip_tags($private->address), 2, '...') !!}</p>
                                   @endif
                                 </div>
                                 <h3>{{ $private->name }}</h3>

@@ -116,8 +116,10 @@
                             <div class="studio-box">
                                 <a href="{{ route('report_inidividual.show', $item->slug) }}">
                                     <figure>
-                                    @if($item->featured_image)
-                                        <img src="{{ asset($item->featured_image) }}" class="w-100" alt="">
+                                    @if($item->background_image)
+                                        <img src="{{ asset($item->background_image) }}" class="w-100" alt="">
+                                    @else
+                                        <img src="{{ asset('img/thumbnail-placeholder-gallery.png') }}" class="w-100" alt="">
                                     @endif
                                         <figcaption>
                                             <h3>{{  $item->heading }}</h3>

@@ -181,7 +181,7 @@
                                               @endif
                                                 
                                               <img src="{{ asset($property->featured_image) }}"
-                                                  onerror="this.onerror=null; this.src='{{ asset('img/list/4.png') }}';"
+                                                  onerror="this.onerror=null; this.src='{{ asset('img/thumbnail-placeholder-gallery.png') }}';"
                                                   alt=""></a>
 
                                                   <div class="Wishlist {{ in_array(route('detail.page',$property->slug), $wish) ? 'added' : '' }}" 
@@ -205,7 +205,9 @@
 
                                               
                                           <h3>{{ $property->name }}</h3>
-                                              <p><img src="{{ asset('img/hotel/map.svg') }}">{!! strip_tags($property->address) !!}</p>
+                                          @if($property->address)
+                                              <p><img src="{{ asset('img/hotel/map.svg') }}">{!! Str::words(strip_tags($property->address), 4, '...') !!}</p>
+                                              @endif
                                           </a>
                                       </figcaption>
                                   </div>

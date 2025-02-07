@@ -85,7 +85,7 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="login-from">
-                            <h2 class="mb-2">Get a quote</h2>
+                            <h2 class="mb-2">Get a quote for your property.</h2>
 
 							@if(session('success'))
                                 <div class="alert alert-success">
@@ -104,11 +104,11 @@
                                 </div>
                                 <div class="form-group"> 
                                     <label>Property Location </label> 
-                                    <input class="form-control" placeholder="Property Location" name="property_location" type="text"> 
+                                    <input class="form-control"  placeholder="Property Location" name="property_location" type="text" required> 
                                 </div>
                                 <div class="form-group"> 
                                     <label>Message</label> 
-                                    <textarea class="form-control" placeholder="Enter your Message..." name="message"></textarea>
+                                    <textarea class="form-control" placeholder="Enter your Message..." name="message" rows="4" style="height: auto;"></textarea>
                                 </div>
                                 <div class="form-group"> 
                                     <button type="submit" class="green-btn submit-btn">Submit Details</button>

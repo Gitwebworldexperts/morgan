@@ -30,7 +30,7 @@
                                     <option value="investment"> Investment </option>
                                     <option value="international"> International </option>
                                     <option value="project"> Development </option>
-                                    <option value="branded"> Branded Redidency </option>
+                                    <option value="branded"> Branded Residences </option>
                                     <option value="mortgage"> Mortgage Calculator </option>
                                     <option value="report"> Report </option>
                                     <option value="career"> Career </option>
@@ -56,7 +56,7 @@
                 </div>
                 <div class="btn-grp d-flex">
                         <button type="submit" class="green-btn">Save</button>
-                        <button id="add-row-btn" type="button" class="custom_clone_button clone_button border-btn">Add new</button>
+                        {{-- <button id="add-row-btn" type="button" class="custom_clone_button clone_button border-btn">Add new</button> --}}
                         <a href="{{ route('faq.index') }}" class="border-btn">Back</a>
                     </div>
                 

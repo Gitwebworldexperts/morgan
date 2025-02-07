@@ -110,7 +110,7 @@
                                     <li><a href="{{ route('profile.show') }}">Profile</a></li>
                                     <li><a href="{{ route('wishlist.index') }}">My Favourites</a></li>
                                     <li><a href="{{ route('my.inquiries') }}">My Enquiries</a></li>
-                                    <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log Out</a></li>
+                                    <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a></li>
                                 </ul>
                             </div>
 
@@ -119,7 +119,7 @@
                                         <img src="{{ asset('img/user.svg') }}" class="mobile-none" alt="User Icon Mobile">
                                         <img src="{{ asset('img/user2.svg') }}" class="desktop-none" alt="User Icon Desktop">
                                     </div>
-                                    <span>Log Out</span>
+                                    <span>Logout</span>
                                 </a> --}}
 
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

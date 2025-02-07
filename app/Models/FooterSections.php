@@ -15,6 +15,7 @@ class FooterSections extends Model
         'address',
         'email',
         'phone',
+        'whatsapp_number',
         'navigation_menus',
         'newsletter_section',
         'social_media_links',

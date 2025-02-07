@@ -24,8 +24,8 @@
                     <div class="col-12">
                         <div class="bread-container">
 							<ul>
-								<li><a href="" class="">Home</a></li>
-								<li><a href="#" class="">Communities</a></li>
+								<li><a href="{{ asset('/') }}" class="">Home</a></li>
+								<li><span class="">Communities</span></li>
 							</ul>
 						</div>
                     </div>
@@ -57,7 +57,7 @@
                                             <figure> <img src="{{ asset($communitie->featured_image) }}" class="" alt="">
                                             </figure>
                                         </a>
-                                        <figcaption> <a href="communities-detail.html">
+                                        <figcaption> <a href="{{ route('detail.communitie', base64_encode($communitie->id)) }}">
                                                 <h3>{{ $communitie->community_name}}</h3>
                                             </a> </figcaption>
                                     </div>

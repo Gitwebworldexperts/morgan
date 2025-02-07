@@ -283,13 +283,19 @@ class PropertieController extends Controller
                 $property_type = 'branded';
             }
             // $property_list = DB::table($tableName)->limit(10)->get();
-            // dd($foundProperty);
+            
             $property_list = DB::table($tableName)
-            ->leftJoin('property_types', $tableName . '.category_id', '=', 'property_types.id')  // Use concatenation to form the full table.column reference
-            ->select($tableName . '.*', 'property_types.*')  // Select columns from both tables
-            ->limit(10)
-            ->get();
-            // dd($property_list);
+    ->leftJoin('property_types', $tableName . '.category_id', '=', 'property_types.id') 
+    ->select(
+        $tableName . '.*',
+        'property_types.id as property_type_id', // Alias the id column of property_types
+        'property_types.type_name as type_name',
+        $tableName . '.id as property_id'        // Alias the id column of the main table
+    )
+    ->where($tableName . '.id', '!=', $foundProperty->id) 
+    ->limit(10)
+    ->get();
+
             return view('detail', compact('foundProperty','agent','property_list','amenitie','property_type'));
         } else {
             echo "Error: Property not found.";
@@ -334,10 +340,16 @@ class PropertieController extends Controller
             // $property_list = DB::table($tableName)->limit(10)->get();
             // dd($foundProperty);
             $property_list = DB::table($tableName)
-            ->leftJoin('property_types', $tableName . '.category_id', '=', 'property_types.id')  // Use concatenation to form the full table.column reference
-            ->select($tableName . '.*', 'property_types.*')  // Select columns from both tables
-            ->limit(10)
-            ->get();
+    ->leftJoin('property_types', $tableName . '.category_id', '=', 'property_types.id') 
+    ->select(
+        $tableName . '.*',
+        'property_types.id as property_type_id', // Alias the id column of property_types
+        'property_types.type_name as type_name',
+        $tableName . '.id as property_id'        // Alias the id column of the main table
+    )
+    ->limit(10)
+    ->get();
+
             $devlopment = "";
             // dd($property_list);
             return view('detail', compact('foundProperty','agent','property_list','amenitie','devlopment','property_type'));
@@ -384,10 +396,17 @@ class PropertieController extends Controller
             // $property_list = DB::table($tableName)->limit(10)->get();
             // dd($foundProperty);
             $property_list = DB::table($tableName)
-            ->leftJoin('property_types', $tableName . '.category_id', '=', 'property_types.id')  // Use concatenation to form the full table.column reference
-            ->select($tableName . '.*', 'property_types.*')  // Select columns from both tables
-            ->limit(10)
-            ->get();
+    ->leftJoin('property_types', $tableName . '.category_id', '=', 'property_types.id') 
+    ->select(
+        $tableName . '.*',
+        'property_types.id as property_type_id', // Alias the id column of property_types
+        'property_types.type_name as type_name',
+        $tableName . '.id as property_id'        // Alias the id column of the main table
+    )
+    ->limit(10)
+    ->get();
+
+
             $private = "";
             // dd($property_list);
             return view('detail', compact('foundProperty','agent','property_list','amenitie','private','property_type'));
@@ -436,10 +455,16 @@ class PropertieController extends Controller
             // $property_list = DB::table($tableName)->limit(10)->get();
             // dd($foundProperty);
             $property_list = DB::table($tableName)
-            ->leftJoin('property_types', $tableName . '.category_id', '=', 'property_types.id')  // Use concatenation to form the full table.column reference
-            ->select($tableName . '.*', 'property_types.*')  // Select columns from both tables
-            ->limit(10)
-            ->get();
+    ->leftJoin('property_types', $tableName . '.category_id', '=', 'property_types.id') 
+    ->select(
+        $tableName . '.*',
+        'property_types.id as property_type_id', // Alias the id column of property_types
+        'property_types.type_name as type_name',
+        $tableName . '.id as property_id'        // Alias the id column of the main table
+    )
+    ->limit(10)
+    ->get();
+
             $investment = "";
             // dd($property_list);
             return view('detail', compact('foundProperty','agent','property_list','amenitie','investment','property_type'));
@@ -460,7 +485,6 @@ class PropertieController extends Controller
         if ($pagination) {
             $previousUrl = url()->previous();
             parse_str(parse_url($previousUrl, PHP_URL_QUERY), $queryParams);
-            $propFor = $queryParams['prop_for'] ?? null;
         }
 
         // Redirect if propFor is empty
@@ -523,7 +547,6 @@ class PropertieController extends Controller
         if ($pagination) {
             $previousUrl = url()->previous();
             parse_str(parse_url($previousUrl, PHP_URL_QUERY), $queryParams);
-            $propFor = $queryParams['prop_for'] ?? null;
         }
 
         // Redirect if propFor is empty
@@ -588,7 +611,6 @@ class PropertieController extends Controller
         if ($pagination) {
             $previousUrl = url()->previous();
             parse_str(parse_url($previousUrl, PHP_URL_QUERY), $queryParams);
-            $propFor = $queryParams['prop_for'] ?? null;
         }
 
         // Redirect if propFor is empty
@@ -733,7 +755,6 @@ class PropertieController extends Controller
         if ($pagination) {
             $previousUrl = url()->previous();
             parse_str(parse_url($previousUrl, PHP_URL_QUERY), $queryParams);
-            $propFor = $queryParams['prop_for'] ?? null;
         }
 
         // Redirect if propFor is empty
@@ -768,7 +789,7 @@ class PropertieController extends Controller
             $properties->appends(['prop_for' => $propFor]);
 
             $privateOffice = PrivateOffice::latest()->first();
-            $private_properties = PrivatePropertie::where('status', 'active')
+            $private_properties = PrivatePropertie::where('status', 'active')->where('is_featured', 1)
             ->latest()
             ->take(6)
             ->with('propertyType')
@@ -791,7 +812,9 @@ class PropertieController extends Controller
         // base64_encode
         $data = [];
         $data['communities'] =  Community::find($id);
-
+        if(!$data['communities']){
+            return redirect()->route('communities.listing');
+        }
 
         // Fetch data for each property type and add a 'property_source' key
         $brandedProperties = BrandedPropertie::where('community_id', $id)
@@ -883,7 +906,9 @@ class PropertieController extends Controller
 
     public function ReportList(){
         $report = Report::latest()->first();
-        $reports = ReportIndividual::all();
+        $reports = ReportIndividual::where('status', 'active')
+        ->select('report_type', 'slug', 'background_image', 'heading')
+        ->get();    
         return view('reports', compact('report','reports'));
     }
 }

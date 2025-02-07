@@ -21,6 +21,7 @@
                 <tr>
                     <th>Job Name</th>
                     <th>Job Type</th>
+                    <th>Status</th>
                     <th>Location</th>
                     <th>Applied jobs</th>
                     <th>Actions</th>
@@ -31,6 +32,7 @@
                     <tr>
                         <td>{{ $career->job_name }}</td>
                         <td>{{ $career->job_type }}</td>
+                        <td>{{ ucfirst($career->status) }}</td>
                         <td>{{ $career->job_location }}</td>
                         <td>
                             <a  target="_blank" href="{{ route('applied.job', base64_encode($career->id)) }}">
@@ -38,9 +40,8 @@
                             </a>
                         </td>
                         <td>
-                            <a class="edit_button" target="_blank" href="{{ route('detail.career', base64_encode($career->id)) }}">
-                                <i class="fa-solid fa-eye"></i>
-                            </a>
+                            <!-- <a class="edit_button" target="_blank" href="{{ route('detail.career', base64_encode($career->id)) }}"><i class="fa-solid fa-eye"></i></a> -->
+                            <a class="edit_button" target="_blank" href="{{ route('detail.career', $career->id) }}"><i class="fa-solid fa-eye"></i></a>
                             <a href="{{ route('careers.edit', $career->id) }}" class="edit_button"><i class="fa-solid fa-pencil"></i></a>
                             <form action="{{ route('careers.destroy', $career->id) }}" method="POST" style="display:inline;">
                                 @csrf

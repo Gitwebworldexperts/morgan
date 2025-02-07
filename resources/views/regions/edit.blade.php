@@ -22,8 +22,8 @@
                         <textarea name="description" id="description" class="form-control" required>{{ $region->description }}</textarea>
                     </div>
                     <div class="form-group">
-                        <label for="image_url">Image URL</label>
-                        <input type="file" name="image_url" id="image_url" class="form-control" value="{{ $region->image_url }}" >
+                        <label for="image_url">Upload Image</label>
+                        <input type="file" accept="image/*" name="image_url" id="image_url" class="form-control" value="{{ $region->image_url }}" >
                         @if($region->image_url)
                         <div id="image-preview" class="mt-3">
                             <img src="{{ asset($region->image_url) }}" class="img-thumbnail mr-2" style="max-height: 150px;">

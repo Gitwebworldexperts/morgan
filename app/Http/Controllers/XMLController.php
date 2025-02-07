@@ -204,7 +204,7 @@ public function handleAgent($item, &$property)
 
                 // Download and store agent photo asynchronously or via job
                 $this->handleAgentPhoto($item['agent']['photo']['url'], $agent);
-
+                
                 $agent->save();
             }
 

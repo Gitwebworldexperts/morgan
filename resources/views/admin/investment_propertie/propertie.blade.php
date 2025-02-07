@@ -12,7 +12,7 @@
         </div>
     @endif
     <section>
-        <p class="heading_for_admin_section">Add Properties 
+        <p class="heading_for_admin_section">Add Investment Properties 
             <a class="add_new_button m-0" href="{{ route('investment_properties.create') }}">+ Add New Property</a>
             <a class="add_new_button  m-0" href="{{ route('property-type.create','investment') }}">+ Add Property Type</a></p>
         <div class="section_content">

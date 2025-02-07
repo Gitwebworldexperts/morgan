@@ -51,6 +51,10 @@ use App\Http\Controllers\ProfileController;
 use App\Jobs\DownloadImageJob;
 use Illuminate\Support\Facades\Queue;
 
+use App\Http\Controllers\ReportFormController;
+
+
+
 require base_path('routes/static.php');
 
 // Route::get('/', function () {
@@ -179,6 +183,8 @@ Route::any('/search', [SearchController::class, 'search'])->name('search');
 
 Route::any('/common_search', [SearchController::class, 'CommonSearch'])->name('common.search');
 
+Route::any('/yesvant', [TestController::class, 'index']);
+
 
 Route::get('/properties/view/{slug}', [PropertieController::class, 'DetailPage'])->name('detail.page');
 
@@ -211,6 +217,7 @@ Route::get('/communities-detail', [BaseController::class, 'communitiesDetail'])-
 Route::get('/contents/view/{slug}', [BaseController::class, 'PrivacyPolicy'])->name('privacy.policy');
 Route::get('/contents/lists/about-us', [BaseController::class, 'AboutUs'])->name('aboutUs');
 Route::get('/blogs/lists', [BaseController::class, 'BlogList'])->name('blogList');
+Route::get('/blogs/lists/test', [BaseController::class, 'BlogListTest']);
 Route::get('/blogs/view/{slug}', [BaseController::class, 'BlogSingle'])->name('blog');
 
 Route::get('/property_management', [BaseController::class, 'PropertyManagement'])->name('property_management');
@@ -249,7 +256,7 @@ Route::get('/404', function () {
     return view('errors/404'); 
 });
 
- Route::get('/report/{slug}', [ReportIndividualController::class, 'show'])->name('report_inidividual.show');
+Route::get('/report/{slug}', [ReportIndividualController::class, 'show'])->name('report_inidividual.show');
 
 Route::post('/submit-career', [CareerController::class, 'submit'])->name('career.submit');
 
@@ -289,7 +296,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 });
 
-
-
-
-
+Route::post('/report-form', [ReportFormController::class, 'store'])->name('report-form.store');
+Route::get('/reportform/{id}', [ReportFormController::class, 'reportForm'])->name('reportform.data');

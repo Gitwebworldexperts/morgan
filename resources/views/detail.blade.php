@@ -25,11 +25,14 @@
 
 @php
   if(isset($devlopment)){
+    $property_type = 'project';
     $routeName = 'devlopment.detail_page';
   }elseif(isset($private)){
     $routeName = 'private.detail_page';
+    $property_type = 'private';
   }elseif(isset($investment)){
     $routeName = 'investment.detail_page';
+    $property_type = 'invest';
   }
   else{
     $routeName = 'detail.page';
@@ -53,7 +56,7 @@
   }elseif($property_type == 'branded'){
     $ListName = "Branded Residences";
     $ListRouteName = route('branded_residences');
-  }elseif($property_type == 'investment'){
+  }elseif($property_type == 'investment' || $property_type == 'invest'){
     $ListName = "Investment";  
     $ListRouteName = route('investment.listing');  
   }
@@ -165,7 +168,7 @@
         <div class="col-12">
           <div class="gallery-grid" id="aniimated-thumbnials">
             @if($foundProperty->featured_image)
-            <a href="{{ $foundProperty->featured_image }}" id="gallery-item-1">
+            <a href="{{ asset($foundProperty->featured_image) }}" id="gallery-item-1">
                 <div class="Big_Gallery">
                   <img decoding="async" src="{{ asset($foundProperty->featured_image) }}" class="img-fluid">
                 </div>
@@ -173,16 +176,29 @@
             @endif
             @if(isset($foundProperty->banners) && !empty($foundProperty->banners))
                 @foreach ($foundProperty->banners as $key => $item)
-                    @if($key > 3)
-                    <a href="{{ asset($item->image_url) }}" id="gallery-item-{{$key}}">
+                @php
+                  $key = $key +1;
+                @endphp
+                    <a href="{{ asset($item->image_url) }}" class="{{ $key + 1 }} gallery-item-{{ $key + 1 }}" id="gallery-item-{{ $key + 1 }}">
                       <div class="Small_Gallery">
                         <img decoding="async" src="{{ asset($item->image_url) }}" class="img-fluid" alt="" />
                       </div>
                     </a>
-                    @else
-                    @endif
-
                 @endforeach
+                @php
+                  $number_of_banners = count($foundProperty->banners) + 1;
+                @endphp
+                @if(count($foundProperty->banners) < 4)
+                  @for($i = 0; $i < (5 - $number_of_banners); $i++)
+                    <a href="{{ asset('img/thumbnail-placeholder-gallery.png') }}" class="{{ $number_of_banners + 1 + $i }} gallery-item-{{ $number_of_banners + 1 + $i }}" id="gallery-item-{{ $number_of_banners + 1 + $i }}">
+                      <div class="Small_Gallery">
+                        <img decoding="async" src="{{ asset('img/thumbnail-placeholder-gallery.png') }}" class="img-fluid" alt="Placeholder Image" />
+                      </div>
+                    </a>
+                  @endfor
+                @endif
+
+
             @endif
           </div>
         </div>
@@ -191,7 +207,7 @@
   </section>
   @else
   <section class="property-gallery-sec  pb-0">
-    <img src="{{ asset('INVESTIMG_0_1705910145.jpg') }}" class="w-100" alt="">              
+    <img src="{{ asset('INVESTIMG_0_1705910145_old.jpg') }}" style=" height: 70vh; object-fit: cover; " class="w-100" alt="">              
   </section>
   @endif
  
@@ -201,9 +217,11 @@
         <div class="col-lg-8">
           <div class="content-wrapper">
             <h2 class="mt-0">{{ $foundProperty->name }}</h2>
+            @if($foundProperty->address)
             <p>
               <img src="{{ asset('/img/hotel/map.svg') }}"> {{ strip_tags($foundProperty->address) }}
             </p>
+            @endif
             @if((number_format($foundProperty->sale_price) || number_format($foundProperty->area) || $foundProperty->bed || $foundProperty->jacuzzi))
             <div class="price-amenitity">
               @if(number_format($foundProperty->sale_price))
@@ -241,8 +259,9 @@
               <h5>Description</h5>
               <div class="parent-section">
                 <div class="show_more_content">
-                @if (strpos($foundProperty->description, "\n") !== false)
-                    {!! nl2br(e($foundProperty->description)) !!}
+                  
+                @if (strpos($foundProperty->description, "\n") !== false && !isset($private))  
+                  {!! nl2br(e($foundProperty->description)) !!}
                 @else
                     {!! $foundProperty->description !!}
                 @endif
@@ -291,9 +310,13 @@
              <div class="seperator"></div>
             
             <div class="property-location">
-              <h5>Property Location</h5>
+              <h5>Property Location </h5>
               {!! $foundProperty->google_maps_link !!}
-              {!! $foundProperty->iframe !!}
+              @if($foundProperty->iframe)
+                  {!! $foundProperty->iframe !!}
+              @else
+                  <img class="w-100" src="{{ asset('logos/map_placholder.png') }}" alt="Map Placeholder">
+              @endif
             </div>
            <!--<div class="seperator"></div>-->
             @if(isset($foundProperty->company) && !empty($foundProperty->company))
@@ -499,6 +522,8 @@
           
           @if(isset($devlopment))
           <h2 class="m-0">More New Developments</h2>
+          @elseif($property_type == 'investment' || $property_type == 'invest')
+          <h2 class="m-0">More Investments</h2>
           @else
           <h2 class="m-0">More Properties</h2>
           @endif
@@ -511,18 +536,27 @@
           <div class="col-12">
             <div class="cards-main">
               <div class="owl-carousel" id="instructor-slider">
-             
+
 
                   @if(isset($property_list) && !empty($property_list) && count($property_list))
-                  @foreach($property_list as $item)
+                  @foreach($property_list as $item) 
+                  <?php $new_id = $item->id; ?>
                     <div class="item">
                     <div class="card-box">
                   
                     <figure>
                       <div class="VillaText">
-                        <p>{{ $item->type_name ?? "Property" }}</p>
+                        <p> {{ $item->type_name ?? "Property" }}</p>
                       </div>
-                      <a href="{{ route($routeName, $item->slug ?? '#') }}"><img onerror="this.onerror=null; this.src='{{ asset('img/list/4.png') }}';" src="{{ asset($item->featured_image)}}" class="" alt=""></a>
+                      <a href="{{ route($routeName, $item->slug ?? '#') }}">
+                        @if($item->featured_image)
+                        <img onerror="this.onerror=null; this.src='{{ asset('img/list/4.png') }}';" src="{{ asset($item->featured_image)}}" class="" alt="">
+                        @elseif(getFirstBanner($item->id,$property_type))
+                        <img src="{{ asset(getFirstBanner($item->id,$property_type)) }}" onerror="this.onerror=null; this.src='{{ asset('img/thumbnail-placeholder-gallery.png') }}';" alt="">
+                        @else
+                            <img src="{{ asset('img/thumbnail-placeholder-gallery.png') }}" alt="Featured Image">
+                        @endif
+                      </a>
                       <div class="Wishlist {{ in_array(route($routeName,$item->slug), $wish) ? 'added' : '' }}" 
                         data-id="{{ $item->id }}" 
                         data-type="{{ $property_type }}" 
@@ -537,11 +571,13 @@
                   <figcaption>
                     <a href="{{ route($routeName, $item->slug ?? '#') }}">
                       <h3>{{ $item->name }}</h3>
+                      @if($item->address)
                       <span class="address_section">
                         <p>
-                          <img src="{{ asset('/img/hotel/map.svg')}}">{!! $item->address !!}
+                          <img src="{{ asset('/img/hotel/map.svg')}}">{!! Str::words(strip_tags($item->address), 3, '...') !!}
                         </p>
                       </span>
+                      @endif
                       @if($property_type != 'project')
                       <div class="HotelViews">
                         <ul>
@@ -598,6 +634,44 @@ span.address_section p {
 @endsection
 
 @section('scripts')
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Count the number of anchor tags in the gallery grid
+    var anchorTags = document.querySelectorAll('#aniimated-thumbnials a');
+    
+    // Check if there are more than 5 anchor tags
+    if (anchorTags.length > 5) {
+      // Add the CSS rule to the document
+      var style = document.createElement('style');
+      style.innerHTML = `
+        #gallery-item-5:after {
+            content: "See more";
+            display: block;
+            width: 100%;
+            height: 100%;
+            background-color: #3a3526d4;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            font-family: 'ClashGrotesk-Medium';
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 17.22px;
+            letter-spacing: 1px;
+            text-align: left;
+            color: #FCF9F2;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }	
+      `;
+      document.head.appendChild(style);
+    }
+  });
+</script>
 
 <script>
 function copyCurrentUrl(event) {

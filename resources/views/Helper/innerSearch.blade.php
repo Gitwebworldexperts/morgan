@@ -68,8 +68,8 @@
                                                   <option @if(isset($searchData['bed']) && $searchData['bed'] == 1) selected @endif>1</option>
                                                   <option @if(isset($searchData['bed']) && $searchData['bed'] == 2) selected @endif>2</option>
                                                   <option @if(isset($searchData['bed']) && $searchData['bed'] == 3) selected @endif>3</option>
-                                                  <option @if(isset($searchData['bed']) && $searchData['bed'] == 4) selected @endif>3</option>
-                                                  <option @if(isset($searchData['bed']) && $searchData['bed'] == 5) selected @endif>3</option>
+                                                  <option @if(isset($searchData['bed']) && $searchData['bed'] == 4) selected @endif>4</option>
+                                                  <option @if(isset($searchData['bed']) && $searchData['bed'] == 5) selected @endif>5</option>
                                                   <option @if(isset($searchData['bed']) && $searchData['bed'] == 6) selected @endif>6</option>
                                                   <option @if(isset($searchData['bed']) && $searchData['bed'] == 7) selected @endif>7+</option>
                                               </select>
@@ -82,7 +82,7 @@
                                                   <option @if(isset($searchData['price']) && $searchData['price'] == 3) selected @endif>3</option>
                                               </select> -->
 
-                                              <div class="dropdown">
+                                              {{-- <div class="dropdown">
                                                     <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         Price Range
                                                     </button>
@@ -99,7 +99,7 @@
                                                         </div>
                                                     </div>
                                                     </div>
-                                                </div>
+                                                </div> --}}
 
                                           </div>
                                           <div class="BookingFromBtn"> <button type="submit"><img

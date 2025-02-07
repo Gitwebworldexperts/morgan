@@ -61,7 +61,7 @@
                                 {!! $item->description !!}
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-6 order--1">
                             <div class="about-left">
                                 <div class="about-img">
                                     <div class="img-item" style="aspect-ratio:1/0.7">

@@ -28,7 +28,7 @@
 
             <div class="form-group">
                 <label for="description">Description </label>
-                <textarea name="description" id="description" class="form-control" rows="5" required>{{ old('description', $post->description) }}</textarea>
+                <textarea name="description" id="description" class="form-control" rows="5" >{{ old('description', $post->description) }}</textarea>
                 @error('description')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror

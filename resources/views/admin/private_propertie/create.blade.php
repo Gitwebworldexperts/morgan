@@ -10,15 +10,9 @@
             </ul>
         </div>
     @endif
-  @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-
 
     <section>
-        <p class="heading_for_admin_section">New Properties</p>
+        <p class="heading_for_admin_section">New Private Properties</p>
         <div class="section_content">
             <form id="image-upload-form" action="{{ route('private_properties.store') }}" method="POST"
                 enctype="multipart/form-data">
@@ -128,6 +122,13 @@
 
                 <div class="form-group">
                     <label>Additional Settings</label><br>
+                    <div class="form-check form-check-inline col-md-6">
+                        <label class="form-check-label" for="jacuzzi">Jacuzzi</label>
+                        <input type="number" min="0" class="form-control" name="jacuzzi" id="jacuzzi" min="0" value="{{ old('jacuzzi') }}">    
+                    </div>
+                    @error('jacuzzi')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" name="is_featured" id="is_featured" value="1"
                             {{ old('is_featured') ? 'checked' : '' }}>
@@ -137,14 +138,6 @@
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
 
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="jacuzzi" id="jacuzzi" value="1"
-                            {{ old('jacuzzi') ? 'checked' : '' }}>
-                        <label class="form-check-label" for="jacuzzi">Jacuzzi</label>
-                    </div>
-                    @error('jacuzzi')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
                     <!-- <div class="form-check form-check-inline">
                     <input class="form-check-input" type="checkbox" name="is_private" id="is_private" value="1" {{ old('is_private') ? 'checked' : '' }}>
                     <label class="form-check-label" for="is_private">Is Private</label>

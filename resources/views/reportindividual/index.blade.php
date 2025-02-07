@@ -22,7 +22,8 @@
             <thead>
                 <tr>
                     <th>Heading</th>
-                    <th>Subheading</th>
+                    <!-- <th>Subheading</th> -->
+                    <th>Download</th>
                     <th>Status</th>
                     <th>Created At</th>
                     <th>Action</th>
@@ -32,13 +33,17 @@
                 @if(isset($reports) && !empty($reports) && $reports->count() > 0)
                     @foreach($reports as $report)
                         <tr>
-                            <td>{{ $report->heading }}</td>
-                            <td>{{ $report->subheading ?? 'N/A' }}</td>
+                            <td>{!! Str::words($report->heading, 8, '...') !!}</td>
+                            <!-- <td>{!! Str::words($report->subheading ?? 'N/A', 5, '...') !!}</td> -->
+                            <td><span class="download_count">{{ $report->report_forms_count }}</span></td>
                             <td>{{ ucfirst($report->status) }}</td>
                             <td>{{ $report->created_at->format('d-m-Y') }}</td>
                             <td>
                                 <div class="faq-actions">
                                     <!-- View Report -->
+                                    <a class="edit_button" href="{{ route('reportform.data', $report->id) }}">
+                                    <i class="fa-solid fa-bars-progress"></i> Data
+                                    </a>
                                     <a class="edit_button" href="{{ route('report_inidividual.show', $report->slug) }}">
                                         <i class="fa-solid fa-eye"></i> View
                                     </a>
@@ -64,15 +69,6 @@
                     </tr> -->
                 @endif
             </tbody>
-            <tfoot>
-                <tr>
-                    <th>Heading</th>
-                    <th>Subheading</th>
-                    <th>Status</th>
-                    <th>Created At</th>
-                    <th>Action</th>
-                </tr>
-            </tfoot>
         </table>
     </div>
 </section>
@@ -83,7 +79,9 @@
     <script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function() {
-            new DataTable('#reportsTable');
+            new DataTable('#reportsTable', {
+                order: [] // Disable default sorting
+            });
         });
     </script>
 @endsection

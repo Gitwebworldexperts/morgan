@@ -25,8 +25,9 @@
             <div class="col-12">
                 <div class="bread-container">
                     <ul>
-                        <li><a href="" class="">Home</a></li>
-                        <li><a href="" class="">Careers</a></li>
+                        <li><a href="{{ asset('/') }}" class="">Home</a></li>
+                        <li><a href="{{ asset('/careers/apply') }}" class="">Careers</a></li>
+                        <li><span>{{ $career->job_name }}</span></li>
                     </ul>
                 </div>
             </div>

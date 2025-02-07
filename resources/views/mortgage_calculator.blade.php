@@ -1,7 +1,10 @@
 @extends('layouts.app')
 @section('title', "Mortgage Calculator ")
 @section('content')
-    <!-- breadcrumb -->
+@php
+    $footerSection = getFooterSection();    
+@endphp
+<!-- breadcrumb -->
     <section class="breadcrumb-sec">
         <div class="container">
             <div class="row">
@@ -9,7 +12,7 @@
                     <div class="bread-container">
                         <ul>
                             <li><a href="{{ asset('/') }}" class="">Home</a></li>
-                            <li><a href="javascript:void(0)" class="">Mortgage Calculator</a></li>
+                            <li><span>Mortgage Calculator</span></li>
                         </ul>
                     </div>
                 </div>
@@ -86,10 +89,8 @@
 
                             <div class="need-help">
                                 <h5>Still Need Help?</h5>
-                                <a href="" class="green-btn"><img src="img/whatsapp.png" alt="" class="" />Talk to a mortgage advisor</a>
-                            </div>
-
-
+                                <a target="_blank" href="https://api.whatsapp.com/send?phone={{ $footerSection->mortgage_advisor_number}}" class="green-btn"><img src="img/whatsapp.png" alt="" class="" />Talk to a mortgage advisor</a>
+                            </div>  
                         </div>
                     </div>
 
@@ -152,7 +153,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group mb-0">
-                                    <button type="submit" class="green-btn">Request a consultation <img src="{{ asset('img/arrow-right3.svg') }}" class=""></button>
+                                    <button type="submit" class="green-btn">Request a consultation &nbsp<img src="{{ asset('img/arrow-right3.svg') }}" class=""></button>
                                 </div>
                             </form>
                         </div>

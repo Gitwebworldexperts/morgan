@@ -4,7 +4,8 @@
     <section>
     <div class="container">
         <p class="heading_for_admin_section">Applied Job for {{ $careeer->job_name ?? "" }}</p>
-        <a target="_blank" href="{{ route('detail.career', base64_encode($careeer->id)) }}" class="add_new_button m-0">View Job</a>
+        <!-- <a target="_blank" href="{{ route('detail.career', base64_encode($careeer->id)) }}" class="add_new_button m-0">View Job</a> -->
+        <a target="_blank" href="{{ route('detail.career', $careeer->id) }}" class="add_new_button m-0">View Job</a>
 
         <div class="section_content">
         <table id="example" class="table table-striped" style="width:100%">

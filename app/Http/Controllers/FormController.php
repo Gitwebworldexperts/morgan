@@ -76,7 +76,7 @@ class FormController extends Controller
             'fullName' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'contactNumber' => 'required|string|max:20',
-            'message' => 'required|string',
+            // 'message' => 'required|string',
         ]);
         $previousUrl = url()->previous();
 

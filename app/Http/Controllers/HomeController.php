@@ -36,23 +36,27 @@ class HomeController extends Controller
     {
         $headerSections = HeaderSections::first();
         // $featured_properties = Properties::getFeaturedProperties();
-        $featured_properties = RentPropertie::where('status', 'active')
-                    ->where('is_featured',1)
+            $featured_properties = RentPropertie::where('status', 'active')
+            ->where('is_featured', 1)
+            ->with('banners') // Load the related banners for RentPropertie
+            ->take(10)
+            ->get()
+            ->map(function ($item) {
+                $item['property_source'] = 'rent';
+                return $item;
+            })
+            ->merge(
+                BuyPropertie::where('status', 'active')
+                    ->where('is_featured', 1)
+                    ->with('banners') // Load the related banners for BuyPropertie
                     ->take(10)
-                    ->get()->map(function ($item) {
-                        $item['property_source'] = 'rent';
+                    ->get()
+                    ->map(function ($item) {
+                        $item['property_source'] = 'buy';
                         return $item;
                     })
-                    ->merge(
-                        BuyPropertie::where('status', 'active')
-                            ->where('is_featured',1)
-                            ->take(10)
-                            ->get()->map(function ($item) {
-                                $item['property_source'] = 'buy';
-                                return $item;
-                            })
-                    )
-                    ->sortByDesc('created_at');
+            )
+            ->sortByDesc('created_at');
                     
         // Get the distinct region IDs from the InternationalPropertie model (taking the first 10).
         $regionIds = InternationalPropertie::distinct('region')->pluck('region')->take(10);

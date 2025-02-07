@@ -104,13 +104,13 @@
                             <ul class="remove_bullets ">
                                 <li class="nav-item">
                                     <a href="{{ route('buy_properties.index') }}"
-                                        class="@if (request()->is('buy_properties*') || Route::is('buy_properties.index')) active_nav @endif nav-link align-middle px-0">
+                                        class="@if (request()->is('buy_properties*') || Route::is('buy_properties.index') || Route::is('buy_properties.create') || Route::is('buy_properties.edit')) active_nav @endif nav-link align-middle px-0">
                                         <span class="ms-1 d-none d-sm-inline">Buy</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('rent_properties.index') }}"
-                                        class="@if (request()->is('rent_properties*') || Route::is('rent_properties.index')) active_nav @endif nav-link align-middle px-0">
+                                        class="@if (request()->is('rent_properties*') || Route::is('rent_properties.index') || Route::is('rent_properties.create') || Route::is('rent_properties.edit')) active_nav @endif nav-link align-middle px-0">
                                         <span class="ms-1 d-none d-sm-inline">Rent</span>
                                     </a>
                                 </li>
@@ -128,13 +128,13 @@
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('international_properties.index') }}"
-                                        class="@if (request()->is('international_properties*') || Route::is('international_properties.index')) active_nav @endif nav-link align-middle px-0">
+                                        class="@if (request()->is('international_properties*') || Route::is('international_properties.index') || Route::is('international_properties.create') || Route::is('international_properties.edit')) active_nav @endif nav-link align-middle px-0">
                                         <span class="ms-1 d-none d-sm-inline">International</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('project_properties.index') }}"
-                                        class="@if (request()->is('project_properties*') || Route::is('project_properties.index')) active_nav @endif nav-link align-middle px-0">
+                                        class="@if (request()->is('project_properties*') || Route::is('project_properties.index') || Route::is('project_properties.edit') || Route::is('project_properties.create')) active_nav @endif nav-link align-middle px-0">
                                         <span class="ms-1 d-none d-sm-inline">Development/Project</span>
                                     </a>
                                 </li>
@@ -250,7 +250,7 @@
 
                         <li class="nav-item">
                             <a href="{{ route('report_inidividual.index') }}"
-                                class="@if (request()->is('report_inidividual*') || Route::is('admin.report_inidividual') || Route::is('admin.report_inidividual.edit') || Route::is('admin.report_inidividual.create')) active_nav @endif nav-link align-middle px-0">
+                                class="@if (request()->is('report_inidividual*') || Route::is('report_inidividual.index') || Route::is('report_inidividual.edit') || Route::is('report_inidividual.create') || Route::is('reportform.data')) active_nav @endif nav-link align-middle px-0">
                                 <!-- <i class="fa-solid fa-photo-film"></i>  -->
                                 <i class="fa-solid fa-flag"></i>
                                 <span class="ms-1 d-none d-sm-inline">Reports</span>
@@ -258,7 +258,7 @@
                         </li>
 
                         <li  class="nav-item">
-                            <a href="{{ route('regions.index') }}" class="@if (Route::is('regions.edit') || Route::is('regions.create') || Route::is('careers.index')) active_nav @endif nav-link align-middle px-0">
+                            <a href="{{ route('regions.index') }}" class="@if (Route::is('regions.edit') || Route::is('regions.create') || Route::is('regions.index')) active_nav @endif nav-link align-middle px-0">
                                 <span class="ms-1 d-none d-sm-inline"><i class="fa-solid fa-thumbtack"></i> Region</span>
                             </a>
                         </li>

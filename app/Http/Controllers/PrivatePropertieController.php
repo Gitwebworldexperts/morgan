@@ -53,7 +53,7 @@ class PrivatePropertieController extends Controller
             // 'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'featured_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'area' => 'nullable|numeric',
-            'jacuzzi' => 'nullable|boolean',
+            'jacuzzi' => 'nullable|numeric',
             'bed' => 'nullable|integer',
             'price' => 'nullable|numeric',
             'sale_price' => 'nullable|numeric',
@@ -82,7 +82,8 @@ class PrivatePropertieController extends Controller
         $property->bed = $request->input('bed', 0); // Default to 0 if not provided
         $property->price = $request->price;
         $property->sale_price = $request->sale_price;
-        $property->jacuzzi = $request->has('jacuzzi');
+        // $property->jacuzzi = $request->has('jacuzzi');
+        $property->jacuzzi = $request->input('jacuzzi', 0);
         $property->is_featured = $request->has('is_featured');
         $property->is_private = $request->has('is_private');
         $property->country_id = $request->country_id;
@@ -274,7 +275,7 @@ class PrivatePropertieController extends Controller
             // 'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'featured_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'area' => 'nullable|numeric',
-            'jacuzzi' => 'nullable|boolean',
+            'jacuzzi' => 'nullable|numeric',
             'bed' => 'nullable|integer',
             'price' => 'nullable|numeric',
             'sale_price' => 'nullable|numeric',
@@ -302,7 +303,8 @@ class PrivatePropertieController extends Controller
     $property->bed = $request->input('bed', 0);
     $property->price = $request->price;
     $property->sale_price = $request->sale_price;
-    $property->jacuzzi = $request->has('jacuzzi');
+    // $property->jacuzzi = $request->has('jacuzzi');
+    $property->jacuzzi = $request->input('jacuzzi', 0);
     $property->is_featured = $request->has('is_featured') ? $request->has('is_featured') : 0;
     $property->is_private = $request->has('is_private') ? $request->has('is_private') : 0;
     $property->country_id = $request->country_id;

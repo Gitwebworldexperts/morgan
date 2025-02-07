@@ -43,19 +43,25 @@ class RentPropertieController extends Controller
         {
             $request->validate([
                 'name' => 'required|string|max:255',
-                'address' => 'required|string',
-            // 'google_maps_link' => 'nullable|url',
-            // 'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+                'meta_title' => 'required|string|max:255',
+                'meta_description2' => 'required|string|max:255',
+                // 'address' => 'max:255',
+                // 'google_maps_link' => 'max:255',
+                // 'property_description' => 'max:255',
+                // 'iframe' => 'max:255',
+                // 'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
                 'featured_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-                // 'area' => 'nullable|numeric',
-                'jacuzzi' => 'nullable|boolean',
+                'area' => 'nullable|numeric',
+                'jacuzzi' => 'nullable|numeric',
                 'bed' => 'nullable|integer',
                 'price' => 'nullable|numeric',
                 'sale_price' => 'nullable|numeric',
                 'is_featured' => 'nullable|boolean',
                 'is_private' => 'nullable|boolean',
                 // 'country_id' => 'nullable|exists:countries,id',
-                'category_id' => 'required',
+                // 'category_id' => 'required',
+                // 'eighth_heading' => 'max:255',
+                // 'eighth_description' => 'max:255',
             ]);
         $slug = generateSlug($request->name."_rent", \App\Models\RentPropertie::class);
             // Create a new property instance
@@ -66,11 +72,12 @@ class RentPropertieController extends Controller
             $property->community_id = $request->community_id;
             $property->meta_title = $request->meta_title;
             $property->meta_description2 = $request->meta_description2;
-        $property->slug = $slug;
+            $property->slug = $slug;
+            $property->iframe = $request->iframe;
             $property->address = $request->address;
             $property->google_maps_link = $request->google_maps_link;
             $property->area = $request->area;
-            $property->jacuzzi = $request->has('jacuzzi');
+            $property->jacuzzi = $request->input('jacuzzi', 0);
             $property->bed = $request->input('bed', 0); // Default to 0 if not provided
             $property->price = $request->price;
             $property->sale_price = $request->sale_price;
@@ -179,7 +186,7 @@ class RentPropertieController extends Controller
             $request->validate([
                 'name' => 'required|string|max:255',
                 'address' => 'required|string',
-                'google_maps_link' => 'nullable|url',
+                // 'google_maps_link' => 'nullable|url',
                 'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
                 'featured_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
                 'area' => 'nullable|numeric',
@@ -251,20 +258,28 @@ class RentPropertieController extends Controller
     public function update(Request $request, $id)
     {
         // dd($request);
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'address' => 'required|string',
-        // 'google_maps_link' => 'nullable|url',
-        'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-        'featured_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-        'area' => 'nullable|numeric',
-        'jacuzzi' => 'nullable|boolean',
-        'bed' => 'nullable|integer',
-        'price' => 'nullable|numeric',
-        'sale_price' => 'nullable|numeric',
-        'country_id' => 'nullable|exists:countries,id',
-        'category_id' => 'required|exists:property_types,id',
-    ]);
+           $request->validate([
+            'name' => 'required|string|max:255',
+            'meta_title' => 'required|string|max:255',
+            'meta_description2' => 'required|string|max:255',
+            // 'address' => 'max:555',
+            // 'google_maps_link' => 'max:255',
+            // 'property_description' => 'max:255',
+            // 'iframe' => 'max:255',
+            // 'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'featured_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'area' => 'nullable|numeric',
+            'jacuzzi' => 'nullable|numeric',
+            'bed' => 'nullable|integer',
+            'price' => 'nullable|numeric',
+            'sale_price' => 'nullable|numeric',
+            'is_featured' => 'nullable|boolean',
+            'is_private' => 'nullable|boolean',
+            // 'country_id' => 'nullable|exists:countries,id',
+            // 'category_id' => 'required',
+            // 'eighth_heading' => 'max:255',
+            // 'eighth_description' => 'max:255',
+        ]);
 
     // Find the property to update
     $property = RentPropertie::findOrFail($id);
@@ -277,11 +292,12 @@ class RentPropertieController extends Controller
     $property->meta_description2 = $request->meta_description2;
     $property->address = $request->address;
     $property->google_maps_link = $request->google_maps_link;
+    $property->iframe = $request->iframe;
     $property->area = $request->area;
     $property->bed = $request->input('bed', 0);
     $property->price = $request->price;
     $property->sale_price = $request->sale_price;
-    $property->jacuzzi = $request->has('jacuzzi');
+    $property->jacuzzi = $request->input('jacuzzi', 0);
     $property->is_featured = $request->has('is_featured') ? $request->has('is_featured') : 0;
     $property->is_private = $request->has('is_private') ? $request->has('is_private') : 0;
     $property->country_id = $request->country_id;
@@ -331,7 +347,7 @@ class RentPropertieController extends Controller
         // Optionally, you can also save the featured image as a banner
         $banner = new Banners();
         $banner->image_url = 'featured_images/' . $newFileName;
-        $banner->page_type = 'private';
+        $banner->page_type = 'rent';
         $banner->property_id = $property->id;
         $banner->save();
     }
@@ -374,20 +390,25 @@ class RentPropertieController extends Controller
 
     public function destroy($id)
     {
+         // temp
+            // $buy = RentPropertie::all();
+            // foreach($buy as $item){
+            //     $property = RentPropertie::findOrFail($item->id);
+            //     deletePropertyFiles($property,'rent');
+            //     if(!$property){
+            //         return redirect()->back()->with('error', 'Private property not found!');
+            //     }
+            //     $property->delete();
+            // }
+
+        // temp
+
         $property = RentPropertie::findOrFail($id);
+        deletePropertyFiles($property,'rent');
         if(!$property){
             return redirect()->back()->with('error', 'Private property not found!');
         }
         $property->delete();
-        // $existingBanners = Banners::where('property_id', $property->id)->get();
-        // // Delete existing banners and unlink their images
-        // foreach ($existingBanners as $banner) {
-        //     $imagePath = public_path($banner->image_url);
-        //     if (file_exists($imagePath)) {
-        //         unlink($imagePath);
-        //     }
-        //     $banner->delete();
-        // }
         return redirect()->back()->with('success', 'Property delete successfully');
     }
 }

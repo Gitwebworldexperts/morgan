@@ -29,10 +29,14 @@
                     @if ($second_button_name && $second_button_url)
                         <a class="btn green-btn" href="{{ $second_button_url }}"><img src="{{asset('img/user.svg')}}" class=""><span>{{ $second_button_name }}</span></a>
                     @else
-                        <a class="btn green-btn" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><img src="{{asset('img/user.svg')}}" class=""><span>Log Out</span></a>
+                    @guest
+                    <a class="btn green-btn" href="{{ route('login') }}"><img src="{{asset('img/user.svg')}}" class=""><span>Log In</span></a>
+                    @else
+                    <a class="btn green-btn" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><img src="{{asset('img/user.svg')}}" class=""><span>Log Out</span></a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                             @csrf
                         </form>
+                    @endif
                     @endif
                 </div>
             </div>

@@ -31,7 +31,7 @@ class RegionController extends Controller
         ]);
 
         Region::create([
-            'name' => $validated['image_url'],
+            'name' => $validated['name'],
             'description' => $validated['description'],
             'image_url' => $request->hasFile('image_url') ? $imageUploadService->storeImage($request->file('image_url'), 'images'): null,
         ]);

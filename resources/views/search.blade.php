@@ -43,6 +43,7 @@
 
                                         if(isset($devlopment)){
                                             $routeName = 'devlopment.detail_page';
+                                            $property_type_name = "project";
                                         }elseif(isset($private)){
                                             $routeName = 'private.detail_page';
                                         }elseif($property_type_name == 'international' && 0){
@@ -176,12 +177,12 @@
                                         <figure> 
                                         <a href="{{ route($routeName, $item->slug ?? '#') }}">    
                                         <img src="{{ asset($item->featured_image) }}"
-                                                  onerror="this.onerror=null; this.src='{{ asset('img/list/4.png') }}';"
+                                                  onerror="this.onerror=null; this.src='{{ asset('img/thumbnail-placeholder-gallery.png') }}';"
                                                   alt="">
                                                   </a>
                                                   <div class="Wishlist {{ in_array(route('devlopment.detail_page',$item->slug), $wish) ? 'added' : '' }}" 
                                                                     data-id="{{ $item->id }}" 
-                                                                    data-type="{{ $item->property_source }}" 
+                                                                    data-type="{{ $item->property_source ?? $property_type_name }}" 
                                                                     data-url="{{ route('devlopment.detail_page', $item->slug) }}"  
                                                                     data-auth="{{ isset(auth()->user()->id) ? auth()->user()->id : '' }}">
                                                                     <img class="heart-o-icon" src="{{ asset('img/heart-o.svg') }}">
@@ -192,7 +193,9 @@
                                     
                                     <figcaption> <a href="{{ route('devlopment.detail_page', $item->slug ?? '#') }}">
                                             <h3>{{ $item->name }}</h3>
-                                            <p><img src="{{ asset('img/hotel/map.svg') }}">{!! strip_tags($item->address) !!}</p>
+                                            @if($item->address)
+                                            <p><img src="{{ asset('img/hotel/map.svg') }}">{!! Str::words(strip_tags($item->address), 4, '...') !!}</p>
+                                            @endif
                                         </a> </figcaption>
                                 </div>
                             </div>
@@ -221,7 +224,7 @@
             </div>
         </section>
         @else
-          <section class="CTA-strip space pb-0">
+          <section class="CTA-strip space pb-0 <?= (isset($property_type_name) && $property_type_name == 'private') ? 'bg-brown' : ''; ?>">
           <div class="container">
               <div class="row" style="background-image: url('{{ asset($data['detail']->blog_background) }}');" style="background-image: url('{{ asset('img/buy.png') }}');">
                   <div class="col-lg-6">
@@ -252,7 +255,7 @@
         @endif
         
 
-      <section class="space position-relative">
+      <section class="space position-relative <?= (isset($property_type_name) && $property_type_name == 'private') ? 'bg-brown' : ''; ?>">
           <div class="container">
 
               <div class="listing-top-area">
@@ -263,14 +266,14 @@
                     </div>
                     @endif
                       <div class="col-12">
-                          <div class="listing-top-area-container">
+                          <div class="listing-top-area-container <?= (isset($property_type_name) && $property_type_name == 'private') ? 'dark-text' : ''; ?>">
                               <div class="item-counter">
                                   <p>Results: <span> {{ $data['property']->total() }} Properties</span></p>
                               </div>
                               
-                          <div class="filter-trigger">
-							<a href="javascript:void(0)" onclick="openNav()" class="green-btn"><img src="{{ asset('img/filter.svg') }}"  class="" alt=""> Filters</a>
-						</div>
+                            <div class="filter-trigger">
+							    <a href="javascript:void(0)" onclick="openNav()" class="<?= (isset($property_type_name) && $property_type_name == 'private') ? 'light-btn' : 'green-btn'; ?>"><img src="{{ asset('img/filter.svg') }}"  class="" alt=""> Filters</a>
+						    </div>
                           </div>
                       </div>
                   </div>
@@ -289,15 +292,23 @@
                                                   <p>{{ ucfirst(isset($property->propertyType->type_name) ? $property->propertyType->type_name: "Property") }}</p>
                                               </div> 
                                               <a href="{{ route($routeName, $property->slug ?? '#') }}">
-                                                <img src="{{ asset($property->featured_image) }}"
-                                                  onerror="this.onerror=null; this.src='{{ asset('img/list/4.png') }}';"
-                                                  alt="">
+                                              @if($property->featured_image)
+                                                    <img src="{{ asset($property->featured_image) }}"
+                                                    onerror="this.onerror=null; this.src='{{ asset('img/thumbnail-placeholder-gallery.png') }}';"
+                                                    alt="">
+                                                @elseif(isset($property->banners[0]->image_url) && $property->banners[0]->image_url)
+                                                    <img src="{{ asset($property->banners[0]->image_url) }}"
+                                                        onerror="this.onerror=null; this.src='{{ asset('img/thumbnail-placeholder-gallery.png') }}';"
+                                                    alt="">
+                                                @else
+                                                    <img src="{{ asset('img/thumbnail-placeholder-gallery.png') }}" alt="Featured Image">
+                                                @endif
                                                 </a>
 
                                             
                                                 <div class="Wishlist {{ in_array(route($routeName,$property->slug), $wish) ? 'added' : '' }}" 
                                                                     data-id="{{ $property->id }}" 
-                                                                    data-type="{{ $property->property_source }}" 
+                                                                    data-type="{{ $property->property_source ?? $property_type_name }}" 
                                                                     data-url="{{ route($routeName, $property->slug) }}"  
                                                                     data-auth="{{ isset(auth()->user()->id) ? auth()->user()->id : '' }}">
                                                                     <img class="heart-o-icon" src="{{ asset('img/heart-o.svg') }}">
@@ -310,7 +321,9 @@
                                       <figcaption>
                                           <a href="{{ route($routeName, $property->slug ?? '#') }}">
                                               <h3>{{ $property->name }}</h3>
-                                              <p><img src="{{ asset('img/hotel/map.svg') }}">{!! strip_tags($property->address) !!}</p>
+                                              @if($property->address)
+                                              <p><img src="{{ asset('img/hotel/map.svg') }}">{!! Str::words(strip_tags($property->address), 3, '...') !!}</p>
+                                            @endif
                                               @if(!isset($devlopment))
                                               <div class="HotelViews">
                                                   <ul>
@@ -346,7 +359,7 @@
 
           </div>
       </section>
-    @if(isset($devlopment) || (isset($property_type_name) && !empty($property_type_name) && $property_type_name == 'international'))
+    @if(isset($devlopment) || ( $property_type_name == 'investment' || $property_type_name == 'invest' ) || (isset($property_type_name) && !empty($property_type_name) && $property_type_name == 'international'))
         <section class="list-us-sec space bg-grey pt-0">
             <div class="container">
                 <div class="row align-items-end">
@@ -357,8 +370,8 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="list-from">
-                            <h2 class="mb-2">listing Form</h2>
-                            <p class="mb-4">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+                            <h2 class="mb-2">Register your interest!</h2>
+                            <p class="mb-4 d-none"></p>
                                         @if(session('success'))
                                         <div class="alert alert-success">
                                             {{ session('success') }}
@@ -430,18 +443,20 @@
 		  <div class="filter-head">
 			<h2>Filters</h2>
 		  </div>
+
+
 		  <div class="filter-boxes">
 			<div class="filter-box">
 				<h4>Sort By</h4>
 				<div class="filter-checkboxes">
 					<ul>
 						<li>
-							<input class="styled-checkbox" id="styled-checkbox-1" {{ old('sort_asc',$filter_array['sort']) ? 'checked' : '' }} name="sort" type="radio" value="ASC">
+							<input class="styled-checkbox" id="styled-checkbox-1" {{ (old('sort_desc', $filter_array['sort']) == 'ASC') ? 'checked' : '' }} name="sort" type="radio" value="ASC">
 							<label for="styled-checkbox-1">Low  to High</label>
 						</li>
 						
 						<li>
-							<input class="styled-checkbox" id="styled-checkbox-2" {{ old('sort_desc',$filter_array['sort']) ? 'checked' : '' }} name="sort" type="radio" value="DESC">
+							<input class="styled-checkbox" id="styled-checkbox-2" {{ (old('sort_desc', $filter_array['sort']) == 'DESC') ? 'checked' : '' }} name="sort" type="radio" value="DESC">
 							<label for="styled-checkbox-2">High to low</label>
 						</li>
 					</ul>
@@ -457,7 +472,8 @@
                             @foreach($data['property_type'] as $item)
                             <li>
                                 <input class="styled-checkbox" id="type_styled-checkbox-{{ $item->id }}" {{ in_array($item->id, $filter_array['property_type'])? "checked":"" }} name="property_type[]" type="checkbox" value="{{ $item->id }}">
-                                <label for="type_styled-checkbox-{{ $item->id }}">{{ $item->type_name }}</label>
+                                <label for="type_styled-checkbox-{{ $item->id }}">{!! ucfirst(Str::words($item->type_name, 4, '...')) !!}
+                                </label>
                             </li>
                             @endforeach
                         @endif
@@ -509,9 +525,9 @@
 						  <div class="slider">
 							<div class="progress"></div>
 						  </div>
-						  <div class="range-input">
-							<input type="range" class="range-min" min="0" max="10000" value="0" step="100"> 
-							<input type="range" class="range-max" min="0" max="750000000000" value="750000000000" step="100">
+                          <div class="range-input">
+							<input type="range" class="range-min" min="0" max="10000" value="2500" step="100">
+							<input type="range" class="range-max" min="0" max="10000" value="7500" step="100">
 						  </div>
 						   <div class="price-input">
 							<div class="field">
@@ -544,3 +560,5 @@
 		</form>
 		<div id="filter-overlay"></div>
       @endsection
+
+      

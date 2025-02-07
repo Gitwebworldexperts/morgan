@@ -19,8 +19,12 @@ use App\Models\InternationalPropertie;
 use App\Models\BuyPropertie;
 use App\Models\BrandedPropertie;
 use App\Models\InvestmentPropertie;
-
-
+use App\Models\Banners;
+use Illuminate\Support\Facades\Log;
+// use Intervention\Image\Facades\Image;
+// use Intervention\Image\ImageManagerStatic as Image;
+use Image;
+use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\View;
@@ -438,8 +442,8 @@ function renderInterestForm($form_name = "RegsiterYourInterest",$pageId = "",$pa
         <div class="col-md-6 col-12">
             <div class="form-group">
                 <p class="mb-0 mt-4">
-                    <input type="checkbox" name="consent" required>
-                    Consent to submit all details and agree to Morgan'."'".'s <a href="#" class="link-btn">Privacy Policy</a>.
+                    <label><input type="checkbox" name="consent" required>
+                    Consent to submit all details and agree to Morgan'."'".'s <a target="_blank" href="https://myprojectdemonstration.net/development/morgan/web/contents/view/privacy-policy-2026" class="link-btn">Privacy Policy</a>.</label>
                 </p>
             </div>
         </div>
@@ -632,17 +636,29 @@ if (!function_exists('getPropertyDeatil')) {
     	    	
     	$propertyTypes = [
             'rent' => RentPropertie::class,
+            'buy' => BuyPropertie::class,
             'project' => ProjectPropertie::class,
             'private' => PrivatePropertie::class,
             'international' => InternationalPropertie::class,
             'sales' => BuyPropertie::class,
             'branded' => BrandedPropertie::class,
-            'invest' => InvestmentPropertie::class
+            'invest' => InvestmentPropertie::class,
+            'investment' => InvestmentPropertie::class
         ];
         
         if (array_key_exists($property_type, $propertyTypes)) {
         	$properties = $propertyTypes[$property_type]::where('id',$property_id)->first();
- 		if($column_name && $properties){
+
+            if($column_name && $properties){
+
+                if(!$properties->$column_name && $column_name == "featured_image" && ($property_type == "rent" || $property_type == "buy")){
+                    
+                    $existingBanners = Banners::where(['property_id' => $properties->id, 'page_type' => $property_type])->first();
+                    if($existingBanners->image_url){
+                        return $existingBanners->image_url;
+                    }   
+                }
+
  			return $properties->$column_name;
  		}
         	return $properties;
@@ -671,6 +687,138 @@ if (!function_exists('getPropertyDeatil')) {
 
         return $option;
     }
+    function deletePropertyFiles($property, $page_type)
+    {
+        // Delete banners
+        $existingBanners = Banners::where(['property_id' => $property->id, 'page_type' => $page_type])->get();
+        
+        foreach ($existingBanners as $banner) {
+            if (deleteFile($banner->image_url)) {
+                $banner->delete();
+            }
+        }
+
+        // Delete property-related files
+        $files = [
+            $property->blog_background,
+            $property->brochure,
+            $property->floor_plan,
+            $property->featured_image
+        ];
+        foreach ($files as $filePath) {
+            if($filePath){
+                deleteFile($filePath);
+            }
+        }
+    }
+
+    function deleteFile(?string $filePath): bool
+    {
+        if ($filePath && file_exists($filePath)) {
+            try {
+                unlink($filePath);
+                return true;
+            } catch (\Exception $e) {
+                Log::error("Failed to delete file: {$filePath}. Error: {$e->getMessage()}");
+            }
+        }
+        return false;
+    }
+
+
+    function getFirstBanner($property_id, $page_type)
+    {
+        $first_banner = Banners::where(['page_type'=>$page_type, 'property_id' =>$property_id])->first();
+        if(isset($first_banner->image_url) && $first_banner->image_url){
+            return $first_banner->image_url;
+        }else{
+            return "img/thumbnail-placeholder-gallery.png";
+        }
+    }
+    
+
+    
+    
+    function assets($path = "", $compress_percentage = 80) {
+        $tempFolder = "temp/";
+        $tempPath = $tempFolder . $path;
+    
+        // Check if the original file exists
+        if (empty($path) || !file_exists($path)) {
+            abort(404, "Invalid or missing file path.");
+        }
+    
+        // Ensure the temp folder structure exists
+        $tempDir = dirname($tempPath); // Get the directory path
+        if (!is_dir($tempDir)) {
+            mkdir($tempDir, 0755, true); // Create the directory recursively
+        }
+    
+        // Check if the compressed file already exists
+        if (file_exists($tempPath)) {
+            return asset($tempPath); // Return the existing compressed file
+        }
+    
+        // Get image information
+        $imageInfo = getimagesize($path);
+        if (!$imageInfo) {
+            return asset($path); // Return the original path if not an image
+        }
+    
+        // Initialize Imagick or Intervention Image
+        try {
+            $image = Image::make($path);
+            $mime = $image->mime();
+    
+            // Strip metadata for reduced size
+            $image->strip();
+    
+            // Resize the image to fit the specified quality or dimensions
+            $maxWidth = 800; // You can customize this
+            $maxHeight = 800; // You can customize this
+    
+            if ($image->width() > $maxWidth || $image->height() > $maxHeight) {
+                $image->resize($maxWidth, $maxHeight, function ($constraint) {
+                    $constraint->aspectRatio(); // Maintain aspect ratio
+                    $constraint->upsize(); // Prevent upsizing
+                });
+            }
+    
+            // Handle compression based on MIME type
+            switch ($mime) {
+                case 'image/jpeg':
+                    // Compress JPEG
+                    $quality = min(max((int)$compress_percentage, 0), 100); // Ensure quality is between 0 and 100
+                    $image->encode('jpeg', $quality);
+                    break;
+                case 'image/png':
+                    // Compress PNG
+                    $compressionLevel = 9 - round(($compress_percentage / 100) * 9); // Convert percentage to PNG compression level
+                    $compressionLevel = min(max($compressionLevel, 0), 9);
+                    $image->encode('png', $compressionLevel);
+                    break;
+                case 'image/gif':
+                    // No compression for GIF (we just save it)
+                    $image->encode('gif');
+                    break;
+                default:
+                    return asset($path); // For unsupported formats, return original path
+            }
+    
+            // Save the image to the temp folder
+            $image->save($tempPath);
+    
+            // Return the asset URL
+            return asset($tempPath);
+        } catch (\Exception $e) {
+            // Handle any exceptions (e.g., bad file format, Imagick issues)
+            return asset($path); // Return original file in case of error
+        }
+    }
+    
+    
+    
+    
 
 }
 

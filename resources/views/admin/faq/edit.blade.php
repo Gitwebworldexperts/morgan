@@ -25,13 +25,13 @@
                                 <select class="form-control" name="linked_page">
                                     <option value=""> Select Linked Page </option>
                                     <option value="home" {{ ($faq->page == "home") ? "selected": ''; }}> Home </option>
-                                    <option value="sales" {{ ($faq->page == "buy") ? "selected": ''; }}> Buy </option>
+                                    <option value="sales" {{ ($faq->page == "buy" || $faq->page == "sales") ? "selected": ''; }}> Buy </option>
                                     <option value="rent" {{ ($faq->page == "rent") ? "selected": ''; }}> Rent </option>
                                     <option value="private" {{ ($faq->page == "private") ? "selected": ''; }}> Private </option>
                                     <option value="investment" {{ ($faq->page == "investment") ? "selected": ''; }}> Investment </option>
                                     <option value="international" {{ ($faq->page == "international") ? "selected": ''; }}> International </option>
-                                    <option value="project" {{ ($faq->page == "development") ? "selected": ''; }}> Development </option>
-                                    <option value="branded" {{ ($faq->page == "branded") ? "selected": ''; }}> Branded Redidency </option>
+                                    <option value="project" {{ ($faq->page == "project") ? "selected": ''; }}> Development </option>
+                                    <option value="branded" {{ ($faq->page == "branded") ? "selected": ''; }}> Branded Residences </option>
                                     <option value="mortgage" {{ ($faq->page == "mortgage") ? "selected": ''; }}> Mortgage Calculator </option>
                                     <option value="report" {{ ($faq->page == "report") ? "selected": ''; }}> Report </option>
                                     <option value="career" {{ ($faq->page == "career") ? "selected": ''; }}> Career </option>

@@ -43,7 +43,20 @@
       </section>
       <section class="space position-relative">
           <div class="container">
-              <div class="">
+              <div class="row">
+              <div class="col-md-3">
+        <div class="ProfileSidebar">
+            <h3>My Account</h3>
+            <ul>
+                <li><a href="{{ route('profile.show') }}">Profile</a></li>
+                <li><a href="{{ route('wishlist.index') }}">My Favourites</a></li>
+                <li><a href="{{ route('my.inquiries') }}">My Enquiries</a></li>
+                <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a></li>
+            </ul>
+            </div>
+        </div>
+              <div class="col-md-9">
+             <div class="my-account-Card">
                   <div class="row">
                       <div class="col-12">
                           <div class="listing-top-area-container">
@@ -53,9 +66,9 @@
                           </div>
                       </div>
                   </div>
-              </div>
-              <div class="row">
-                <div class="col-12">
+               
+              <div class="">
+                <div class="table-responsive">
                     @if(isset($inquiries) && count($inquiries))
                         <table class="table">
                             <thead class="thead-dark">
@@ -74,7 +87,7 @@
                                         <td>{{ $item->full_name }}</td>
                                         <td>{{ $item->contact_number }}</td>
                                         <td>{{ $item->message }}</td>
-                                        <td><a href="{{ $item->page_name }}">Click Here</a></td>
+                                        <td><a href="{{ $item->page_name }}">View Property</a></td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -83,8 +96,14 @@
                         <p><b>Currently, there is no inquiry associated with your email ID</b></p>
                     @endif
 
+                    <div class="col-12">
+                            {{ $inquiries->links('vendor.pagination.custom-pagination') }}
+                      </div>
+
                 </div>
               </div>
+            </div>
+            </div>
             </div>
       </section>
       @endsection

@@ -1,15 +1,17 @@
 @php
 $footerSection = getFooterSection();
-$whatsapp = $footerSection->phone;
+$whatsapp = $report->whatsapp_number;
 $copy = $footerSection->copyright;
 @endphp
 
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="en">
     <head>
-        <title>{{ $report->meta_title }}</title>
+    <title>{{ $report->meta_title }}</title>
+        <meta property="og:title" content="{{ $report->meta_title }}" />
+        <meta property="og:description" content="{{ strip_tags($report->meta_title) }}" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" type="image/x-icon" href="img/favicon.png" />
+        <link rel="icon" type="image/x-icon" href="{{ asset(siteLogo()) }}" />
         <meta charset="utf-8" />
         <meta name="keywords" content="" /> 
         <meta name="title" content="Dubai’s Branded Residences Report – H1 2024">
@@ -23,11 +25,13 @@ $copy = $footerSection->copyright;
     <body>
 	 
     
-        <div class="whatsapp-float">
-            <a href="'https://api.whatsapp.com/send?phone='.$whatsapp" target="_blank" class="whatsapp-btn">
-                <img src="{{ asset('img/indireport/whatsapp.svg') }}" class="" />
-            </a>
-        </div>
+    @if($whatsapp)
+      <div class="whatsapp-float">    
+          <a href="https://api.whatsapp.com/send?phone={{ $whatsapp }}" target="_blank" class="whatsapp-btn">
+              <img src="{{ asset('img/indireport/whatsapp.svg') }}" class="" />
+          </a>
+      </div>
+    @endif
 		
         <!-- header -->
         <header class="header js-header">
@@ -110,15 +114,44 @@ $copy = $footerSection->copyright;
          <div class="container">
             <div class="row">
                 <div class="col-md-6 col-lg-5">
-                  <div class="FormBox">
-                  {!! $report->html_code !!}  
-<!-- END - We recommend to place the above code where you want the form in your website html  -->
+                <div class="FormBox">    
+                  <div class="formHeading">
+                    <h3>Fill out the form to download the full report</h3>
                   </div>
+                  @if ($errors->any())
+                      <div class="alert alert-danger">
+                          <ul>
+                              @foreach ($errors->all() as $error)
+                                  <li>{{ $error }}</li>
+                              @endforeach
+                          </ul>
+                      </div>
+                  @endif
+                <form action="{{ route('report-form.store') }}" method="POST">
+                @csrf
+                <input type="hidden" name="report_id" value="{{ $report->id }}">
+                  <div class="form-group">
+                    <input class="form-control" placeholder="First Name" required name="first_name">
+                  </div>
+                  <div class="form-group">
+                    <input class="form-control" placeholder="Last Name" required name="last_name">
+                  </div>
+                  <div class="form-group">
+                    <input class="form-control" placeholder="Email Address" name="email">
+                  </div>
+                    <div class="form-group mb-0">
+                    <button class="form-BTN" style=" border: 0; "><img src="{{ asset('img/indireport/download.svg') }}"> Download the full report</button>
+                    
+                  </div>
+              </form>
+            </div>
                 </div>
                   <div class="col-md-6">
+                  @if($report->footer_image)
                      <div class="formSectionImage text-right">
                         <img src="{{ asset($report->footer_image) }}" class="img-fluid">
                      </div>
+                     @endif
                   </div>
             </div>
          </div>
@@ -153,10 +186,10 @@ $copy = $footerSection->copyright;
                 </div>
             </div>
         </footer>
-<!-- 
-        <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script> 
-        <script src="{{ asset('js/bootstrap.js') }}"></script>
-        <script src="{{ asset('js/main.js') }}"></script> -->
+
+        <script src="{{ asset('js/indireport/jquery-3.6.0.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/indireport/bootstrap.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/indireport/main.js') }}" type="text/javascript"></script>
 
 
 <!-- START - We recommend to place the below code in footer or bottom of your website html  -->

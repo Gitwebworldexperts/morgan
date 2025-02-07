@@ -27,7 +27,7 @@
 
             <div class="form-group">
                 <label for="description">Description</label>
-                <textarea name="description" id="description" required>{{ old('description') }}</textarea>
+                <textarea name="description" id="description" >{{ old('description') }}</textarea>
                 @error('description')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror

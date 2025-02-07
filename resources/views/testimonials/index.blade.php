@@ -9,7 +9,7 @@
 <a href="{{ route('testimonials.create') }}" class="green-btn mb-4">Create Testimonial</a>
 
 
-<table class="table table-bordered">
+<table class="table table-bordered" id="example">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -31,7 +31,7 @@
                             <form action="{{ route('testimonials.destroy', $testimonial->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button onclick="return confirm('Are you sure you want to delete this privacy policy?');" type="submit" class="btn btn-danger">Delete</button>
+                                <button onclick="return confirm('Are you sure you want to delete this testimonial ?');" type="submit" class="btn btn-danger">Delete</button>
                             </form>
                         </td>
                     </tr>
@@ -42,4 +42,16 @@
 </div>
 
 
+@endsection
+@section('scripts')    
+    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.js"></script>
+    <script type="text/javascript">
+    jQuery(document).ready(function() {
+        new DataTable('#example', {
+            order: [] // Disables default ordering
+        });
+    });
+
+    </script>
 @endsection

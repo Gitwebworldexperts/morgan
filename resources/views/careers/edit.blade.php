@@ -42,7 +42,7 @@
                 <select name="status" id="status" class="form-control">
                     <option value="open" {{ $career->status == 'open' ? 'selected' : '' }}>Open</option>
                     <option value="closed" {{ $career->status == 'closed' ? 'selected' : '' }}>Closed</option>
-                    <option value="pending" {{ $career->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                    <!-- <option value="pending" {{ $career->status == 'pending' ? 'selected' : '' }}>Pending</option> -->
                 </select>
             </div>
             <button type="submit" class="green-btn">Update Career</button>

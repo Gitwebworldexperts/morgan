@@ -37,7 +37,7 @@ class CareerPageController extends Controller
         $careerPage->update([
             'heading' => $validated['heading'],
             'description' => $validated['description'],
-            'button_link' => $validated['button_link'] ?? null,
+            'button_link' => $request->button_link ?? null,
             'section2_heading' => $validated['section2_heading'] ?? null,
         ]);
 

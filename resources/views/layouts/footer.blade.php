@@ -216,7 +216,25 @@ $property_type = allPropertyType();
 
                                         @endphp
                                         @foreach($dropdown_urls as $key => $item)
-                                            <li><a href="{{$key}}">{{$item}}</a></li>    
+                                        @php
+                                            // Unset variables (not usually necessary in Laravel, but included if required by your logic)
+                                            unset($temp, $temp1, $temp2);
+
+                                            // Split the $key into parts
+                                            $temp = explode("-", $key);
+
+                                            // Initialize variables with proper validation
+                                            $temp1 = isset($temp[0]) && is_numeric($temp[0]) ? $temp[0] : null; // Set to null if not valid
+                                            $temp2 = isset($temp[1]) && in_array($temp[1], ['buy', 'rent']) ? ($temp[1] === 'buy' ? 'sales' : $temp[1]) : null;
+                                        @endphp
+
+                                        @if($temp2 && $temp1)
+                                            <li><a href="{{ route('search', [
+                                                'prop_for' => $temp2,
+                                                'sub_type' => $temp1, // Use $temp1 here
+                                            ]) }}">{{ $item }}</a></li>
+                                        @endif
+
                                         @endforeach
                                         @endif
 
@@ -336,7 +354,7 @@ $property_type = allPropertyType();
 
                                         @endphp
                                         @foreach($footerSections as $key => $item)
-                                            <li><a href="{{$key}}">{!! $item !!}</a></li>    
+                                            <li><a href="{{$key}}" target="_blank">{!! $item !!}</a></li>    
                                         @endforeach
                                         @endif
                                     </ul>

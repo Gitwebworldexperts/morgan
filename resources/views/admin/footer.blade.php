@@ -50,6 +50,16 @@
                     @endif
                 </div>
 
+                <div class="mb-3">
+                    <label for="phone" class="form-label"><strong>Whatsapp Number :</strong></label>                    
+                    <input type="text" name="whatsapp_number" class="form-control" value="{{$footerSections->whatsapp_number}}">
+                    @if ($errors->has('whatsapp_number'))
+                        <div class="text-danger backend_error">
+                            {{ $errors->first('phone') }}
+                        </div>
+                    @endif
+                </div>
+
                 @if (isset($footerSections) && !empty($footerSections))
                     @php
                         $footerSection = json_decode($footerSections->navigation_menus, true);
@@ -112,7 +122,9 @@
                     </div>
 
                 @endif
+                
 
+                @if(isset($testing))
                 @if (isset($footerSection) &&
                         !empty($footerSection) &&
                         isset($footerSection['dropdown_urls']) &&
@@ -172,6 +184,99 @@
                             </div>
                         @endif
                     </div>
+                @endif
+
+                @else
+
+                @if (isset($footerSection) &&
+                        !empty($footerSection) &&
+                        isset($footerSection['dropdown_urls']) &&
+                        !empty($footerSection['dropdown_urls']))
+
+                        <div class="mb-3 pr">
+                        <label for="logo" class="form-label"><strong>Property Type   :</strong></label>
+                        <div id="new-row-container">
+                        @if (isset($footerSection['dropdown_urls']) && !empty($footerSection['dropdown_urls']))
+                        @foreach ($footerSection['dropdown_urls'] as $url => $name)
+
+                            <div class="mb-3 row align-items-center">
+                                <div class="col-md-5">
+                                    <input class="form-control" type="text" placeholder="Nav Title" required
+                                        name="new_nav_name[]" value="{{ $name }}">
+                                </div>
+                                <div class="col-md-6">
+
+
+
+                                <select class="form-control" data-placeholder="Select a property type" name="new_nav_url[]">
+                                    <option value="">Select a property type</option>
+                                    @if (!empty($propertyTypes))
+                                        @foreach ($propertyTypes as $item)
+                                            <option 
+                                                value="{{ $item->id }}-{{ $item->property }}" 
+                                                {{ old('new_nav_url', $url) == ($item->id . '-' . $item->property) ? 'selected' : '' }}>
+                                                {{ ucfirst($item->type_name) }} - {{ ucfirst($item->property) }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+
+                                </select>
+                                </div>
+                                <div class="col-md-1">
+                                    <span class="new-remove-row ml-2"><i class="fas fa-trash-alt"></i></span>
+                                </div>
+                            </div>
+                            @endforeach
+                            @endif
+                        </div>
+                        <button id="new-add-row-btn" type="button" class="clone_button"><i
+                                class="fa-solid fa-square-plus"></i></button>
+                        @if ($errors->has('nav_name') || $errors->has('nav_url'))
+                            <div class="text-danger backend_error">
+                                Navigation part is required
+                            </div>
+                        @endif
+                    </div>
+                    @else
+                    <div class="mb-3 pr">
+                        <label for="logo" class="form-label"><strong>Property Type   :</strong></label>
+                        <div id="new-row-container">
+                            <div class="mb-3 row align-items-center">
+                                <div class="col-md-5">
+                                    <input class="form-control" type="text" placeholder="Nav Title" required
+                                        name="new_nav_name[]">
+                                </div>
+                                <div class="col-md-6">
+
+
+
+                                <select class="form-control" data-placeholder="Select a property type" name="new_nav_url[]">
+                                    <option value="">Select a property type</option>
+                                    @if($propertyTypes)
+                                        @foreach($propertyTypes as $item)
+                                            <option value="{{ $item->id }}-{{ $item->property }}" >
+                                            {{ ucfirst($item->type_name) }} - {{ ucfirst($item->property) }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                                </div>
+                                <div class="col-md-1">
+                                    <span class="new-remove-row ml-2"><i class="fas fa-trash-alt"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <button id="new-add-row-btn" type="button" class="clone_button"><i
+                                class="fa-solid fa-square-plus"></i></button>
+                        @if ($errors->has('nav_name') || $errors->has('nav_url'))
+                            <div class="text-danger backend_error">
+                                Navigation part is required
+                            </div>
+                        @endif
+                    </div>
+                    @endif
+
+
                 @endif
                 @php
 

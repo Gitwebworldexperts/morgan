@@ -13,7 +13,7 @@
             <div class="slider-info">
                <div class="BannerBox">
                   <div class="banner-heading text-center">
-                     <h1>{{ $data['communities']->community_name }}</h1>
+                     <h1>{{ $data['communities']->community_name ?? "" }}</h1>
                   </div>
                </div>
             </div>
@@ -27,7 +27,7 @@
 							<ul>
 								<li><a href="{{ route('home') }}" class="">Home</a></li>
 								<li><a href="{{ route('communities.listing') }}" class="">Communities</a></li>
-								<li><span href="#" class="">{{ $data['communities']->community_name }}</span></li>
+								<li><span href="#" class="">{{ $data['communities']->community_name ?? "" }}</span></li>
 							</ul>
 						</div>
                     </div>
@@ -42,7 +42,7 @@
 						<div class="about-left">
 							<div class="about-img">
 								<div class="img-item">
-									<img src="{{ asset($data['communities']->section_i_image) }}" alt="" class="w-100">
+									<img src="{{ asset($data['communities']->section_i_image ?? "") }}" alt="" class="w-100">
 								</div>
 							</div>
 						</div>
@@ -50,7 +50,7 @@
                     <div class="col-lg-6 parent-section">
                         <div class="about-content ">
                             <div class="show_more_content">
-                            {!! $data['communities']->section_i_content !!}
+                            {!! $data['communities']->section_i_content ?? "" !!}
                             </div>
                             <span id="toggleContentBtn" class="link-btn ">Show More</span>                           
                         </div>
@@ -67,12 +67,12 @@
 					
                     <div class="col-lg-7">
 						<div class="about-content">
-                        {!! $data['communities']->section_ii_content !!}
+                        {!! $data['communities']->section_ii_content ?? "" !!}
 							<div class="btn-grp mt-4">
-                                @if($data['communities']->button_i_name && $data['communities']->button_i_url)
+                                @if(isset($data['communities']->button_i_url) && isset($data['communities']->button_i_name) && $data['communities']->button_i_name && $data['communities']->button_i_url)
                                     <a href="{{ $data['communities']->button_i_url }}" class="green-btn">{{ $data['communities']->button_i_name ?? "Luxury Properties for sale in Dubai Hills Estate" }}</a>
                                 @endif
-                                @if($data['communities']->button_ii_name && $data['communities']->button_ii_url)
+                                @if(isset($data['communities']->button_ii_url) && isset($data['communities']->button_ii_name) && $data['communities']->button_ii_name && $data['communities']->button_ii_url)
                                     <a href="{{ $data['communities']->button_ii_url }}" class="green-btn">{{ $data['communities']->button_ii_name ?? "Contact an expert" }}</a>
                                 @endif
 							</div>
@@ -83,7 +83,7 @@
 						<div class="about-left">
 							<div class="about-img">
 								<div class="img-item text-right ml-auto">
-									<img src="{{ asset($data['communities']->second_image) }}" alt="" class="w-100">
+									<img src="{{ asset($data['communities']->second_image ?? "") }}" alt="" class="w-100">
 								</div>
 							</div>
 						</div>
@@ -101,7 +101,7 @@
 
         <section class="CTA-strip">
             <div class="container">
-                @if($data['communities']->third_image)
+                @if(isset($data['communities']->third_image) && $data['communities']->third_image)
                 <div class="row" style="background-image: url('{{ asset($data['communities']->third_image) }}');">
                 @else
                 <div class="row" style="background-image: url('{{ asset('img/strip-bg.png') }}');">
@@ -109,8 +109,8 @@
 
                     <div class="col-lg-6">
                         <div class="heading-pnel fff m-0">
-                            {!! $data['communities']->section_iii_content !!}    
-                            @if($data['communities']->section_iii_button_name)
+                            {!! $data['communities']->section_iii_content ?? "" !!}    
+                            @if( isset($data['communities']->section_iii_button_name) && $data['communities']->section_iii_button_name)
                                 <a href="{{ $data['communities']->section_iii_button_name }}" class="green-btn fff">Download the latest market report</a>
                             @endif
                         </div>
@@ -154,9 +154,12 @@
                                     <div class="card-box"> 
 										
                                             <figure>
+                                            @if(isset($item->property_type['type_name']))
                                                 <div class="VillaText">
                                                     <p>{{ ucfirst($item->property_type['type_name']) }}</p>
-                                                </div> <a href="{{ route($routeName, $item->slug ?? '#') }}"><img src="{{ asset($item->featured_image) }}"
+                                                </div>
+                                                @endif
+                                                <a href="{{ route($routeName, $item->slug ?? '#') }}"><img src="{{ asset($item->featured_image) }}"
                                                   onerror="this.onerror=null; this.src='{{ asset('img/list/4.png') }}';"
                                                   alt=""> </a>
 
@@ -173,9 +176,11 @@
                                         <figcaption>
                                             <a href="{{ route($routeName, $item->slug ?? '#') }}">
                                             <h3>{{ $item->name }}</h3>
+                                            @if($item->address)
                                             <span class="address_section d-flex align-items-start">
-                                                <img style="width:12px;margin-top:4px;margin-right:5px;" src="{{ asset('/img/hotel/map.svg')}}">{!! $item->address !!}
+                                                <img style="width:12px;margin-top:4px;margin-right:5px;" src="{{ asset('/img/hotel/map.svg')}}">{!! Str::words($item->address, 4, '...') !!}
                                             </span>
+                                            @endif
                                             @if($item->property_source != "branded")
                                             <div class="HotelViews">
                                                 <ul>

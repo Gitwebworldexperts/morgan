@@ -7,7 +7,7 @@
         @csrf
         
         <div class="form-group">
-            <label for="name">Name:</label>
+            <label for="name">Name: <span class="mandatory">*</span></label>
             <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" required>
             @error('name')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -39,8 +39,8 @@
         </div> -->
 
         <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required>
+            <label for="email">Email: <span class="mandatory">*</span></label>
+            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required >
             @error('email')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
@@ -56,7 +56,7 @@
         
 
         <div class="form-group">
-            <label for="mobile">Mobile:</label>
+            <label for="mobile">Mobile: <span class="mandatory">*</span></label>
             <input type="text" class="form-control @error('mobile') is-invalid @enderror" id="mobile" name="mobile" value="{{ old('mobile') }}" required>
             @error('mobile')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -73,7 +73,7 @@
 
         <div class="form-group">
             <label for="photo">Photo:</label>
-            <input type="file" class="form-control @error('photo') is-invalid @enderror" id="photo" name="photo">
+            <input type="file" accept="image/*" class="form-control @error('photo') is-invalid @enderror" id="photo" name="photo">
             @error('photo')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror

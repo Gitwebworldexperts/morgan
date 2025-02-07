@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
+use Illuminate\Support\Facades\Artisan;
+
 class BaseController extends Controller
 {
     /**
@@ -23,7 +25,7 @@ class BaseController extends Controller
     public function __construct()
     {
         // $this->middleware('auth');
-        $this->middleware('auth')->except('contactus','BlogList','BlogSingle','PrivacyPolicy','communitiesDetail','PropertyManagement','CareerList','AboutUs');
+        $this->middleware('auth')->except('contactus','BlogList','BlogListTest','BlogSingle','PrivacyPolicy','communitiesDetail','PropertyManagement','CareerList','AboutUs');
     }
     public function settings()
     {
@@ -110,6 +112,14 @@ class BaseController extends Controller
         return view('blog-list')->with('posts',$posts);
     }
 
+    public function BlogListTest(){
+        $posts = Post::latest()  // Include posts with no tags
+                ->paginate(13);
+
+        return view('blog-list-test')->with('posts',$posts);
+    }
+
+    
 
     public function BlogSingle($slug)
     {
@@ -119,6 +129,7 @@ class BaseController extends Controller
             $relatedPost = Post::select('name', 'images', 'slug', 'created_at')
             ->whereIn('id', $relatedPostIdsArray)
             ->get();
+            
             return view('blog-detail')->with(['relatedPost' =>$relatedPost, 'post'=>$post]);       
         }
         return redirect()->action([self::class, 'BlogList'])->with('error', 'Page Not Found.');
@@ -150,7 +161,7 @@ class BaseController extends Controller
     }
     public function Careers($id){
         if($id){
-            $id = base64_decode($id);
+            // $id = base64_decode($id);
             $career = Career::find($id);
             if($career){
                 return view('career')->with(['career' =>$career]);    

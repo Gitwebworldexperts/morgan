@@ -21,8 +21,8 @@
                         <textarea name="description" id="description" class="form-control" required>{{ old('description') }}</textarea>
                     </div>
                     <div class="form-group">
-                        <label for="image_url">Image URL</label>
-                        <input type="url" name="image_url" id="image_url" class="form-control" value="{{ old('image_url') }}" required>
+                        <label for="image_url">Upload Image</label>
+                        <input type="file" accept="image/*" name="image_url" id="image_url" class="form-control" >
                     </div>
                     <button type="submit" class="green-btn">Create Region</button>
                 </div>
