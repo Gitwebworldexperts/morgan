@@ -16,8 +16,6 @@
                </div>
             </div>
       </div></section>
-
-
       <section class="breadcrumb-sec">
             <div class="container">
                 <div class="row">
@@ -53,11 +51,11 @@
                       @if (isset($data['communities']) && !empty($data['communities']) && count($data['communities']))
                           @foreach ($data['communities'] as $communitie)
                               <div class="col-lg-3 col-md-6 col-12">
-                                    <div class="new-development card-box"> <a href="{{ route('detail.communitie', base64_encode($communitie->id)) }}">
-                                            <figure> <img src="{{ asset($communitie->featured_image) }}" class="" alt="">
+                                    <div class="new-development card-box"> <a href="{{ route('detail.communitie', $communitie->slug) }}">
+                                            <figure> <img src="{{ assets($communitie->featured_image,337,340) }}" class="" alt="">
                                             </figure>
                                         </a>
-                                        <figcaption> <a href="{{ route('detail.communitie', base64_encode($communitie->id)) }}">
+                                        <figcaption> <a href="{{ route('detail.communitie', $communitie->slug) }}">
                                                 <h3>{{ $communitie->community_name}}</h3>
                                             </a> </figcaption>
                                     </div>

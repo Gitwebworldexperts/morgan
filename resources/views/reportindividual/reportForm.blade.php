@@ -14,7 +14,7 @@
 
 <section>
     <p class="heading_for_admin_section">
-        Reports Form Data         <a href="javascript:void(0);" class="add_new_button m-0">{{ count($report_form_data) }} Downloads</a>
+        Reports Form Data         <a href="{{ route('export.report',$report_detail->id) }}" class="add_new_button m-0">{{ count($report_form_data) }} Downloads</a>
     </p>
     <div class="section_content">
         <p><strong> Report Name ( {!! Str::words($report_detail->heading, 8, '...') !!} )</strong></p>

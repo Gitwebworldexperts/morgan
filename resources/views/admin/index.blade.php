@@ -41,14 +41,21 @@
                         <div id="row-container">
                             @if (isset($headerSections['urls']) && !empty($headerSections['urls']))
                                 @foreach ($headerSections['urls'] as $url => $name)
-                                    <div class="mb-3 row align-items-center">
-                                        <div class="col-md-5">
+                                    
+                                    <div class="mb-3 row w-100 align-items-center">
+                                        <div class="col-md-4">
                                             <input class="form-control" type="text" placeholder="Nav Title"
-                                                value="{{ $name }}" required name="nav_name[]">
+                                                value="{{ $name[0] ?? '' }}" required name="nav_name[]">
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <input class="form-control" type="text" placeholder="Link Url"
                                                 value="{{ $url }}" required name="nav_url[]">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <select class="form-control" id="" name="nav_status[]">
+                                                <option {{ (($name[1] ?? '') == '1') ? "selected" : "" }} value="1">Active</option>
+                                                <option {{ (($name[1] ?? '') == '2') ? "selected" : "" }} value="2">Inactive</option>
+                                            </select>
                                         </div>
                                         <div class="col-md-1">
                                             <span class="remove-row ml-2"><i class="fas fa-trash-alt"></i></span>
@@ -72,13 +79,19 @@
                         <label for="logo" class="form-label"><strong>Menus :</strong></label>
                         <div id="row-container">
                             <div class="mb-3 row align-items-center">
-                                <div class="col-md-5">
+                                <div class="col-md-4">
                                     <input class="form-control" type="text" placeholder="Nav Title" required
                                         name="nav_name[]">
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <input class="form-control" type="text" placeholder="Link Url" required
                                         name="nav_url[]">
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-control" id="" name="nav_status[]">
+                                        <option value="1">Active</option>
+                                        <option value="2">Inactive</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-1">
                                     <span class="remove-row ml-2"><i class="fas fa-trash-alt"></i></span>
@@ -107,13 +120,19 @@
                             @if (isset($headerSections['dropdown_urls']) && !empty($headerSections['dropdown_urls']))
                                 @foreach ($headerSections['dropdown_urls'] as $url => $name)
                                     <div class="mb-3 row align-items-center">
-                                        <div class="col-md-5">
+                                        <div class="col-md-4">
                                             <input class="form-control" type="text" placeholder="Nav Title"
-                                                value="{{ $name }}" required name="new_nav_name[]">
+                                                value="{{ $name[0] ?? '' }}" required name="new_nav_name[]">
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <input class="form-control" type="text" placeholder="Link Url"
                                                 value="{{ $url }}" required name="new_nav_url[]">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <select class="form-control" id="" name="new_nav_status[]">
+                                                <option {{ (($name[1] ?? '') == '1') ? "selected" : "" }} value="1">Active</option>
+                                                <option {{ (($name[1] ?? '') == '2') ? "selected" : "" }} value="2">Inactive</option>
+                                            </select>
                                         </div>
                                         <div class="col-md-1">
                                             <span class="new-remove-row ml-2"><i class="fas fa-trash-alt"></i></span>
@@ -137,13 +156,19 @@
                         <label for="logo" class="form-label"><strong>Menus :</strong></label>
                         <div id="new-row-container">
                             <div class="mb-3 row align-items-center">
-                                <div class="col-md-5">
+                                <div class="col-md-4">
                                     <input class="form-control" type="text" placeholder="Nav Title" required
                                         name="new_nav_name[]">
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <input class="form-control" type="text" placeholder="Link Url" required
                                         name="new_nav_url[]">
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-control" id="" name="new_nav_status[]">
+                                        <option value="1">Active</option>
+                                        <option value="2">Inactive</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-1">
                                     <span class="new-remove-row ml-2"><i class="fas fa-trash-alt"></i></span>

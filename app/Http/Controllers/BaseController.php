@@ -25,7 +25,7 @@ class BaseController extends Controller
     public function __construct()
     {
         // $this->middleware('auth');
-        $this->middleware('auth')->except('contactus','BlogList','BlogListTest','BlogSingle','PrivacyPolicy','communitiesDetail','PropertyManagement','CareerList','AboutUs');
+        $this->middleware('auth')->except('contactus','BlogList','BlogListTest','BlogSingle','PrivacyPolicy','communitiesDetail','PropertyManagement','CareerList','AboutUs','Careers');
     }
     public function settings()
     {
@@ -115,15 +115,24 @@ class BaseController extends Controller
     public function BlogListTest(){
         $posts = Post::latest()  // Include posts with no tags
                 ->paginate(13);
-
+                var_dump(phpinfo());
         return view('blog-list-test')->with('posts',$posts);
     }
 
     
 
-    public function BlogSingle($slug)
+    public function BlogSingle($slug, Request $request)
     {
+        
+        if ($request->getQueryString()) {
+            return redirect()->to(url()->current(), 301); // Permanent redirect to clean URL
+        }
+    
         $post = Post::with('tags')->where('slug',$slug)->first();
+        if (!$post) {
+            return redirect('/blogs/lists')->with('error', 'Blog post not found.');
+        }
+
         if($post){
             $relatedPostIdsArray = $post->related_posts ? explode(',', $post->related_posts) : [];
             $relatedPost = Post::select('name', 'images', 'slug', 'created_at')
@@ -138,19 +147,14 @@ class BaseController extends Controller
 
     public function PropertyManagement(){
         $data = PropertyManagement::latest()->first();
-        // $posts = Post::with('tags')
-        // ->whereHas('tags', function ($query) {
-        //     $query->where('name', '!=', 'Region');
-        // })
-        // ->orWhereDoesntHave('tags')  // Include posts with no tags
-        // ->take(4)  // Limit the result to 4 posts
-        // ->get();  // Get the results
+       
+        $blogIds = explode(',', $data->blog); // Convert comma-separated IDs to an array
 
         $posts = Post::with('tags')
-        ->latest()                   // Orders by 'created_at' in descending order
-        ->take(4)                    // Limits the result to 4 posts
-        ->get();
-    
+            ->whereIn('id', $blogIds) // Fetch only the posts with these IDs
+            ->latest()                // Orders by 'created_at' in descending order
+            ->get();
+
 
         return view('property_management')->with(['data' =>$data,"posts" => $posts]);        
     }
@@ -159,18 +163,23 @@ class BaseController extends Controller
         $careers = Career::all();
         return view('career_list')->with(['career' =>$careers,'careerPage'=>$careerPage]);
     }
-    public function Careers($id){
-        if($id){
-            // $id = base64_decode($id);
-            $career = Career::find($id);
-            if($career){
-                return view('career')->with(['career' =>$career]);    
-            }else{
-                return redirect()->route('home');
+    public function Careers($id)
+    {
+        // Check if the $id is not an integer (assuming a slug is passed)
+        if (!is_numeric($id)) {
+            $career = Career::where('slug', $id)->first();
+            if ($career) {
+                $id = $career->id; // Assign the ID from the slug result
             }
-            
-        }else{
-            return redirect()->route('home');
-        }   
+        }
+    
+        if ($id) {
+            $career = Career::find($id);
+            if ($career) {
+                return view('career')->with(['career' => $career]);    
+            }
+        }
+    
+        return redirect()->route('career.list');  
     }
 }

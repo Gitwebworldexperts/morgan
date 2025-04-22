@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ListWithUs;
+use App\Mail\ContactMail;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\PropertyListingMail;
+
 
 class ListWithUsController extends Controller
 {
@@ -17,10 +21,14 @@ class ListWithUsController extends Controller
             'bedrooms' => 'nullable|integer',
             'area' => 'nullable|string',
             'building_name' => 'nullable|string|max:255',
+            'form' => 'max:0'
         ]);
 
-        ListWithUs::create($request->all());
+        
 
+        ListWithUs::create($request->all());
+        $adminEmail = env('APP_ADMIN', 'yesvant@webworldexpertsindia.com'); 
+        Mail::to($adminEmail)->send(new PropertyListingMail($request->all()));
         return redirect()->back()->with('success', 'Your information has been submitted successfully!');
     }
 

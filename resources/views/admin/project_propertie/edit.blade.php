@@ -145,6 +145,13 @@
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
+                    <div class="form-group col-md-12">
+                        <label for="test_price">Price Input</label>
+                        <input type="text" class="form-control"  name="price_input" id="price_input" value="{{ old('price_input', $property->price_input) }}">
+                        @error('price_input')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -358,26 +365,29 @@
                 
 
                 <div id="itemsContainer">
-                <label for="status">Payment Plan<span class="mandatory">*</span></label>
-                <p>Total Percentage: <span id="totalPercentage">0</span>%</p>
+                    <label for="status">Payment Plan<span class="mandatory">*</span></label>
+                    <p>Total Percentage: <span id="totalPercentage">0</span>%</p>
                     @if(isset($property->plans) && !empty($property->plans))
                         @foreach($property->plans as $item)
                             <div class="form-row">
-                                <input type="text" name="plan_name[]" value="{{ $item->name}}" class="m-auto mlr-1" placeholder="Name" required>
-                                <input type="number" name="percentage[]" class="m-auto mlr-1" value="{{ $item->percentage}}" required placeholder="Percentage" min="0" max="100" oninput="updateTotalPercentage()">
-                                <input type="text" name="detail[]" class="m-auto mlr-1" value="{{ $item->detail}}" placeholder="Detail" required>
+                                <input type="text" name="plan_name[]" value="{{ $item->name }}" class="m-auto mlr-1" placeholder="Name" required>
+                                <input type="number" name="percentage[]" class="m-auto mlr-1" value="{{ $item->percentage }}" required placeholder="Percentage" min="0" max="100" oninput="updateTotalPercentage()">
+                                <input type="text" name="detail[]" class="m-auto mlr-1" value="{{ $item->detail }}" placeholder="Detail" required>
+                                <button type="button" class="remove-btn custom_remove_button remove_button border-btn">Remove</button>
                                 <button type="button" class="clone-btn custom_clone_button clone_button border-btn">Clone</button>
                             </div>
                         @endforeach
                     @else
-                    <div class="form-row">
-                        <input type="text" name="plan_name[]" class="m-auto mlr-1" placeholder="Name" required>
-                        <input type="number" name="percentage[]" class="m-auto mlr-1" required placeholder="Percentage" min="0" max="100" oninput="updateTotalPercentage()">
-                        <input type="text" name="detail[]" class="m-auto mlr-1" placeholder="Detail" required>
-                        <button type="button" class="clone-btn custom_clone_button clone_button border-btn">Clone</button>
-                    </div>
+                        <div class="form-row">
+                            <input type="text" name="plan_name[]" class="m-auto mlr-1" placeholder="Name" required>
+                            <input type="number" name="percentage[]" class="m-auto mlr-1" required placeholder="Percentage" min="0" max="100" oninput="updateTotalPercentage()">
+                            <input type="text" name="detail[]" class="m-auto mlr-1" placeholder="Detail" required>
+                            <button type="button" class="remove-btn custom_remove_button remove_button border-btn">Remove</button>
+                            <button type="button" class="clone-btn custom_clone_button clone_button border-btn">Clone</button>
+                        </div>
                     @endif
                 </div>
+                
 
                 
 
@@ -472,14 +482,22 @@ div#itemsContainer .form-row:last-child button {
         });
 
         let itemCount = 1;
-    document.querySelector('#image-upload-form').addEventListener('click', function(e) {
-        if (e.target && e.target.classList.contains('clone-btn')) {
-            const cloneRow = e.target.closest('.form-row').cloneNode(true);
-            itemCount++;
-            cloneRow.querySelectorAll('input, textarea').forEach(input => input.value = '');
-            document.getElementById('itemsContainer').appendChild(cloneRow);
-        }
-    });
+
+        document.querySelector('#image-upload-form').addEventListener('click', function(e) {
+            if (e.target && e.target.classList.contains('clone-btn')) {
+                const cloneRow = e.target.closest('.form-row').cloneNode(true);
+                itemCount++;
+                cloneRow.querySelectorAll('input, textarea').forEach(input => input.value = '');
+                document.getElementById('itemsContainer').appendChild(cloneRow);
+            }
+
+            // Remove button functionality
+            if (e.target && e.target.classList.contains('remove-btn')) {
+                const rowToRemove = e.target.closest('.form-row');
+                rowToRemove.remove();
+            }
+        });
+
 
         function updateTotalPercentage() {
         const percentages = document.querySelectorAll('input[name="percentage[]"]');

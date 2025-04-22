@@ -8,7 +8,8 @@ $meta_description = $global[1] ?? '';
 @section('title', $meta_title ?: 'Land For Rent Dubai')
 @section('meta')
     <meta property="og:title" content="@yield('title')" />
-    <meta property="og:description" content="{{ $meta_description ?: '' }}" />
+    <meta property="og:description" content="{!! $meta_description ?: '' !!}" />
+    <meta name="description" content="{!! $meta_description ?: '' !!}">
 @endsection
 
 @section('content')

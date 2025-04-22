@@ -6,7 +6,15 @@
             {{ session('success') }}
         </div>
     @endif
-
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <section>
         <p class="heading_for_admin_section">Edit Private Property</p>
         <div class="section_content">
@@ -56,7 +64,7 @@
                     <!-- <small class="form-text text-muted">Please enter a valid URL.</small> -->
                 </div>
 
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="images">Choose Images</label>
                     <input type="file" accept="image/*" name="images[]" id="images" class="form-control" multiple>
                     @error('images.*')
@@ -81,7 +89,7 @@
                             <p>No banners found for this property.</p>
                         @endif
                     </div>
-                </div>
+                </div> -->
 
 
                 <div class="form-group">
@@ -131,6 +139,14 @@
                         <label for="sale_price">Sale Price</label>
                         <input type="number" class="form-control" name="sale_price" id="sale_price" min="0" value="{{ old('sale_price', $property->sale_price) }}">
                         @error('sale_price')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    
+                    <div class="form-group col-md-12">
+                        <label for="price_input">Price Input</label>
+                        <input type="text" class="form-control"  name="price_input" id="price_input" value="{{ old('price_input', $property->price_input) }}">
+                        @error('price_input')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>

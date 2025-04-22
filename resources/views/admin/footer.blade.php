@@ -30,6 +30,37 @@
                         </div>
                     @endif
                 </div>
+                <div class="row">
+                    <div class="co-md-6 mb-3">
+                        <label for="locality" class="form-label"><strong>Locality :</strong></label>                    
+                        <input type="text" name="locality" class="form-control" value="{{ $footerSections->locality }}">
+                        @if ($errors->has('locality'))
+                            <div class="text-danger backend_error">
+                                {{ $errors->first('locality') }}
+                            </div>
+                        @endif
+                    </div>
+                    <div class="co-md-6 mb-3">
+                        <label for="region" class="form-label"><strong>Region :</strong></label>                    
+                        <input type="text" name="region" class="form-control" value="{{ $footerSections->region }}">
+                        @if ($errors->has('region'))
+                            <div class="text-danger backend_error">
+                                {{ $errors->first('region') }}
+                            </div>
+                        @endif
+                    </div>
+                    <div class="co-md-6 mb-3">
+                        <label for="postal_code" class="form-label"><strong>Postal Code :</strong></label>                    
+                        <input type="text" name="postal_code" class="form-control" value="{{ $footerSections->postal_code }}">
+                        @if ($errors->has('postal_code'))
+                            <div class="text-danger backend_error">
+                                {{ $errors->first('postal_code') }}
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+
                 <div class="mb-3">
                     <label for="email" class="form-label"><strong>Email ID :</strong></label>                    
                     <input type="email" name="email" placeholder="Email ID" value="{{$footerSections->email}}" class="form-control">
@@ -71,13 +102,19 @@
                             @if (isset($footerSection['urls']) && !empty($footerSection['urls']))
                                 @foreach ($footerSection['urls'] as $url => $name)
                                     <div class="mb-3 row align-items-center">
-                                        <div class="col-md-5">
+                                        <div class="col-md-4">
                                             <input class="form-control" type="text" placeholder="Nav Title"
-                                                value="{{ $name }}" required name="nav_name[]">
+                                                value="{{ $name[0] ?? '' }}" required name="nav_name[]">
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <input class="form-control" type="text" placeholder="Link Url"
                                                 value="{{ $url }}" required name="nav_url[]">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <select class="form-control" id="" name="nav_status[]">
+                                                <option {{ (($name[1] ?? '') == '1') ? "selected" : "" }} value="1">Active</option>
+                                                <option {{ (($name[1] ?? '') == '2') ? "selected" : "" }} value="2">Inactive</option>
+                                            </select>
                                         </div>
                                         <div class="col-md-1">
                                             <span class="remove-row ml-2"><i class="fas fa-trash-alt"></i></span>
@@ -135,13 +172,19 @@
                             @if (isset($footerSection['dropdown_urls']) && !empty($footerSection['dropdown_urls']))
                                 @foreach ($footerSection['dropdown_urls'] as $url => $name)
                                     <div class="mb-3 row align-items-center">
-                                        <div class="col-md-5">
+                                        <div class="col-md-4">
                                             <input class="form-control" type="text" placeholder="Nav Title"
-                                                value="{{ $name }}" required name="new_nav_name[]">
+                                                value="{{ $name[0] ?? '' }}" required name="new_nav_name[]">
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <input class="form-control" type="text" placeholder="Link Url"
                                                 value="{{ $url }}" required name="new_nav_url[]">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <select class="form-control" id="" name="new_nav_status[]">
+                                                <option {{ (($name[1] ?? '') == '1') ? "selected" : "" }} value="1">Active</option>
+                                                <option {{ (($name[1] ?? '') == '2') ? "selected" : "" }} value="2">Inactive</option>
+                                            </select>
                                         </div>
                                         <div class="col-md-1">
                                             <span class="new-remove-row ml-2"><i class="fas fa-trash-alt"></i></span>
@@ -163,13 +206,19 @@
                         <label for="logo" class="form-label"><strong>Second Menu :</strong></label>
                         <div id="new-row-container">
                             <div class="mb-3 row align-items-center">
-                                <div class="col-md-5">
+                                <div class="col-md-4">
                                     <input class="form-control" type="text" placeholder="Nav Title" required
                                         name="new_nav_name[]">
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <input class="form-control" type="text" placeholder="Link Url" required
                                         name="new_nav_url[]">
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-control" id="" name="new_nav_status[]">
+                                        <option value="1">Active</option>
+                                        <option value="2">Inactive</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-1">
                                     <span class="new-remove-row ml-2"><i class="fas fa-trash-alt"></i></span>
@@ -200,28 +249,31 @@
                         @foreach ($footerSection['dropdown_urls'] as $url => $name)
 
                             <div class="mb-3 row align-items-center">
-                                <div class="col-md-5">
+                                <div class="col-md-4">
                                     <input class="form-control" type="text" placeholder="Nav Title" required
-                                        name="new_nav_name[]" value="{{ $name }}">
+                                        name="new_nav_name[]" value="{{ $name[0] ?? '' }}">
                                 </div>
-                                <div class="col-md-6">
-
-
-
-                                <select class="form-control" data-placeholder="Select a property type" name="new_nav_url[]">
-                                    <option value="">Select a property type</option>
-                                    @if (!empty($propertyTypes))
-                                        @foreach ($propertyTypes as $item)
-                                            <option 
-                                                value="{{ $item->id }}-{{ $item->property }}" 
-                                                {{ old('new_nav_url', $url) == ($item->id . '-' . $item->property) ? 'selected' : '' }}>
-                                                {{ ucfirst($item->type_name) }} - {{ ucfirst($item->property) }}
-                                            </option>
-                                        @endforeach
-                                    @endif
-
-                                </select>
+                                <div class="col-md-4">
+                                    <select class="form-control" data-placeholder="Select a property type" name="new_nav_url[]">
+                                        <option value="">Select a property type</option>
+                                        @if (!empty($propertyTypes))
+                                            @foreach ($propertyTypes as $item)
+                                                <option 
+                                                    value="{{ $item->id }}-{{ $item->property }}" 
+                                                    {{ old('new_nav_url', $url) == ($item->id . '-' . $item->property) ? 'selected' : '' }}>
+                                                    {{ ucfirst($item->type_name) }} - {{ ucfirst($item->property) }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
                                 </div>
+                                <div class="col-md-3">
+                                    <select class="form-control" id="" name="new_nav_status[]">
+                                        <option {{ (($name[1] ?? '') == '1') ? "selected" : "" }} value="1">Active</option>
+                                        <option {{ (($name[1] ?? '') == '2') ? "selected" : "" }} value="2">Inactive</option>
+                                    </select>
+                                </div>
+                                
                                 <div class="col-md-1">
                                     <span class="new-remove-row ml-2"><i class="fas fa-trash-alt"></i></span>
                                 </div>
@@ -242,24 +294,27 @@
                         <label for="logo" class="form-label"><strong>Property Type   :</strong></label>
                         <div id="new-row-container">
                             <div class="mb-3 row align-items-center">
-                                <div class="col-md-5">
+                                <div class="col-md-4">
                                     <input class="form-control" type="text" placeholder="Nav Title" required
                                         name="new_nav_name[]">
                                 </div>
-                                <div class="col-md-6">
-
-
-
-                                <select class="form-control" data-placeholder="Select a property type" name="new_nav_url[]">
-                                    <option value="">Select a property type</option>
-                                    @if($propertyTypes)
-                                        @foreach($propertyTypes as $item)
-                                            <option value="{{ $item->id }}-{{ $item->property }}" >
-                                            {{ ucfirst($item->type_name) }} - {{ ucfirst($item->property) }}
-                                            </option>
-                                        @endforeach
-                                    @endif
-                                </select>
+                                <div class="col-md-4">
+                                    <select class="form-control" data-placeholder="Select a property type" name="new_nav_url[]">
+                                        <option value="">Select a property type</option>
+                                        @if($propertyTypes)
+                                            @foreach($propertyTypes as $item)
+                                                <option value="{{ $item->id }}-{{ $item->property }}" >
+                                                {{ ucfirst($item->type_name) }} - {{ ucfirst($item->property) }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-control" id="" name="new_nav_status[]">
+                                        <option value="1">Active</option>
+                                        <option value="2">Inactive</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-1">
                                     <span class="new-remove-row ml-2"><i class="fas fa-trash-alt"></i></span>
@@ -297,13 +352,19 @@
                             <div id="news-row-container">
                                 @foreach ($footerLogoSection as $url => $name)
                                 <div class="mb-3 row align-items-center">
-                                    <div class="col-md-5">
+                                    <div class="col-md-4">
                                         <input class="form-control" type="text" placeholder="Icon Short Code" required
-                                            value="{{ $name }}" name="icon[]">
+                                            value="{{ $name[0] }}" name="icon[]">
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <input class="form-control" type="text" placeholder="Icon Url" required
                                             value="{{ $url }}" name="icon_url[]">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-control" id="" name="icon_status[]">
+                                            <option {{ (($name[1] ?? '') == '1') ? "selected" : "" }} value="1">Active</option>
+                                            <option {{ (($name[1] ?? '') == '2') ? "selected" : "" }} value="2">Inactive</option>
+                                        </select>
                                     </div>
                                     <div class="col-md-1">
                                         <span class="news-remove-row ml-2"><i class="fas fa-trash-alt"></i></span>
@@ -380,7 +441,7 @@
                     @endif
                 </div>
 
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="green-btn">Save</button>
             </form>
 
         </div>

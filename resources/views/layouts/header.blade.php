@@ -20,7 +20,7 @@
             <div class="logo-web">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <div class="logo-box">
-                        <img src="{{ asset(siteLogo()) }}" alt="Site Logo">
+                        <img src="{{ asset(siteLogo()) }}" width="160" height="auto" loading="lazy" alt="Site Logo">
                     </div>
                 </a>
             </div>
@@ -32,13 +32,31 @@
                         {!! headerNav() !!}
                         @if(isset($dropdown_urls) && !empty($dropdown_urls))
                         <li class="nav-item dropdown">
-                            <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                More <img src="{{ asset('img/down-arrow.svg') }}" alt="Dropdown Arrow">
-                            </a>
+                            <a 
+                                class="nav-link dropdown-toggle" 
+                                href="#" 
+                                id="moreDropdown" 
+                                data-toggle="dropdown" 
+                                role="button" 
+                                aria-haspopup="true" 
+                                aria-expanded="false"
+                                >
+                                More 
+                                <img 
+                                    loading="lazy" 
+                                    width="13" 
+                                    height="13" 
+                                    src="{{ asset('img/down-arrow.svg') }}" 
+                                    alt="Dropdown Arrow"
+                                >
+                                </a>
+
                             <div class="dropdown-menu">
                                 <ul>
                                     @foreach ($dropdown_urls as $url => $name)
-                                        <li><a href="{{ $url }}">{{ $name }}</a></li>
+                                        @if(isset($name[0]) && isset($name[1]) && $name[1] == '1' )
+                                            <li><a href="{{ $url }}">{{ $name[0] }}</a></li>
+                                        @endif
                                     @endforeach
                                 </ul>
                             </div>
@@ -49,9 +67,9 @@
 
                 <div class="EndSide">
                     <div class="schedule-call desktop-none">
-                        <a class="btn green-btn" data-toggle="modal" data-target="#search-modal">
+                        <a class="btn green-btn" href="#" onclick="event.preventDefault();" data-toggle="modal" data-target="#search-modal">
                             <div class="btn-icon">
-                                <img src="{{ asset('img/search.svg') }}" alt="Search Icon">
+                                <img src="{{ asset('img/search.svg') }}" width="13" height="13" alt="Search Icon">
                             </div>
                         </a>
                     </div>
@@ -60,7 +78,7 @@
                         <div class="schedule-call mobile-none">
                             <a class="btn green-btn" href="{{ $first_button_url }}">
                                 <div class="btn-icon">
-                                    <img src="{{ asset('img/home.svg') }}" alt="First Button Icon">
+                                    <img src="{{ asset('img/home.svg') }}" width="13" height="13" loading="lazy" alt="First Button Icon">
                                 </div>
                                 <span>{{ $first_button_name }}</span>
                             </a>
@@ -80,8 +98,8 @@
                         <div class="schedule-call">
                             <a class="btn green-btn" href="{{ $second_button_url }}">
                                 <div class="btn-icon">
-                                    <img src="{{ asset('img/user.svg') }}" class="mobile-none" alt="User Icon Mobile">
-                                    <img src="{{ asset('img/user2.svg') }}" class="desktop-none" alt="User Icon Desktop">
+                                    <img loading="lazy" width="13" height="13" src="{{ asset('img/user.svg') }}" class="mobile-none" alt="User Icon Mobile">
+                                    <img loading="lazy" width="13" height="13" src="{{ asset('img/user2.svg') }}" class="desktop-none" alt="User Icon Desktop">
                                 </div>
                                 <span>{{ $second_button_name }}</span>
                             </a>
@@ -91,16 +109,16 @@
                             @guest
                                 <a class="btn green-btn" href="{{ route('login') }}">
                                     <div class="btn-icon">
-                                        <img src="{{ asset('img/user.svg') }}" class="mobile-none" alt="User Icon Mobile">
-                                        <img src="{{ asset('img/user2.svg') }}" class="desktop-none" alt="User Icon Desktop">
+                                        <img loading="lazy" width="13" height="13" src="{{ asset('img/user.svg') }}" class="mobile-none" alt="User Icon Mobile">
+                                        <img loading="lazy" width="13" height="13" src="{{ asset('img/user2.svg') }}" class="desktop-none" alt="User Icon Desktop">
                                     </div>
                                     <span>Log in</span>
                                 </a>
                             @else
                             <a class="btn green-btn profile" href="#">
                                 <div class="btn-icon">
-                                    <img src="{{ asset('img/user.svg') }}" class="mobile-none" alt="User Icon Mobile">
-                                    <img src="{{ asset('img/user2.svg') }}" class="desktop-none" alt="User Icon Desktop">
+                                    <img loading="lazy" width="13" height="13" src="{{ asset('img/user.svg') }}" class="mobile-none" alt="User Icon Mobile">
+                                    <img loading="lazy" width="13" height="13" src="{{ asset('img/user2.svg') }}" class="desktop-none" alt="User Icon Desktop">
                                 </div>
                                 <span>{{ ucfirst(Auth::user()->name) }}</span>
                             </a>
@@ -116,8 +134,8 @@
 
                                  {{-- <a class="btn green-btn" >
                                     <div class="btn-icon">
-                                        <img src="{{ asset('img/user.svg') }}" class="mobile-none" alt="User Icon Mobile">
-                                        <img src="{{ asset('img/user2.svg') }}" class="desktop-none" alt="User Icon Desktop">
+                                        <img loading="lazy" width="13" height="13" src="{{ asset('img/user.svg') }}" class="mobile-none" alt="User Icon Mobile">
+                                        <img loading="lazy" width="13" height="13" src="{{ asset('img/user2.svg') }}" class="desktop-none" alt="User Icon Desktop">
                                     </div>
                                     <span>Logout</span>
                                 </a> --}}
@@ -130,7 +148,7 @@
                     @endif
 
                     <div class="mobile-icon">
-                        <button class="navbar-toggler nav-btn nav-slider" type="button">
+                        <button class="navbar-toggler nav-btn nav-slider" aria-label="Close" type="button">
                             <span class="navbar-toggler-icon"></span>
                         </button>
                     </div>

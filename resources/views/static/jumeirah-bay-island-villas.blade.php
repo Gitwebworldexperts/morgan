@@ -1,15 +1,17 @@
 @extends('layouts.app')
 @php
-$global = Config::get('jumeirah-bay-island-villas', []);
-$meta_title = $global[0] ?? '';
-$meta_description = $global[1] ?? '';
+$global = Config::get('static_meta', []);
+
+$meta_title = $global['jumeirah-bay-island-villas'][0] ?? '';
+$meta_description = $global['jumeirah-bay-island-villas'][1] ?? '';
 @endphp
 
 @section('title', $meta_title ?: 'Jumeirah Bay Island Villas')
 
 @section('meta')
     <meta property="og:title" content="@yield('title')" />
-    <meta property="og:description" content="{{ $meta_description ?: '' }}" />
+    <meta property="og:description" content="{!! $meta_description ?: '' !!}" />
+    <meta name="description" content="{!! $meta_description ?: '' !!}">
 @endsection
 
 @section('content')

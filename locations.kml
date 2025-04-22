@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.2">
+<Placemark>
+<name>Morgans International Realty</name>
+<description>Morgans International Realty, a luxury real estate brokerage and property investment consultancy firm in Dubai, help you to buy and sell properties in UAE at an attractive price</description>
+<Point>
+<coordinates>25.0978092,55.154107</coordinates>
+</Point>
+</Placemark>
+</kml>
+

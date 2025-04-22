@@ -44,6 +44,7 @@ class InvestmentPropertieController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'meta_title' => 'required|string|max:255',
+            'price_input' => 'nullable|string|max:255',
             'meta_description2' => 'required|string|max:255',
             // 'address' => 'max:255',
             // 'google_maps_link' => 'max:255',
@@ -63,13 +64,13 @@ class InvestmentPropertieController extends Controller
             // 'eighth_heading' => 'max:255',
             // 'eighth_description' => 'max:255',
         ]);
-
         $slug = generateSlug('investment_'.$request->name, \App\Models\InvestmentPropertie::class);
         // Create a new property instance
         $property = new InvestmentPropertie();
         $property->status = $request->status; 
         $property->property_size = $request->property_size;
         $property->name = $request->name;
+        $property->price_input = $request->price_input;
         $property->community_id = $request->community_id;
         $property->meta_title = $request->meta_title;
         $property->meta_description2 = $request->meta_description2;
@@ -113,7 +114,7 @@ class InvestmentPropertieController extends Controller
                 // Store the image path in the banners table
                 $banner = new Banners();
                 $banner->image_url = 'images/' . $newFileName;
-                $banner->page_type = 'private'; // Set the appropriate page_id if needed
+                $banner->page_type = 'investment'; // Set the appropriate page_id if needed
                 $banner->property_id = $property->id; // Associate with the newly created property
                 $banner->save();
             }
@@ -131,7 +132,7 @@ class InvestmentPropertieController extends Controller
             // Optionally, you can also save the featured image as a banner
             $banner = new Banners();
             $banner->image_url = 'featured_images/' . $newFileName;
-            $banner->page_type = 'private';
+            $banner->page_type = 'investment';
             $banner->property_id = $property->id; // Associate with the newly created property
             $banner->save();
         }
@@ -264,6 +265,7 @@ class InvestmentPropertieController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'price_input' => 'nullable|string|max:255',
             'meta_title' => 'required|string|max:255',
             'meta_description2' => 'required|string|max:255',
             // 'address' => 'max:555',
@@ -290,6 +292,7 @@ class InvestmentPropertieController extends Controller
     $property->property_size = $request->property_size;
     // Update the property fields
     $property->name = $request->name;
+    $property->price_input = $request->price_input;
     $property->community_id = $request->community_id;
     $property->meta_title = $request->meta_title;
     $property->meta_description2 = $request->meta_description2;
@@ -332,7 +335,7 @@ class InvestmentPropertieController extends Controller
             // Store the image path in the banners table
             $banner = new Banners();
             $banner->image_url = 'images/' . $newFileName;
-            $banner->page_type = 'private'; // Set the appropriate page_id if needed
+            $banner->page_type = 'investment'; // Set the appropriate page_id if needed
             $banner->property_id = $property->id; // Associate with the updated property
             $banner->save();
         }
@@ -350,7 +353,7 @@ class InvestmentPropertieController extends Controller
         // Optionally, you can also save the featured image as a banner
         $banner = new Banners();
         $banner->image_url = 'featured_images/' . $newFileName;
-        $banner->page_type = 'private';
+        $banner->page_type = 'investment';
         $banner->property_id = $property->id;
         $banner->save();
     }

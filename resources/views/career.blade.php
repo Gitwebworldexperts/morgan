@@ -73,7 +73,7 @@
             
             <div class="col-lg-6 col-md-6 col-12">
                 <div class="list-from">
-                    <h2 class="mb-2">Apply Job</h2>
+                    <h2 class="mb-2">Apply</h2>
                     @if(session('success'))
                         <div class="alert alert-success">
                             {{ session('success') }}
@@ -88,8 +88,12 @@
                             </ul>
                         </div>
                     @endif
-                    <p class="mb-4">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
-                    <form action="{{ route('career.submit') }}" method="POST" enctype="multipart/form-data">
+                    @if(session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+                 <form action="{{ route('career.submit') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="career_id" value="{{ base64_encode($career->id) }}">
                         <div class="form-group">
@@ -117,6 +121,8 @@
                         </div>
                     </form>
 
+
+
                 </div>
             </div>
             
@@ -128,4 +134,12 @@
       
 
 
+@endsection
+@section('scripts')
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<script>
+   function onSubmit(token) {
+     document.getElementById("contactForm").submit();
+   }
+</script>
 @endsection

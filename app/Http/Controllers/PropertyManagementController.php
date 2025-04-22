@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Services\ImageUploadService;
 use App\Models\PropertyQuote;
+use App\Models\Post;
 
 class PropertyManagementController extends Controller
 {
@@ -19,7 +20,8 @@ class PropertyManagementController extends Controller
     public function create()
     {
         $pm = PropertyManagement::latest()->first();
-        return view('PM.create', compact('pm'));
+        $blogs = Post::all();
+        return view('PM.create', compact('pm','blogs'));
     }
 
     public function store(Request $request,ImageUploadService $imageUploadService)
@@ -47,6 +49,8 @@ class PropertyManagementController extends Controller
             $section_2_anchor_link = $pm->section_2_anchor_link;
         }
 
+        // dd($request->blog);
+
         // Create the page record
         PropertyManagement::create([
             'title' => $request->title,
@@ -58,6 +62,7 @@ class PropertyManagementController extends Controller
             'section_2_title' => $request->section_2_title,
             'section_2_description' => $request->section_2_description,
             // 'section_2_anchor_link' => $request->section_2_anchor_link,
+            'blog' => is_array($request->blog) ? implode(',', $request->blog) : $request->blog,
             'section_2_anchor_link' => $request->hasFile('section_2_anchor_link') ? $imageUploadService->storeImage($request->file('section_2_anchor_link'), 'images'): $section_2_anchor_link,            
         ]);
 

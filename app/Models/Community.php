@@ -9,6 +9,7 @@ class Community extends Model
     use HasFactory;
 
     protected $fillable = [
+        'slug',
         'community_name',
         'featured_image',
         'section_i_image',

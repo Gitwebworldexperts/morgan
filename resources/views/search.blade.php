@@ -25,6 +25,7 @@
         }elseif($property_type_name == 'project'){
             $ListRouteName = route('devlopment.listing');
             $ListName = "Development";
+ 
         }elseif($property_type_name == 'international'){
             $ListName = "International";
             $ListRouteName = route('search', ['prop_for' => 'international']);
@@ -324,7 +325,8 @@
                                               @if($property->address)
                                               <p><img src="{{ asset('img/hotel/map.svg') }}">{!! Str::words(strip_tags($property->address), 3, '...') !!}</p>
                                             @endif
-                                              @if(!isset($devlopment))
+
+                                              @if(!isset($devlopment) && $property_type_name != 'project')
                                               <div class="HotelViews">
                                                   <ul>
                                                       <li><img src="{{ asset('img/hotel/1.svg') }}"> {{ number_format($property->area) }}
@@ -337,8 +339,13 @@
                                                       @endif
                                                   </ul>
                                               </div>
-                                              <span class="d-none"> {{ var_dump($property); }}</span>
-                                              <h6><span>AED</span> {{ number_format($property->sale_price) }}/-</h6>
+                                                @if(isset($property->price_input))
+                                                        <h6>{{ ucfirst($property->price_input) }}</h6>
+                                                @else
+                                                    @if(number_format($property->sale_price))
+                                                        <h6><span>AED</span> {{ number_format($property->sale_price) }}/-</h6>
+                                                    @endif  
+                                                @endif
                                               @endif
                                           </a>
                                       </figcaption>
@@ -394,6 +401,7 @@
           <div class="form-group">
               <label>Full Name</label>
               <input class="form-control" name="fullName" type="text" placeholder="John Doe" required>
+              <input type="text" name="form" style="display:none;">
           </div>
           <div class="form-group">
               <label>Email</label>
@@ -406,7 +414,7 @@
           <input type="hidden" name="pageName" value="${pageName}">
           <input type="hidden" name="pageId" value="${pageId}">
         <input type="hidden" name="type" value="dev">
-          <button type="submit" class="green-btn submit-btn">Submit</button>
+        <button type="submit" data-sitekey="6LdTOJIqAAAAAIzlPRlnrnXROcFEH92ZzhUR-pAs" data-callback='onSubmit' data-action='submit'  class="g-recaptcha green-btn submit-btn">Submit</button>
       </form>
                             
                         </div>
@@ -561,4 +569,11 @@
 		<div id="filter-overlay"></div>
       @endsection
 
-      
+@section('scripts')
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script>
+       function onSubmit(token) {
+         document.getElementById("contactForm").submit();
+       }
+    </script>
+@endsection      

@@ -20,14 +20,8 @@ use Illuminate\Http\Request;
 class SearchController extends Controller
 {
     public function search(Request $request) {
- 
-        
-        
-
-
         $this->page_title = '';
-        $propFor = $request->input('prop_for') ?? $_GET['prop_for'];
-        
+        $propFor = $request->input('prop_for') ?? ($_GET['prop_for'] ?? null);
         $sub_type = $request->input('sub_type') ?? "";
         if($sub_type){
             $request->property_type = [$sub_type]; 
@@ -72,7 +66,7 @@ class SearchController extends Controller
         // Redirect if propFor is empty
 
         if (empty($propFor)) {
-            return redirect()->route('home');
+            return redirect()->route('home', [], 301);
         }
 
         $propertyTypes = [
@@ -91,7 +85,7 @@ class SearchController extends Controller
             if($propFor == "international" && !empty($region)){
                 //  $regions = Region::whereIn('id', $regionIds)->get();
 
-                $properties = $propertyTypes[$propFor]::where('region',$region)->orderBy('id', 'desc')->with('propertyType')->paginate(12);
+                $properties = $propertyTypes[$propFor]::where('region',$region)->where('status','active')->orderBy('id', 'desc')->with('propertyType')->paginate(12);
             }else{
                 // $properties = $propertyTypes[$propFor]::orderBy('id', 'desc')->with('propertyType')->paginate(12);
             $properties = $propertyTypes[$propFor]::query()
@@ -119,6 +113,7 @@ class SearchController extends Controller
                         $query->where('bed', $custom_bed);
                     }
                 })
+                ->where('status','active')
                 ->with('propertyType','banners')
                 ->paginate(12);
 
@@ -176,11 +171,13 @@ class SearchController extends Controller
 
             // Pass 'prop_for' through the pagination links
             $properties->appends(['prop_for' => $propFor]);
-
+            if ($properties->currentPage() > $properties->lastPage()) {
+                return redirect()->route('search', ['prop_for' => $propFor]); 
+            }
             // Return view directly with paginated data
             return view('search', compact('data','property_type_name','regions','filter_array'));
         } else {
-            return redirect()->route('home');    
+            return redirect()->route('home', [], 301);    
         }
     }
 
@@ -258,7 +255,8 @@ class SearchController extends Controller
                     } else {
                         $query->where('bed', $bed);
                     }
-                })
+                })                
+                ->where('status','active')
                 ->orderBy('id', 'desc')
                 ->with('propertyType','banners')
                 ->paginate(24);

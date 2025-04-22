@@ -114,7 +114,7 @@
                         @foreach($reports as $item)
                         <div class="box home{{ $item->report_type }} col-lg-4" <?php if($item->report_type == 1){ ?> style="display: block;" <?php }else{ ?> style="display: none;" <?php } ?>>
                             <div class="studio-box">
-                                <a href="{{ route('report_inidividual.show', $item->slug) }}">
+                                <a href="{{ route('report_inidividual.shows', $item->slug) }}">
                                     <figure>
                                     @if($item->background_image)
                                         <img src="{{ asset($item->background_image) }}" class="w-100" alt="">

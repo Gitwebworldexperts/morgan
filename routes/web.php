@@ -52,7 +52,7 @@ use App\Jobs\DownloadImageJob;
 use Illuminate\Support\Facades\Queue;
 
 use App\Http\Controllers\ReportFormController;
-
+use Illuminate\Support\Facades\Artisan;
 
 
 require base_path('routes/static.php');
@@ -61,9 +61,21 @@ require base_path('routes/static.php');
 //     return view('welcome');
 // });
 
+Route::get('/clear-cache', function() {
+    Artisan::call('optimize:clear'); 
+    Artisan::call('route:clear');
+    Artisan::call('config:clear');
+    Artisan::call('view:clear');
+    Artisan::call('cache:clear');
+
+    // Clears route, config, view, and application cache
+    return 'Cache cleared successfully!';
+});
+
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
 
     // Route::middleware(['auth'])->group(function () {
     Route::get('admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
@@ -169,6 +181,8 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 
 Route::get('/xml_data', [XMLController::class, 'getXml'])->name('xml');
 
+Route::get('/sync_raptor', [XMLController::class, 'syncRaptor'])->name('syncRaptor');
+
 Route::get('/xml_image_download', [XMLController::class, 'startWorker'])->name('xmlImageDownload');
 
 
@@ -183,7 +197,10 @@ Route::any('/search', [SearchController::class, 'search'])->name('search');
 
 Route::any('/common_search', [SearchController::class, 'CommonSearch'])->name('common.search');
 
-Route::any('/yesvant', [TestController::class, 'index']);
+// Route::any('/yesvant', [TestController::class, 'testSoapRequest']);
+
+
+Route::get('/optimize', [TestController::class, 'optimize']);
 
 
 Route::get('/properties/view/{slug}', [PropertieController::class, 'DetailPage'])->name('detail.page');
@@ -195,7 +212,9 @@ Route::get('investment/lists', [PropertieController::class, 'InvestmentListing']
 
 Route::get('development/lists', [PropertieController::class,    'DevelopmentListing'])->name('devlopment.listing');
 
-Route::get('branded_residences', [PropertieController::class, 'BrandedResidences'])->name('branded_residences');
+// Route::get('branded_residences', [PropertieController::class, 'BrandedResidences']);
+
+Route::get('branded-residences-dubai', [PropertieController::class, 'BrandedResidences'])->name('branded_residences');
 
 
 Route::get('private_offices', [PropertieController::class, 'PrivateOffices'])->name('private_offices');
@@ -209,6 +228,10 @@ Route::get('/investment/view/{slug}', [PropertieController::class, 'InvestmentDe
 
 
 Route::get('/google/redirect', [App\Http\Controllers\GoogleLoginController::class, 'redirectToGoogle'])->name('google.redirect');
+
+
+
+
 Route::get('/google/callback', [App\Http\Controllers\GoogleLoginController::class, 'handleGoogleCallback'])->name('google.callback');
 
 Route::get('/contactus', [BaseController::class, 'contactus'])->name('contactus');
@@ -226,22 +249,29 @@ Route::post('/quote_store', [PropertyManagementController::class, 'quoteStore'])
 
 
 
-Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
+Route::post('/contact-submit', [ContactController::class, 'submit'])->name('contact.submit');
+
 
 Route::post('/submit', [FormController::class, 'submit'])->name('intrest.submit');
 Route::post('/submit-application', [ApplicationController::class, 'store'])->name('application.store');
 Route::post('/list-with-us', [ListWithUsController::class, 'store'])->name('list-with-us.store');
 
-Route::get('/career/{id}', [BaseController::class, 'Careers'])->name('detail.career');
+// Route::get('/career/{id}', [BaseController::class, 'Careers'])->name('detail.career');
+
+Route::get('/careers/apply/{id}', [BaseController::class, 'Careers'])->name('detail.career');
+
 Route::get('/careers/apply', [BaseController::class, 'CareerList'])->name('career.list');
 Route::get('/applied/{id}', [CareerController::class, 'AppliedJob'])->name('applied.job');
+
+Route::get('/generic_applied', [CareerController::class, 'GenericAppliedJob'])->name('generic.applied.job');
+
 Route::get('privatelisting/lists', [PropertieController::class, 'PrivateListing'])->name('private.listing');
 
 Route::get('communities', [PropertieController::class, 'Communities'])->name('communities.listing');
 Route::get('/list-with-us', [PageListWithUsController::class, 'Frontend'])->name('page_list_with_us');
 
 
-Route::get('/communitie/{id}', [PropertieController::class, 'CommunitieDetail'])->name('detail.communitie');
+Route::get('/communities/{id}', [PropertieController::class, 'CommunitieDetail'])->name('detail.communitie');
 
 Route::get('/reports', [PropertieController::class, 'ReportList'])->name('report.list');
 
@@ -256,9 +286,24 @@ Route::get('/404', function () {
     return view('errors/404'); 
 });
 
-Route::get('/report/{slug}', [ReportIndividualController::class, 'show'])->name('report_inidividual.show');
+
+// Route::get('/report/{period}', function ($period) {
+//     // Simulating a constructor setup
+//     dd($period);
+    
+// });
+
+
+
+
+
+Route::get('/report/{slug}', [ReportIndividualController::class, 'show'])->name('report_inidividual.shows');
 
 Route::post('/submit-career', [CareerController::class, 'submit'])->name('career.submit');
+
+Route::post('/generic-submit-career', [CareerController::class, 'genericSubmit'])->name('career.generic.submit');
+
+
 
 
 Route::get('/mortgage-calculator', [MortgageCalculatorController::class, 'index']);
@@ -289,7 +334,6 @@ Route::get('/my_inquiries', [WishlistController::class, 'myInquiries'])->name('m
 
 Route::get('/sendRequest', [FormController::class, 'sendRequest']);
 
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -297,4 +341,17 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::post('/report-form', [ReportFormController::class, 'store'])->name('report-form.store');
-Route::get('/reportform/{id}', [ReportFormController::class, 'reportForm'])->name('reportform.data');
+Route::get('/reportform/{id}', [ReportFormController::class, 'reportForm'])->middleware('auth')->name('reportform.data');
+
+Route::prefix('admin')->middleware('admin')->group(function () {
+    Route::get('/export-report/{id}', [ReportFormController::class, 'exportReportToCSV'])->name('export.report');    
+});
+
+
+Route::get('/report-thank-you', function () {
+    return view('reportThanks'); 
+});
+
+Route::redirect('/privatelisting/view/emirates-hills', '/privatelisting/view/emirates-hills-villas', 301);
+Route::redirect('/privatelisting/view/district-one', '/privatelisting/view/district-one-mohammed-bin-rashid-city-villas', 301);
+Route::redirect('/investment/view/full-building-for-sale', '/investment/view/building-for-sale-jumeirah-golf-estates', 301);

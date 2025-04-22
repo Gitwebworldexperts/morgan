@@ -5,16 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Providers\RouteServiceProvider;
 
 class GoogleLoginController extends Controller
 {
-    public function redirectToGoogle()
+    public function redirectToGoogle(): Response
     {
-        return Socialite::driver('google')->redirect();
+        $response = Socialite::driver('google')->redirect();
+    
+        // Modify response headers to include 'X-Robots-Tag'
+        $response->headers->set('X-Robots-Tag', 'noindex, nofollow');
+    
+        return $response;
     }
-
 
     public function handleGoogleCallback()
     {

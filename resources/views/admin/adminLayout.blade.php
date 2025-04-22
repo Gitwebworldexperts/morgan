@@ -182,7 +182,7 @@
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('list-with-us.view') }}"
-                                class="@if (request()->is('form_data*') || Route::is('list-with-us.vie')) active_nav @endif nav-link align-middle px-0">
+                                class="@if (request()->is('form_data*') || Route::is('list-with-us.view')) active_nav @endif nav-link align-middle px-0">
                                 <i class="fa-solid fa-link"></i> <span class="ms-1 d-none d-sm-inline">List-With-Us Data</span>
                             </a>
                         </li>
@@ -281,10 +281,11 @@
                             </a>
                         @endif
                         <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                            <!-- <li><a class="dropdown-item" href="{{ route('settings') }}">Settings</a></li> -->
-                            <li><a class="dropdown-item" href="{{ route('settings') }}"><i
-                                        class="fa-solid fa-gear"></i> Settings</a></li>
-                            <!-- <li><a class="dropdown-item" href="#">Profile</a></li> -->
+                            <li><a class="dropdown-item" href="{{ asset('admin/header_sections') }}"><i
+                                        class="fa-solid fa-gear"></i> Header Options</a></li>
+                                <li><a class="dropdown-item" href="{{ asset('admin/footer_sections') }}"><i
+                                class="fa-solid fa-gear"></i> Footer Options</a></li>
+
                             <li>
                                 <hr class="dropdown-divider">
                             </li>

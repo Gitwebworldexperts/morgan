@@ -19,7 +19,7 @@
         <div class="row no-gutters">
             <div class="col-lg-6">
                 <div class="login-img">
-                    <img src="https://myprojectdemonstration.net/development/morgan/web/img/login-image.png" alt="morgan" class="w-100" />
+                    <img src="{{ assets('img/login-image.png') }}" alt="morgan" class="w-100" />
                 </div>
             </div>
             <div class="col-lg-6">

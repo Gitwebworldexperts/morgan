@@ -17,7 +17,9 @@
                     {!! headerNav() !!}
                     @if(isset($dropdown_urls) && !empty($dropdown_urls))
                         @foreach ($dropdown_urls as $url => $name)
-                        <li class="nav-item"> <a class="nav-link" href="{{ $url }}">{{ $name }}</a> </li>
+                        @if(isset($name[0]) && isset($name[1]) && $name[1] == '1')
+                        <li class="nav-item"> <a class="nav-link" href="{{ $url }}">{{ $name[0] }}</a> </li>
+                        @endif
                         @endforeach                        
                     @endif
                 </ul>

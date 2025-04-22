@@ -27,7 +27,7 @@
                     <div class="col-lg-6">
                         <div class="login-from">
                             <h2 class="mb-2">{{ __('Login') }}</h2>
-                            <p class="mb-4">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+                            <p class="mb-4">Please log in with your credentials to access all your listings, manage inquiries, and stay connected with your clients. If you encounter any issues, feel free to reach out to our support team. We’re here to help!</p>
                             
                             <div class="login-google-btn">
                                 <a href="{{ route('google.redirect') }}" class="border-btn"><img src="img/google.svg" width="24" class="" alt=""> Login with google</a>

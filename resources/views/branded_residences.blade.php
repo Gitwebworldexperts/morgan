@@ -93,7 +93,8 @@
                 </div>
               </div>
 
-              <div class="formula-boxes">
+              <div class="formula-boxes d-flex">
+                  <div>
                 <div class="formula-box">
                   <figure>
                     <img src="{{ asset($data['page_data']->tripal_win_image_1 ) }}" alt="" class="">
@@ -110,7 +111,8 @@
                     <h3>{{ $data['page_data']->tripal_win_title_2 }}</h3>
                   </figcaption>
                 </div>
-                <div class="formula-box center-box">
+                </div>
+                <div class="formula-box center-box1">
                   <figure>
                     <img src="{{ asset($data['page_data']->tripal_win_image_3 ) }}" alt="" class="">
                   </figure>
@@ -246,6 +248,14 @@
         </div>
     
     </section>
+    <style>
+    .formula-boxes.d-flex {
+    align-items: center;
+}
+.formula-boxes > div {
+    width: 50%;
+}
+    </style>
     @include('faq', ['page_name' => 'branded'])
 
 

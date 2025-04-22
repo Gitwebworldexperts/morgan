@@ -63,14 +63,14 @@
                     <!-- <small class="form-text text-muted">Please enter a valid URL.</small> -->
                 </div>
 
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="images">Choose Images</label>
                     <input type="file" accept="image/*" name="images[]" id="images" class="form-control" multiple>
                     @error('images.*')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                     <div id="image-preview" class="mt-3"></div>
-                </div>
+                </div> -->
 
                 <div class="form-group">
                     <label for="featured_image">Featured Image</label>
@@ -113,6 +113,14 @@
                         <input type="number" class="form-control" name="sale_price" id="sale_price" min="0"
                             value="{{ old('sale_price') }}">
                         @error('sale_price')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label for="price_input">Price Input</label>
+                        <input type="text" class="form-control"  name="price_input" id="price_input" value="{{ old('price_input') }}">
+                        @error('price_input')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>

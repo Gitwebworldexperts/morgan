@@ -57,28 +57,31 @@ class FooterSectionController extends Controller
         }
         $actions  = $data['nav_name'];
         $urls = $data['nav_url'];
+        $nav_status = $data['nav_status'];
         // Combine the arrays into an associative array
         $url_json = $combined = [];
         foreach ($urls as $index => $url) {
-            $url_json[$url] = $actions[$index];
+            $url_json[$url] = [$actions[$index],$nav_status[$index]];
         }
 
 
 
         $new_actions  = $data['new_nav_name'];
         $new_urls = $data['new_nav_url'];
+        $new_nav_status = $data['new_nav_status'];
         // Combine the arrays into an associative array
         $new_url_json = $new_combined = [];
         foreach ($new_urls as $index => $url) {
-            $new_url_json[$url] = $new_actions[$index];
+            $new_url_json[$url] = [$new_actions[$index],$new_nav_status[$index]];
         }
 
         $icon  = $data['icon'];
         $icon_url = $data['icon_url'];
+        $icon_status = $data['icon_status'];
         // Combine the arrays into an associative array
         $icon_url_json = $icon_combined = [];
         foreach ($icon_url as $index => $url) {
-            $icon_url_json[$url] = $icon[$index];
+            $icon_url_json[$url] = [$icon[$index],$icon_status[$index]];
         }
 
         $combined = ['urls'=>$url_json,'dropdown_urls'=>$new_url_json];        
@@ -111,6 +114,12 @@ class FooterSectionController extends Controller
         // Save or update navigation links
         $headerSection->navigation_menus = $json;
         $headerSection->social_media_links = $social_media_links;
+
+
+        $headerSection->locality = $request->locality;
+        $headerSection->region = $request->region;
+        $headerSection->postal_code = $request->postal_code;
+
 
         $headerSection->copyright = $request->copyright; 
         $headerSection->newsletter_section = $request->newslatter;

@@ -13,8 +13,9 @@
     @endif
     <section>
     <div class="container">
-        <p class="heading_for_admin_section">Careers</p>
+        <p class="heading_for_admin_section">Careers <a href="{{ route('generic.applied.job') }}" class="add_new_button m-0">Generic Applications</a></p>
         <a href="{{ route('careers.create') }}" class="add_new_button m-0">Create New Career</a>
+        
         <div class="section_content">
         <table id="example" class="table table-striped" style="width:100%">
             <thead>

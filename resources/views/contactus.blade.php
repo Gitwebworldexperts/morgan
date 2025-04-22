@@ -1,5 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Contact Us  – Morgan’s International Realty')
+
+
 @section('content')
 @php
 $footerSection = getFooterSection();
@@ -72,6 +74,7 @@ $footerSection = getFooterSection();
 							        <div class="col-lg-6">
 							            <div class="form-group">
 							                <label>First Name</label>
+							                <input type="text" name="form" style="display:none;">
 							                <input class="form-control" name="first_name" placeholder="John" required type="text">
 							            </div>
 							        </div>

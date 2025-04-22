@@ -11,12 +11,13 @@
 @section('title', $page_name)
 @section('meta')
   @if(isset($data['detail']->meta_tags) && !empty($data['detail']->meta_tags))
-      {!! $data['detail']->meta_tags !!}
+    {!! $data['detail']->meta_tags !!}
   @endif
   @if(isset($post->meta_title) && !empty($post->meta_title))
     <meta property="og:title" content="{{$page_name}}" />
   @endif
   @if(isset($post->meta_description) && !empty($post->meta_description))
+    <meta name="description" content="{{ $post->meta_description }}" />
     <meta property="og:description" content="{{ $post->meta_description }}" />
   @endif
 @endsection
@@ -40,7 +41,16 @@
     <section class="space blog-detail-page">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-8">
+                    
+                @php
+                    if(!(isset($post->tags) && !empty($post->tags) && count($post->tags)) && !(isset($relatedPost) && !empty($relatedPost) && count($relatedPost))){
+                        $class = "col-lg-12";                    
+                    }else{
+                        $class = "col-lg-8";
+                    }
+                @endphp
+
+                    <div class="{{ $class ?? 'col-lg-8' }}">
 						<div class="content-wrapper">
 							<div class="share-blog">
 								<a href="" class="green-btn d-none"><img src="{{ asset('img/share.svg') }}" alt="">Share</a>
@@ -105,7 +115,6 @@
 					<div class="col-lg-4">
 						<div class="blog-detail-right">
 						<div class="blog-thubnails">
-							
 							
                             @if(isset($relatedPost) && !empty($relatedPost) && count($relatedPost))
                             <div class="sub-head">

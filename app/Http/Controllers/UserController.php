@@ -148,5 +148,83 @@ class UserController extends Controller
         }
     }
 
+    public function exportUsersToCSV()
+{
+    $fileName = 'users.csv';
+    $users = \App\Models\User::all(); // Replace with your model as needed
+
+    $headers = [
+        "Content-type"        => "text/csv",
+        "Content-Disposition" => "attachment; filename=$fileName",
+        "Pragma"              => "no-cache",
+        "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+        "Expires"             => "0"
+    ];
+
+    // Your column headers
+    $columns = ['ID', 'Name', 'Email', 'Created At'];
+
+    $callback = function() use($users, $columns) {
+        $file = fopen('php://output', 'w');
+
+        // 🔥 Title Row
+        fputcsv($file, ['User Export Report - Generated on ' . now()->format('Y-m-d H:i:s')]);
+        
+        // ✅ Empty row for spacing (optional)
+        fputcsv($file, []);
+        
+        // 🧩 Column headers
+        fputcsv($file, $columns);
+
+        // 🔁 Data rows
+        foreach ($users as $user) {
+            fputcsv($file, [
+                $user->id,
+                $user->name,
+                $user->email,
+                $user->created_at,
+            ]);
+        }
+
+        fclose($file);
+    };
+
+    return response()->stream($callback, 200, $headers);
+}
+
+
+    public function exportUsersToCSV_OLD()
+    {
+        $fileName = 'users.csv';
+        $users = \App\Models\User::all(); // You can adjust the model accordingly
+    
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+    
+        $columns = ['ID', 'Name', 'Email', 'Created At'];
+    
+        $callback = function() use($users, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+    
+            foreach ($users as $user) {
+                fputcsv($file, [
+                    $user->id,
+                    $user->name,
+                    $user->email,
+                    $user->created_at,
+                ]);
+            }
+    
+            fclose($file);
+        };
+    
+        return response()->stream($callback, 200, $headers);
+    }
 
 }

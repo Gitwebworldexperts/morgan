@@ -3,6 +3,10 @@ namespace App\Http\Controllers;
 
 use App\Models\RentPropertie;
 use App\Models\BuyPropertie;
+
+use App\Models\TempRentPropertie;
+use App\Models\TempBuyPropertie;
+
 use App\Models\ListingDetail;
 use DB;
 use App\Models\PropertyType;
@@ -15,6 +19,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use App\Jobs\DownloadImageJob;
+use Laravel\Socialite\Facades\Socialite;
 
 
 use Illuminate\Support\Facades\Artisan;
@@ -47,7 +52,66 @@ class XMLController extends Controller
         ]);
     }
 
-   
+ public function syncRaptor()
+{
+    ini_set('max_execution_time', 0);
+    ini_set('memory_limit', '2G');
+    // config(['app.debug' => true]);
+
+    $url = "https://feed.propertyraptor.com/raptorfeed/df/eu20_001/xml/RfDataFeed.xml";
+    $response = Http::get($url);
+
+    if ($response->successful()) {
+        $listingIds = [];
+        $xmlContent = simplexml_load_string($response->body());
+        $xmlArray = json_decode(json_encode($xmlContent), true);
+
+        $batchSize = 50;
+        $properties = array_chunk($xmlArray['property'], $batchSize);
+
+        foreach ($properties as $batch) {
+            foreach ($batch as $item) {
+                $listingIds[] = $item['reference_number'];
+            }
+        }
+
+        // Fetch existing properties
+        $rentProperties = RentPropertie::whereNotNull('reference_number')->get();
+        $buyProperties = BuyPropertie::whereNotNull('reference_number')->get();
+
+        $rentReferenceNumbers = $rentProperties->pluck('reference_number')->toArray();
+        $buyReferenceNumbers = $buyProperties->pluck('reference_number')->toArray();
+
+        $mergedArray = array_merge($rentReferenceNumbers, $buyReferenceNumbers);
+        $difference = array_diff($mergedArray, $listingIds); // Properties to be removed
+
+        // Copy missing properties to temp tables
+        $missingRentProperties = $rentProperties->whereIn('reference_number', $difference);
+        $missingBuyProperties = $buyProperties->whereIn('reference_number', $difference);
+
+        if ($missingRentProperties->isNotEmpty()) {
+            foreach ($missingRentProperties as $property) {
+                TempRentPropertie::create($property->toArray());
+            }
+        }
+
+        if ($missingBuyProperties->isNotEmpty()) {
+            foreach ($missingBuyProperties as $property) {
+                TempBuyPropertie::create($property->toArray());
+            }
+        }
+
+        // Remove missing properties from the main tables
+        RentPropertie::whereIn('reference_number', $difference)->delete();
+        BuyPropertie::whereIn('reference_number', $difference)->delete();
+
+        return "Sync Raptor Completed - Copied & Removed Missing Properties";
+    } else {
+        \Log::error('SYNC Raptor: Failed to retrieve XML data from ' . $url);
+        return response()->json(['error' => 'Failed to retrieve XML data SYNC Raptor'], 500);
+    }
+}
+
 
     public function getXml()
 {
@@ -229,7 +293,7 @@ public function handlePropertyType($item, &$property)
 {
     if (isset($item['category'])) {
         $propertyType = PropertyType::firstOrCreate(
-            ['type_name' => $item['category'], 'property' => $item['offering_type'] == "Rental" ? 'rent' : 'buy'],
+            ['type_name' => $item['property_type'], 'property' => $item['offering_type'] == "Rental" ? 'rent' : 'buy'],
             ['status' => '1']
         );
         $property->category_id = $propertyType->id;

@@ -1,546 +1,200 @@
-/*!Main Css v1.54 by @Prem */
+/*!Main Css v1.54 by @Prem*/
 
-document.querySelectorAll('.Wishlist').forEach(function(wishlist) {
-    wishlist.addEventListener('click', function() {
-        const productSlug = this.getAttribute('data-url'); // Extract the slug from the URL
-        const userId = this.getAttribute('data-auth');
-
-        const productId = this.getAttribute('data-id');
-        const producttype = this.getAttribute('data-type');
-    
-    if (!userId) {
-        alert('You must be logged in to add to the wishlist.');
-        return;
-    }
-
-    
-    // Send a POST request to the server to add the item to the wishlist
-    fetch('/development/morgan/web/wishlist', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({
-            product_slug: productSlug,
-            product_id: productId,
-            product_type: producttype,
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Toggle the heart icons based on the response
-     	// Check the server response and update the wishlist icon accordingly
-if (data.message === 'Product added to wishlist!') {
-    // Hide the outlined heart icon and display the filled heart icon
-    const heartOutlined = this.querySelector('.heart-o-icon');
-    const heartFilled = this.querySelector('.heart-icon');
-    
-	let timerInterval;
-	Swal.fire({
-	  title: "Successfully added to wishlist",
-	  timer: 2000,
-	  timerProgressBar: true,
-	  didOpen: () => {
-	    Swal.showLoading();
-	    const timer = Swal.getPopup().querySelector("b");
-	    timerInterval = setInterval(() => {
-	      timer.textContent = `${Swal.getTimerLeft()}`;
-	    }, 100);
-	  },
-	  willClose: () => {
-	    clearInterval(timerInterval);
-	  }
-	}).then((result) => {
-	  
-	});
-
-
-    
-    if (heartOutlined && heartFilled) { // Ensure elements exist to avoid errors
-        heartOutlined.style.setProperty('display', 'none', 'important'); // Use !important
-        heartFilled.style.setProperty('display', 'inline', 'important'); // Use !important
-    } else {
-        console.error('Heart icons not found in the DOM.');
-    }
-} else if (data.message === 'Product removed from wishlist!') {
-    // Hide the filled heart icon and display the outlined heart icon
-    const heartOutlined = this.querySelector('.heart-o-icon');
-    const heartFilled = this.querySelector('.heart-icon');
-    	let timerInterval;
-	Swal.fire({
-	  title: "Successfully removed from wishlist",
-	  timer: 2000,
-	  timerProgressBar: true,
-	  didOpen: () => {
-	    Swal.showLoading();
-	    const timer = Swal.getPopup().querySelector("b");
-	    timerInterval = setInterval(() => {
-	      timer.textContent = `${Swal.getTimerLeft()}`;
-	    }, 100);
-	  },
-	  willClose: () => {
-	    clearInterval(timerInterval);
-	  }
-	}).then((result) => {
-	  
-	});
-    if (heartOutlined && heartFilled) { // Ensure elements exist to avoid errors
-        heartOutlined.style.setProperty('display', 'inline', 'important'); // Use !important
-        heartFilled.style.setProperty('display', 'none', 'important'); // Use !important
-    } else {
-        console.error('Heart icons not found in the DOM.');
-    }
-} else {
-    // Handle unexpected messages or errors
-    console.warn('Unexpected message:', data.message);
-}
-
-        
-
-    });
-    });
+window.addEventListener('load', () => {
+  document.getElementById('preloader').style.display = 'none';
+//   document.getElementById('content').style.display = 'block';
 });
 
-// document.querySelector('.Wishlist').addEventListener('click', function() {
-    
-// });
+// Wishlist Toggle
+document.querySelectorAll('.Wishlist').forEach(wishlist => {
+  wishlist.addEventListener('click', function () {
+    const productSlug = this.dataset.url;
+    const userId = this.dataset.auth;
+    const productId = this.dataset.id;
+    const productType = this.dataset.type;
 
+    if (!userId) return alert('You must be logged in to add to the wishlist.');
 
-(function() {
-    // Get all images on the page
-    const images = document.querySelectorAll('img');
-    
-    // Iterate through each image
-    images.forEach(img => {
-        // Check if the image has an alt attribute
-        if (!img.hasAttribute('alt') || img.alt.trim() === '') {
-            // Add or update the alt attribute
-            img.setAttribute('alt', 'morgan');
-            // console.log(`Alt attribute added to:`, img);
-        }
+    fetch('/wishlist', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+      },
+      body: JSON.stringify({ product_slug: productSlug, product_id: productId, product_type: productType })
+    })
+    .then(res => res.json())
+    .then(data => {
+      const heartOutlined = this.querySelector('.heart-o-icon');
+      const heartFilled = this.querySelector('.heart-icon');
+      const showSwal = (msg) => {
+        let timerInterval;
+        Swal.fire({
+          title: msg,
+          timer: 2000,
+          timerProgressBar: true,
+          didOpen: () => {
+            Swal.showLoading();
+            timerInterval = setInterval(() => {
+              Swal.getPopup().querySelector("b").textContent = `${Swal.getTimerLeft()}`;
+            }, 100);
+          },
+          willClose: () => clearInterval(timerInterval)
+        });
+      };
+
+      if (data.message.includes('added')) {
+        showSwal("Successfully added to wishlist");
+        heartOutlined?.style.setProperty('display', 'none', 'important');
+        heartFilled?.style.setProperty('display', 'inline', 'important');
+      } else if (data.message.includes('removed')) {
+        showSwal("Successfully removed from wishlist");
+        heartOutlined?.style.setProperty('display', 'inline', 'important');
+        heartFilled?.style.setProperty('display', 'none', 'important');
+      } else {
+        console.warn('Unexpected message:', data.message);
+      }
     });
+  });
+});
 
-    console.log('Alt attribute check completed.');
+// Add alt to all images if missing
+(() => {
+  document.querySelectorAll('img').forEach(img => {
+    if (!img.hasAttribute('alt') || !img.alt.trim()) img.setAttribute('alt', 'morgan');
+  });
+  console.log('Alt attribute check completed.');
 })();
 
+// Owl Carousel Initializations (simplified batch init)
+const carousels = [
+  { id: "#instructor-slider", loop: true, items: 4 },
+  { id: "#single_slider", loop: false, items: 4 },
+  { id: "#NewDevelopment", loop: true, items: 4 },
+  { id: "#private-office", loop: true, items: 4 },
+  { id: "#Brands", loop: true, items: 5, autoplay: true },
+  { id: "#Top-Destinations", loop: true, items: 2, dots: true },
+  { id: "#Testimonials", loop: true, items: 3, dots: true },
+  { id: "#region-slider", loop: true, items: 3.4 },
+  { id: "#team-slider", loop: true, items: 3.4 },
+  { id: "#testimonials", loop: true, items: 1, dots: true },
+];
 
-var owl = $("#instructor-slider");
-owl.owlCarousel({
-    margin: 20,
-    items: 4,
-    dots: false,
-    loop: true,
-    nav: true,
-    autoHeight: true,
-    responsive: {
-        0: {
-            dots: false,
-            items: 1.5,
-        },
-        600: {
-            dots: false,
-            items: 2.5,
-        },
-        1000: {
-            dots: false,
-            items: 4,
-        },
-    },
-});
-
-
-
-
-var owl = $("#NewDevelopment");
-owl.owlCarousel({
-    margin: 20,
-    items: 4,
-    dots: false,
-    loop: true,
-    nav: true,
-    autoHeight: true,
-    responsive: {
-        0: {
-            dots: false,
-            items: 1.3,
-            margin: 10
-        },
-        600: {
-            dots: false,
-            items: 2.5,
-        },
-        1000: {
-            dots: false,
-            items: 4,
-        },
-    },
-});
-
-
-
-var owl = $("#private-office");
-owl.owlCarousel({
-    margin: 10,
-    items: 4,
-    dots: false,
-    loop: true,
-    nav: true,
-    autoHeight: true,
-    responsive: {
-        0: {
-            dots: false,
-            items: 1.5,
-        },
-        600: {
-            dots: false,
-            items: 2.5,
-        },
-        1000: {
-            dots: false,
-            items: 4,
-        },
-    },
-});
-
-
-
-var owl = $("#Brands");
-owl.owlCarousel({
-    margin: 20,
-    items: 5,
-    dots: false,
-    autoplay: true,
-    loop: true,
-    nav: true,
-    autoHeight: true,
-    responsive: {
-        0: {
-            dots: false,
-            items: 3,
-        },
-        600: {
-            dots: false,
-            items: 3,
-        },
-        1000: {
-            dots: false,
-            items: 5,
-        },
-    },
-});
-
-var owl = $("#Top-Destinations");
-owl.owlCarousel({
-    margin: 20,
-    items: 4,
-    dots: false,
-    loop: true,
-    nav: true,
-    autoHeight: true,
-    responsive: {
-        0: {
-            dots: true,
-            items: 1,
-        },
-        600: {
-            dots: true,
-            items: 1,
-        },
-        767: {
-            dots: true,
-            items: 2,
-        },
-        1000: {
-            dots: true,
-            items: 2,
-        },
-    },
-});
-
-
-
-var owl = $("#Testimonials");
-owl.owlCarousel({
-    margin: 30,
-    items: 1,
-    dots: true,
-    loop: true,
-    nav: true,
-    autoHeight: true,
-    responsive: {
-        0: {
-            dots: true,
-            items: 1,
-        },
-        600: {
-            dots: true,
-            items: 2,
-        },
-        1000: {
-            dots: true,
-            items: 3,
-        },
-    },
-});
-
-
-
-
-var owl = $("#region-slider");
-	owl.owlCarousel({
-		margin: 30,
-		items: 3.4,
-		dots: false,
-		loop: true,
-		nav: true,
-		autoHeight: true,
-		responsive: {
-			0: {
-				items: 1.2,
-				margin: 10,
-			},
-			600: {
-				items: 2.5,
-			},
-			1000: {
-				items: 3.4,
-			},
-		},
-	});
-
-
-
-var owl = $("#team-slider");
-	owl.owlCarousel({
-		margin: 30,
-		items: 3.4,
-		dots: false,
-		loop: true,
-		nav: true,
-		autoHeight: true,
-		responsive: {
-			0: {
-				items: 1.2,
-				margin: 10,
-			},
-			600: {
-				items: 2.5,
-			},
-			1000: {
-				items: 3.4,
-			},
-		},
-	});
-
-
-
-
-
-var owl = $("#testimonials");
-	owl.owlCarousel({
-		margin: 0,
-		items: 1,
-		dots: true,
-		loop: true,
-		nav: true,
-		autoHeight: true,
-		responsive: {
-			0: {
-				items: 1,
-			},
-			600: {
-				items: 1,
-			},
-			1000: {
-				items: 1,
-			},
-		},
-	});
-
-
-
-
-
-
-
-
-
-
-
-
-
-(function($) {
-
-    $(".nav-btn.nav-slider").on("click", function() {
-        $(".overlay").show();
-        $(".sidebar").toggleClass("open");
+carousels.forEach(({ id, loop, items, dots = false, autoplay = false }) => {
+  const el = $(id);
+  if (el.length) {
+    el.owlCarousel({
+      margin: 20,
+      nav: true,
+      loop,
+      dots,
+      autoplay,
+      autoHeight: true,
+      responsive: {
+        0: { items: Math.min(items, 1.5), margin: 10, dots },
+        600: { items: Math.min(items, 2.5), dots },
+        1000: { items, dots }
+      }
     });
+  }
+});
 
-    $(".overlay").on("click", function() {
-        if ($(".sidebar").hasClass("open")) {
-            $(".sidebar").removeClass("open");
-        }
-        $(this).hide();
-    });
-    $(".overlay-body").on("click", function() {
-        if ($(".sidebar").hasClass("open")) {
-            $(".sidebar").removeClass("open");
-        }
-        $(this).hide();
-    });
-
-    $(".filterButoon").on("click", function() {
-        $(".overlay-body").show();
-        $(".Products-Sidebar").toggleClass("open-filter");
-    });
-
-    $(".overlay-body").on("click", function() {
-        if ($(".Products-Sidebar").hasClass("open-filter")) {
-            $(".Products-Sidebar").removeClass("open-filter");
-        }
-        $(this).hide();
-    });
-
+// Sidebar / Filter Toggle
+(($) => {
+  $(".nav-btn.nav-slider").click(() => $(".overlay").show() && $(".sidebar").toggleClass("open"));
+  $(".overlay, .overlay-body").click(() => {
+    $(".sidebar").removeClass("open");
+    $(".overlay, .overlay-body").hide();
+  });
+  $(".filterButoon").click(() => $(".overlay-body").show() && $(".Products-Sidebar").toggleClass("open-filter"));
 })(jQuery);
 
-
-
-
-/*---- Bottom To Top Scroll Script ---*/
-$(window).on('scroll', function() {
-    var height = $(window).scrollTop();
-    if (height > 600) {
-        $('#back2Top').fadeIn();
-    } else {
-        $('#back2Top').fadeOut();
-    }
+// Back to Top Button
+$(window).on('scroll', () => {
+  $('#back2Top').fadeToggle($(window).scrollTop() > 600);
 });
 
-
-
-
-$(window).scroll(function() {
-    var scroll = $(window).scrollTop();
-
-    if (scroll >= 50) {
-        $(".header").addClass("header-fixed");
-    } else {
-        $(".header").removeClass("header-fixed");
-    }
+// LightGallery Init
+$(document).ready(() => {
+  lightGallery(document.getElementById('aniimated-thumbnials'), { thumbnail: true });
 });
 
+// Sticky Header
+$(window).scroll(() => {
+  $(".header").toggleClass("header-fixed", $(window).scrollTop() >= 50);
+});
 
-document.addEventListener("DOMContentLoaded", function() {
-  const rangeInput = document.querySelectorAll(".range-input input"),
-    priceInput = document.querySelectorAll(".price-input input"),
-    range = document.querySelector(".slider .progress");
-  let priceGap = 1000;
+// Price Range Slider
+document.addEventListener("DOMContentLoaded", () => {
+  const rangeInputs = document.querySelectorAll(".range-input input");
+  const priceInputs = document.querySelectorAll(".price-input input");
+  const range = document.querySelector(".slider .progress");
+  const gap = 1000;
 
-  priceInput.forEach((input) => {
-    input.addEventListener("input", (e) => {
-      let minPrice = parseInt(priceInput[0].value),
-        maxPrice = parseInt(priceInput[1].value);
+  const syncRange = (min, max) => {
+    priceInputs[0].value = min;
+    priceInputs[1].value = max;
+    range.style.left = `${(min / rangeInputs[0].max) * 100}%`;
+    range.style.right = `${100 - (max / rangeInputs[1].max) * 100}%`;
+  };
 
-      if (maxPrice - minPrice >= priceGap && maxPrice <= rangeInput[1].max) {
-        if (e.target.className === "input-min") {
-          rangeInput[0].value = minPrice;
-          range.style.left = (minPrice / rangeInput[0].max) * 100 + "%";
-        } else {
-          rangeInput[1].value = maxPrice;
-          range.style.right = 100 - (maxPrice / rangeInput[1].max) * 100 + "%";
-        }
+  priceInputs.forEach((input, i) => {
+    input.addEventListener("input", () => {
+      const [min, max] = [+priceInputs[0].value, +priceInputs[1].value];
+      if (max - min >= gap && max <= rangeInputs[1].max) {
+        rangeInputs[i].value = i === 0 ? min : max;
+        syncRange(min, max);
       }
     });
   });
 
-  rangeInput.forEach((input) => {
-    input.addEventListener("input", (e) => {
-      let minVal = parseInt(rangeInput[0].value),
-        maxVal = parseInt(rangeInput[1].value);
-
-      if (maxVal - minVal < priceGap) {
-        if (e.target.className === "range-min") {
-          rangeInput[0].value = maxVal - priceGap;
-        } else {
-          rangeInput[1].value = minVal + priceGap;
-        }
-      } else {
-        priceInput[0].value = minVal;
-        priceInput[1].value = maxVal;
-        range.style.left = (minVal / rangeInput[0].max) * 100 + "%";
-        range.style.right = 100 - (maxVal / rangeInput[1].max) * 100 + "%";
-      }
+  rangeInputs.forEach(input => {
+    input.addEventListener("input", () => {
+      let [min, max] = [+rangeInputs[0].value, +rangeInputs[1].value];
+      if (max - min < gap) {
+        input.className.includes("range-min") ? rangeInputs[0].value = max - gap : rangeInputs[1].value = min + gap;
+      } else syncRange(min, max);
     });
   });
 });
 
-		// filter on rent page			
-		function openNav() {
-			document.getElementById("filters-sidebar").style.width = "360px";
-			document.getElementById("filters-sidebar").style.right = "0px";
-			document.getElementById("filter-overlay").style.display = "block";
-		}
+// Filter Sidebar Open/Close
+function openNav() {
+  document.getElementById("filters-sidebar").style.cssText = "width:360px;right:0px;";
+  document.getElementById("filter-overlay").style.display = "block";
+}
+function closeNav() {
+  document.getElementById("filters-sidebar").style.cssText = "width:0;right:-400px;";
+  document.getElementById("filter-overlay").style.display = "none";
+}
+document.getElementById("filter-overlay")?.addEventListener("click", closeNav);
 
-		function closeNav() {
-			document.getElementById("filters-sidebar").style.width = "0";
-			document.getElementById("filters-sidebar").style.right = "-400px";
-			document.getElementById("filter-overlay").style.display = "none";
-		}
-		//document.getElementById("filter-overlay").addEventListener("click", closeNav);
-		const filterOverlay = document.getElementById("filter-overlay");
-if (filterOverlay) {
-  filterOverlay.addEventListener("click", closeNav);
-} else {
-  console.warn("filter-overlay element not found.");
+// Document Download Handler
+function checkAndDownload(url, type, e) {
+  if (!url) {
+    $('#alertTitle').html('Document Not Found');
+    $('#alertContent').html('Please connect with the admin regarding this document');
+    return $('#documentNotFound').modal('show');
+  }
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = '';
+  link.click();
 }
 
-		
-		
-		 $(document).ready(function() {
-          lightGallery(document.getElementById('aniimated-thumbnials'), {
-            thumbnail: true
-          });
-        });
+// Show More Toggle
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.parent-section').forEach(section => {
+    const btn = section.querySelector('.link-btn');
+    const content = section.querySelector('.show_more_content');
+    const maxHeight = 300;
+    content.style.maxHeight = `${maxHeight}px`;
+    content.style.overflow = 'hidden';
 
-
-
-        function checkAndDownload(url, type, e) {
-            if (!url) {
-                // Show the modal alert
-                $('#alertContent').html('Please connect with the admin regarding this document');
-                $('#alertTitle').html('Document Not Found');
-                $('#documentNotFound').modal('show');                
-                return;
-            }
-            // For downloading the document
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = '';
-            link.click();
-        }
-        
-            document.addEventListener('DOMContentLoaded', function () {
-		const sections = document.querySelectorAll('.parent-section');
-
-		sections.forEach(function (section) {
-		    const toggleButton = section.querySelector('.link-btn');
-		    const contentDiv = section.querySelector('.show_more_content');
-		    const maxHeight = 300; // Set the maximum height for the initial view, adjust as needed.
-
-		    // Initially hide the content and show the "Show More" button
-		    contentDiv.style.maxHeight = `${maxHeight}px`;
-		    contentDiv.style.overflow = 'hidden';
-
-		    toggleButton.addEventListener('click', function () {
-			// Toggle content visibility
-			if (contentDiv.style.maxHeight === `${maxHeight}px`) {
-			    contentDiv.style.maxHeight = '20000px';  // Set a large value for smooth transition
-			    toggleButton.textContent = 'Show Less';  // Change button text
-			} else {
-			    contentDiv.style.maxHeight = `${maxHeight}px`;  // Collapse the content
-			    toggleButton.textContent = 'Show More';  // Change button text
-			}
-		    });
-		});
-	    });
+    btn.addEventListener('click', () => {
+      const isCollapsed = content.style.maxHeight === `${maxHeight}px`;
+      content.style.maxHeight = isCollapsed ? '20000px' : `${maxHeight}px`;
+      btn.textContent = isCollapsed ? 'Show Less' : 'Show More';
+    });
+  });
+});

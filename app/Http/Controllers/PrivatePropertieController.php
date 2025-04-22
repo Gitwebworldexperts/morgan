@@ -44,6 +44,7 @@ class PrivatePropertieController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'price_input' => 'nullable|string|max:255',
             'meta_title' => 'required|string|max:255',
             'meta_description2' => 'required|string|max:255',
             // 'address' => 'max:255',
@@ -71,6 +72,7 @@ class PrivatePropertieController extends Controller
         $property->status = $request->status; 
         $property->property_size = $request->property_size;
         $property->name = $request->name;
+        $property->price_input = $request->price_input;
         $property->community_id = $request->community_id;
         $property->meta_title = $request->meta_title;
         $property->meta_description2 = $request->meta_description2;
@@ -267,7 +269,8 @@ class PrivatePropertieController extends Controller
            $request->validate([
             'name' => 'required|string|max:255',
             'meta_title' => 'required|string|max:255',
-            'meta_description2' => 'required|string|max:255',
+            'meta_description2' => 'required|string',
+            'price_input' => 'nullable|string|max:255',
             // 'address' => 'max:555',
             // 'google_maps_link' => 'max:255',
             // 'property_description' => 'max:255',
@@ -293,6 +296,7 @@ class PrivatePropertieController extends Controller
     $property->property_size = $request->property_size;
     // Update the property fields
     $property->name = $request->name;
+    $property->price_input = $request->price_input;
     $property->community_id = $request->community_id;
     $property->meta_title = $request->meta_title;
     $property->meta_description2 = $request->meta_description2;

@@ -8,6 +8,13 @@ use Illuminate\Http\Request;
 
 class ReportIndividualController extends Controller
 {
+    
+    public function __construct()
+    {
+    
+    }
+
+    
     public function index()
     {
         $reports = ReportIndividual::withCount('reportForms')->get();
@@ -23,7 +30,9 @@ class ReportIndividualController extends Controller
 
     public function show($slug)
     {
+        // dd($slug);
         $report = ReportIndividual::where(['slug'=>$slug,"status" => 'active'])->first();
+        
         if($report){
             if($report->report_type == 3){
                 $testimonials = Testimonial::whereIn('id', json_decode($report->testimonial_description, true))->get();

@@ -17,13 +17,54 @@ $copy = $footerSection->copyright;
         <meta name="title" content="Dubai’s Branded Residences Report – H1 2024">
         <meta description="{{ $report->meta_description }}" />
         <link href="{{ asset('css/indireport/bootstrap.css') }}" rel="stylesheet" type="text/css" />
-        <link href="{{ asset('css/branded/common.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('css/branded/common.css?v1') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('css/branded/responsive.css') }}" rel="stylesheet" type="text/css" /> 
        
+        <link rel="canonical" href="{{ url()->current() }}">
+
        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />       
+         <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-H0L8EQZMHD"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'G-H0L8EQZMHD');
+    </script>
+    <meta name="google-site-verification" content="ZdLhyH7_yM8MxGSfrrIQu3sxAh8c1dwoN7A2mvQsBMI" />
+    
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NTMCLWV');</script>
+    <!-- End Google Tag Manager -->
+    
+    
+       <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1164815760335008');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1164815760335008&ev=PageView&noscript=1"
+    /></noscript>
     </head>
     <body>
-	 
+	<!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NTMCLWV"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     
     @if($whatsapp)
       <div class="whatsapp-float">    
@@ -83,6 +124,63 @@ $copy = $footerSection->copyright;
                 </div>
             </div>
         </section>
+
+
+    @if(isset($report->slug) && !empty($report->slug) && $report->slug == "dubai-branded-residences-report-h2-2024")
+        @php
+            $darker_BG = "#800020";
+            $lighter_color_dark_BG = "#F7E7CE";
+            $button_color = "#E4C9A4";
+            $darker_color_light_BG = "#3E2723";
+        @endphp
+    @endif
+    
+    @if(isset($darker_BG))
+        <style>
+            .header.js-header.darkHeader.darkHeader-2,.copyright,section.space.ContentSecion,.formSection {
+                background: <?= $darker_BG ?>;
+            }
+            .copyright p,.footerIcons ul li a,.bannerContent h1,.bannerContent p {
+                color: #F7E7CE !important;
+                
+            } 
+            .ContentSecion2{
+                background: #F7E7CE;
+            }
+            .ContentSecion2-Box h3,.ContentSecion2-Box ul li{
+                color: <?= $darker_color_light_BG ?>;
+            }
+            .ContentSecion p{
+                color: #F7E7CE !important;
+            }
+        </style>
+    @endif
+    
+    @if(isset($button_color))
+        <style>
+            .green-btn,.green-btn:hover,button.form-BTN,button.form-BTN:hover{
+                background: <?= $button_color ?>;
+                color: <?= $darker_color_light_BG ?>;
+            }
+            .FormBox{
+                background: <?= $lighter_color_dark_BG ?>;
+            }
+            .FormBox .formHeading h3{
+                color: <?= $darker_color_light_BG ?>;
+            }
+            input.form-control::placeholder,body .FormBox .form-control, body .FormBox .sib-form input, body .sib-form .input:not(textarea), body .sib-form .input__button, body .sib-form .input:first-child, body .sib-form .input__affix:first-child, body .sib-form .input:last-child, body .sib-form .input__affix:last-child{
+                color: <?= $darker_color_light_BG ?>;                
+            }
+            input.form-control::placeholder{
+                color: <?= $darker_color_light_BG ?> !important;
+            }
+            input.form-control::-webkit-input-placeholder { color: <?= $darker_color_light_BG ?> !important; }
+            input.form-control:-moz-placeholder { color: <?= $darker_color_light_BG ?> !important; }
+            input.form-control::-moz-placeholder { color: <?= $darker_color_light_BG ?> !important; }
+            input.form-control:-ms-input-placeholder { color: <?= $darker_color_light_BG ?> !important; }
+        </style>
+    @endif
+
 
         <section class="space ContentSecion2">
             <div class="container">
@@ -176,7 +274,9 @@ $copy = $footerSection->copyright;
 
                                         @endphp
                                         @foreach($footerSections as $key => $item)
-                                            <li><a style="color: #fff;" target="_blank" href="{{$key}}">{!! $item !!}</a></li>    
+                                            @if(isset($item[0]) && isset($item[1]))
+                                                <li><a style="color: #fff;" target="_blank" href="{{$key}}">{!! $item[0] !!}</a></li>    
+                                            @endif
                                         @endforeach
                                         @endif
                                 </ul>
@@ -186,7 +286,7 @@ $copy = $footerSection->copyright;
                 </div>
             </div>
         </footer>
-
+    <script src="https://widgets.leadconnectorhq.com/loader.js" data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js" data-widget-id="67e261b014647143f91cdbf4"></script>
         <script src="{{ asset('js/indireport/jquery-3.6.0.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/indireport/bootstrap.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/indireport/main.js') }}" type="text/javascript"></script>

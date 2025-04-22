@@ -44,7 +44,7 @@
                                     <a class="edit_button" href="{{ route('reportform.data', $report->id) }}">
                                     <i class="fa-solid fa-bars-progress"></i> Data
                                     </a>
-                                    <a class="edit_button" href="{{ route('report_inidividual.show', $report->slug) }}">
+                                    <a class="edit_button" href="{{ route('report_inidividual.shows', $report->slug) }}">
                                         <i class="fa-solid fa-eye"></i> View
                                     </a>
                                     <!-- Edit Report -->

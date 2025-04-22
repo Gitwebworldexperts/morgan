@@ -122,6 +122,7 @@
                                 @csrf
                                 <div class="form-group">
                                     <label>Property Price</label>
+                                    <input type="text" name="form" style="display:none;">
                                     <input class="form-control" id="price" name="property_price" placeholder="1,000,000" type="text" required />
                                 </div>
                                 <div class="form-group">

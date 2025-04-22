@@ -43,7 +43,7 @@
                 </div>
                 <div class="col-lg-4 col-12">
                     <div class="head-btn"> 
-                        <a href="{{ $careerPage['button_link'] ?? '#' }}" target="_blank" class="green-btn ml-auto">Current job oppening</a> 
+                        <a href="{{ $careerPage['button_link'] ?? '#' }}" target="_blank" class="green-btn ml-auto">Current job openings</a> 
                     </div>
                 </div>
                 <div class="col-12">
@@ -58,11 +58,13 @@
                 <div class="col-lg-6 col-md-6 col-12">
                     <div class="job-box">
                         <div class="company-logo">
-                            <img src="{{ asset('img/compnay-logo.png') }}" class="" alt="">
+                            <a href="https://www.morgansrealty.com/careers/apply">
+                                <img src="{{ asset('img/compnay-logo.png') }}" class="" alt="">
+                            </a>
                         </div>
                         <div class="job-info">
                             <span>{{ $item->position }}</span>
-                            <h4>{{ $item->job_name }}</h4>
+                            <h4><a href="{{ route('detail.career', $item->id) }}">{{ $item->job_name }}</a></h4>
                             <div class="job-location">
                                 <ul>
                                     <li><img src="{{ asset('img/clock.svg') }}" alt=""> {{ $item->job_type }}</li>
@@ -71,7 +73,11 @@
                             </div>
                         </div>
                         <!-- <a href="{{ route('detail.career', base64_encode($item->id)) }}" class="link-btn">Apply Now</a> -->
+                        @if($item->slug)
+                        <a href="{{ route('detail.career', $item->slug) }}" class="link-btn">Apply Now</a>
+                        @else
                         <a href="{{ route('detail.career', $item->id) }}" class="link-btn">Apply Now</a>
+                        @endif
                     </div>
                 </div>
                 @endif
@@ -84,8 +90,8 @@
     </div>
 </section>
 
-
-<section class="video-section space">
+@if(0)
+<section class="video-section space ">
             <div class="container">
 				<div class="row">
 					<div class="col-12">
@@ -105,7 +111,87 @@
 				</div>
             </div>
         </section>
+@endif
 
+        <!-- TODO remove -->
+        <section class="list-us-sec studio-list-form space">
+            <div class="container">
+				<div class="row">
+					<div class="col-12">
+						<div class="heading-pnel fff text-center">
+							<h2>Apply Now</h2>
+						</div>
+					</div>
+                </div>
+                <div class="row">
+					<div class="col-lg-12">
+						<div class="list-from">
+						    @if(session('success'))
+                                <div class="alert alert-success">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+                            @if($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+                            @if(session('error'))
+                                <div class="alert alert-danger">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
+                            <form action="{{ route('career.generic.submit') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label>Full Name</label>
+                                            <input type="text" name="form" style="display:none;">
+                                            <input class="form-control" placeholder="John Doe" name="full_name" type="text" required="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label>Email</label>
+                                            <input class="form-control" placeholder="example@gmail.com" name="email" type="email" required="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label>Contact Number</label>
+                                            <input class="form-control" placeholder="23543 4343 3433" name="contact_number" type="text" required="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label>Experience</label>
+                                            <input class="form-control" name="experience" type="text" required="">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>Add Resume</label>
+                                            <input class="form-control" name="resume" type="file" required="" accept=".doc,.docx,.pdf">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <button type="submit" style="margin-left: 0;margin-top: 10px;" class="green-btn submit-btn">Submit <img src="{{ asset('/img/arrow-right3.svg') }}" alt="morgan"></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+						</div>
+					</div>
+                </div>
+            </div>
+        </section>
+        <!-- TODO remove -->
 
         <section class="gallery-section space pt-0">
             <div class="container">
@@ -123,7 +209,7 @@
                             @foreach($careerPage->images as $key => $item)
                                 <div id="item-{{ $key }}">
                                     <div class="gallery-img">
-                                        <img src="{{ asset($item->image_path) }}" class="w-100" alt="">
+                                        <img src="{{ assets($item->image_path) }}" class="w-100" alt="">
                                     </div>
                                 </div>
                             @endforeach

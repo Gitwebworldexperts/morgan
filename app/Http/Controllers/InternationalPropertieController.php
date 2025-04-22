@@ -50,8 +50,9 @@ class InternationalPropertieController extends Controller
         {
             $request->validate([
                 'name' => 'required|string|max:255',
+                'price_input' => 'nullable|string|max:255',
                 'meta_title' => 'required|string|max:255',
-                'meta_description2' => 'required|string|max:255',
+                'meta_description2' => 'required|string',
                 // 'address' => 'max:255',
                 // 'google_maps_link' => 'max:255',
                 // 'property_description' => 'max:255',
@@ -79,6 +80,7 @@ class InternationalPropertieController extends Controller
             $property->status = $request->status; 
             $property->property_size = $request->property_size;
             $property->name = $request->name;
+            $property->price_input = $request->price_input;
             $property->community_id = $request->community_id;
             $property->meta_title = $request->meta_title;
             $property->meta_description2 = $request->meta_description2;
@@ -273,8 +275,9 @@ class InternationalPropertieController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'price_input' => 'nullable|string|max:255',
             'meta_title' => 'required|string|max:255',
-            'meta_description2' => 'required|string|max:255',
+            'meta_description2' => 'required|string',
             // 'address' => 'max:255',
             // 'google_maps_link' => 'max:255',
             // 'property_description' => 'max:255',
@@ -303,6 +306,7 @@ class InternationalPropertieController extends Controller
     // Update the property fields
     $property->iframe = $request->iframe;
     $property->name = $request->name;
+    $property->price_input = $request->price_input;
     $property->community_id = $request->community_id;
     $property->meta_title = $request->meta_title;
     $property->meta_description2 = $request->meta_description2;

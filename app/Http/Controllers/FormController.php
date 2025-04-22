@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\FormData;
 use DateTime;
 use DateTimeZone;
+use App\Mail\FormMail;
+use Illuminate\Support\Facades\Mail;
 
 use App\Services\ApiRequestService;
 
@@ -76,6 +78,7 @@ class FormController extends Controller
             'fullName' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'contactNumber' => 'required|string|max:20',
+            'form' => 'max:0'
             // 'message' => 'required|string',
         ]);
         $previousUrl = url()->previous();
@@ -90,36 +93,55 @@ class FormController extends Controller
             'ip_address' => $request->ip(),
             'is_api' => false, 
         ]);
+        
     
         $nameParts = explode(' ', trim($request->fullName));
         $firstName = $nameParts[0];
         $lastName = isset($nameParts[1]) ? implode(' ', array_slice($nameParts, 1)) : 'NA';
     
-        // Prepare mandatory fields for `sendRequest`
-        $requestData = [
-            "userInfo" => [
-                "submitDateTime" => now()->setTimezone("Asia/Singapore")->format('Y-m-d H:i:s'),
-                "sourceUniqueId" => "form-" . $formData->id,
-                "firstName" => $firstName,
-                "lastName" => $lastName,
-                "phone" => $formData->contact_number,
-                "email" => $formData->email,
-                "listingId" => $request->listingId ?? "default-listing-id", // Replace with actual data or fallback
-                "allowEmailPromotion" => $request->allowEmailPromotion ?? true,
-                "subscribe" => $request->subscribe ?? true,
-                // "extRemark" => ['form_id' => $formData->id],
-            ]
-        ];
-        // $formData->update(['is_api' => true]);
-        try {
-            $response = $this->sendRequest($requestData);
-            // Decode the JSON response
-            $responseDecoded = json_decode($response, true);
-            if (isset($responseDecoded['result']) && $responseDecoded['result'] === true) {
-                $formData->update(['is_api' => true]);
+        if(isset($request->listingId) && !empty($request->listingId) && $request->listingId){
+            // Prepare mandatory fields for `sendRequest`
+            $requestData = [
+                "userInfo" => [
+                    "submitDateTime" => now()->setTimezone("Asia/Singapore")->format('Y-m-d H:i:s'),
+                    "sourceUniqueId" => "form-" . $formData->id,
+                    "firstName" => $firstName,
+                    "lastName" => $lastName,
+                    "phone" => $formData->contact_number,
+                    "email" => $formData->email,
+                    "listingId" => $request->listingId ?? "default-listing-id", // Replace with actual data or fallback
+                    "allowEmailPromotion" => $request->allowEmailPromotion ?? true,
+                    "subscribe" => $request->subscribe ?? true,
+                    // "extRemark" => ['form_id' => $formData->id],
+                ]
+            ];
+            // dd($requestData);
+            // $formData->update(['is_api' => true]);
+            try {
+                $response = $this->sendRequest($requestData);
+                // Decode the JSON response
+                $responseDecoded = json_decode($response, true);
+                if (isset($responseDecoded['result']) && $responseDecoded['result'] === true) {
+                    $formData->update(['is_api' => true]);
+                }
+            } catch (Exception $e) {
+                return redirect()->back()->with('error', 'Failed to submit form: ' . $e->getMessage());
             }
-        } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Failed to submit form: ' . $e->getMessage());
+        }else {
+            $contactData = [
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'email' => $formData->email,
+                'phone' => $formData->contact_number,
+                'message' => $request->message ?? "",
+                'url' => $previousUrl,
+                'ip_address' => $request->ip(),
+            ];
+            
+            $adminEmail = env('APP_ADMIN', 'yesvant@webworldexpertsindia.com'); 
+            // $adminEmail = 'yesvant@webworldexpertsindia.com'; 
+            Mail::to($adminEmail)->send(new FormMail($contactData));
+            
         }
     
         return redirect()->back()->with('success', 'Form submitted successfully!');

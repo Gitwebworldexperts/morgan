@@ -15,6 +15,7 @@ class Career extends Model
     // Define the fillable attributes to prevent mass-assignment vulnerabilities
     protected $fillable = [
         'job_name',
+        'slug',
         'job_type',
         'job_location',
         'position',

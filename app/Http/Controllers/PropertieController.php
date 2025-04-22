@@ -234,23 +234,19 @@ class PropertieController extends Controller
         if(!isset($property)){
             return response()->json(['message' => 'Delete Request Not for this property.'], 404);
         }
-        // $property = Properties::find($property);
-        // if(!$property){
-        //     return response()->json(['message' => 'Associated property not found.'], 404);
-        // }
-        $banner_list = Banners::where('property_id', $property)->where('id',$banner)->first();
+            $banner_list = Banners::where('property_id', $property)->where('id',$banner)->first();
         $banner_list->delete();
         return response()->json(['message' => 'Banner deleted successfully.'], 200);
     }
 
     public function DetailPage(Request $request,$pageName){
         $properties = [
-            RentPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType','community'])->first(),
-            PrivatePropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType','community'])->first(),
-            ProjectPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType','company','plans','community'])->first(),
-            InternationalPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType','community'])->first(),
-            BuyPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType','community'])->first(),
-            BrandedPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType','community'])->first()
+            RentPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->where('status','active')->with(['banners', 'propertyType','community'])->first(),
+            PrivatePropertie::where('slug', 'LIKE', '%' . $pageName . '%')->where('status','active')->with(['banners', 'propertyType','community'])->first(),
+            ProjectPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->where('status','active')->with(['banners', 'propertyType','company','plans','community'])->first(),
+            InternationalPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->where('status','active')->with(['banners', 'propertyType','community'])->first(),
+            BuyPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->where('status','active')->with(['banners', 'propertyType','community'])->first(),
+            BrandedPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->where('status','active')->with(['banners', 'propertyType','community'])->first()
         ];        
         
         $amenitie = Amenitie::where('status','1')->get();
@@ -292,13 +288,16 @@ class PropertieController extends Controller
         'property_types.type_name as type_name',
         $tableName . '.id as property_id'        // Alias the id column of the main table
     )
+    ->where($tableName . '.status', '=', 'active')
     ->where($tableName . '.id', '!=', $foundProperty->id) 
     ->limit(10)
     ->get();
 
             return view('detail', compact('foundProperty','agent','property_list','amenitie','property_type'));
         } else {
-            echo "Error: Property not found.";
+
+            return redirect()->route('home', [], 301);
+            // echo "Error: Property not found.";
             die;
         }
         die;
@@ -306,7 +305,7 @@ class PropertieController extends Controller
 
     public function DevlopmentDetailPage(Request $request,$pageName){
         $properties = [
-            ProjectPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType','company','plans'])->first(),
+            ProjectPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->where('status','active')->with(['banners', 'propertyType','company','plans'])->first(),
         ];        
         
         $amenitie = Amenitie::where('status','1')->get();
@@ -347,6 +346,7 @@ class PropertieController extends Controller
         'property_types.type_name as type_name',
         $tableName . '.id as property_id'        // Alias the id column of the main table
     )
+    ->where($tableName . '.status', '=', 'active')
     ->limit(10)
     ->get();
 
@@ -354,6 +354,8 @@ class PropertieController extends Controller
             // dd($property_list);
             return view('detail', compact('foundProperty','agent','property_list','amenitie','devlopment','property_type'));
         } else {
+
+            return redirect()->route('devlopment.listing', [], 301);  
             echo "Error: Property not found.";
             die;
         }
@@ -362,7 +364,7 @@ class PropertieController extends Controller
 
     public function PrivateDetailPage(Request $request,$pageName){
         $properties = [
-            PrivatePropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType'])->first(),
+            PrivatePropertie::where('slug', 'LIKE', '%' . $pageName . '%')->where('status','active')->with(['banners', 'propertyType'])->first(),
         ];        
         
         $amenitie = Amenitie::where('status','1')->get();
@@ -403,6 +405,7 @@ class PropertieController extends Controller
         'property_types.type_name as type_name',
         $tableName . '.id as property_id'        // Alias the id column of the main table
     )
+    ->where($tableName . '.status', '=', 'active')
     ->limit(10)
     ->get();
 
@@ -411,15 +414,15 @@ class PropertieController extends Controller
             // dd($property_list);
             return view('detail', compact('foundProperty','agent','property_list','amenitie','private','property_type'));
         } else {
+            return redirect()->route('private.listing', [], 301);  
             echo "Error: Property not found.";
-            die;
         }
         die;
     }
 
     public function InvestmentDetailPage(Request $request,$pageName){
         $properties = [
-            InvestmentPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->with(['banners', 'propertyType'])->first(),
+            InvestmentPropertie::where('slug', 'LIKE', '%' . $pageName . '%')->where('status','active')->with(['banners', 'propertyType'])->first(),
         ];        
         
         $amenitie = Amenitie::where('status','1')->get();
@@ -462,6 +465,7 @@ class PropertieController extends Controller
         'property_types.type_name as type_name',
         $tableName . '.id as property_id'        // Alias the id column of the main table
     )
+    ->where($tableName . '.status', '=', 'active')
     ->limit(10)
     ->get();
 
@@ -469,7 +473,13 @@ class PropertieController extends Controller
             // dd($property_list);
             return view('detail', compact('foundProperty','agent','property_list','amenitie','investment','property_type'));
         } else {
+
+            return redirect()->route('investment.listing', [], 301);  
             echo "Error: Property not found.";
+            die;
+
+            // return redirect('/')->with('error', 'Property not found.');
+            // echo "Error: Property not found.";
             die;
         }
         die;
@@ -499,7 +509,7 @@ class PropertieController extends Controller
         // Check if the requested property type exists
         if (array_key_exists($propFor, $propertyTypes)) {
             // Fetch properties with pagination
-            $properties = $propertyTypes[$propFor]::orderBy('id', 'desc')->with('propertyType')->paginate(12); // Change to your desired items per page
+            $properties = $propertyTypes[$propFor]::where('status','active')->orderBy('id', 'desc')->with('propertyType')->paginate(12); // Change to your desired items per page
 
             $property_type = PropertyType::where('status',1)->where('property','private')->get();
             
@@ -561,7 +571,7 @@ class PropertieController extends Controller
         // Check if the requested property type exists
         if (array_key_exists($propFor, $propertyTypes)) {
             // Fetch properties with pagination
-            $properties = $propertyTypes[$propFor]::orderBy('id', 'desc')->with('propertyType')->paginate(12); // Change to your desired items per page
+            $properties = $propertyTypes[$propFor]::where('status','active')->orderBy('id', 'desc')->with('propertyType')->paginate(12); // Change to your desired items per page
 
             $property_type = PropertyType::where('status',1)->where('property','investment')->get();
             
@@ -607,6 +617,7 @@ class PropertieController extends Controller
         $propFor = 'project';
         $pagination = $request->input('page');
 
+ 
         // Check if pagination was requested and set propFor if needed
         if ($pagination) {
             $previousUrl = url()->previous();
@@ -625,12 +636,12 @@ class PropertieController extends Controller
         if (array_key_exists($propFor, $propertyTypes)) {
             // Fetch properties with pagination
             if(isset($companyId)){
-                $properties = $propertyTypes[$propFor]::where('company_id',$companyId)->orderBy('id', 'desc')->with('propertyType')->paginate(12); // Change to your desired items per page
+                $properties = $propertyTypes[$propFor]::where('company_id',$companyId)->where('status','active')->orderBy('id', 'desc')->with('propertyType')->paginate(12); // Change to your desired items per page
             }else{
-                $properties = $propertyTypes[$propFor]::orderBy('id', 'desc')->with('propertyType')->paginate(12); // Change to your desired items per page
+                $properties = $propertyTypes[$propFor]::where('status','active')->orderBy('id', 'desc')->with('propertyType')->paginate(12); // Change to your desired items per page
             }
         
-                $top_listing = $propertyTypes[$propFor]::orderBy('id', 'desc')->with('propertyType')->latest()->take(5)->get()->map(function ($item) {
+                $top_listing = $propertyTypes[$propFor]::where('status','active')->orderBy('id', 'desc')->with('propertyType')->latest()->take(5)->get()->map(function ($item) {
                     $item['property_source'] = 'project';
                     return $item;
                 });
@@ -767,7 +778,7 @@ class PropertieController extends Controller
         ];
 
             // Fetch properties with pagination
-            $properties = $propertyTypes[$propFor]::orderBy('id', 'desc')->with('propertyType')->paginate(12); // Change to your desired items per page
+            $properties = $propertyTypes[$propFor]::where('status','active')->orderBy('id', 'desc')->with('propertyType')->paginate(12); // Change to your desired items per page
 
             $property_type = PropertyType::where('status',1)->where('property','private')->get();
             
@@ -807,17 +818,30 @@ class PropertieController extends Controller
         return view('communitie_listing', compact('data'));
     }
 
-    public function CommunitieDetail($id){
-        $id = base64_decode($id);
+    public function CommunitieDetail($slug){
+        // $id = base64_decode($id);
         // base64_encode
         $data = [];
-        $data['communities'] =  Community::find($id);
+        // if($slug == "al-barari"){
+        //     $slug = "al-barari-2";
+        // }
+        // if($slug == "al-furjan"){
+        //     $slug = "al-furjan-2";
+        // }
+        // if($slug == "business-bay"){
+        //     $slug = "business-bay-2";
+        // }
+
+
+        $data['communities'] =  Community::where('slug',$slug)->first();
         if(!$data['communities']){
             return redirect()->route('communities.listing');
         }
+        $id = $data['communities']->id;
 
         // Fetch data for each property type and add a 'property_source' key
         $brandedProperties = BrandedPropertie::where('community_id', $id)
+            ->where('status','active')
             ->where('is_featured','1')
             ->with(['banners', 'propertyType'])
             ->take(3)
@@ -828,6 +852,7 @@ class PropertieController extends Controller
             });
 
         $investmentPropertie = InvestmentPropertie::where('community_id', $id)
+        ->where('status','active')
         ->where('is_featured','1')
         ->with(['banners', 'propertyType'])
         ->take(3)
@@ -838,6 +863,7 @@ class PropertieController extends Controller
         });
 
         $rentProperties = RentPropertie::where('community_id', $id)
+            ->where('status','active')
             ->where('is_featured','1')
             ->with(['banners', 'propertyType'])
             ->take(3)
@@ -848,6 +874,7 @@ class PropertieController extends Controller
             });
 
         $privateProperties = PrivatePropertie::where('community_id', $id)
+            ->where('status','active')
             ->where('is_featured','1')
             ->with(['banners', 'propertyType'])
             ->take(3)
@@ -858,6 +885,7 @@ class PropertieController extends Controller
             });
 
         $projectProperties = ProjectPropertie::where('community_id', $id)
+            ->where('status','active')
             ->where('is_featured','1')
             ->with(['banners', 'propertyType'])
             ->take(3)
@@ -868,6 +896,7 @@ class PropertieController extends Controller
             });
 
         $internationalProperties = InternationalPropertie::where('community_id', $id)
+            ->where('status','active')
             ->where('is_featured','1')
             ->with(['banners', 'propertyType'])
             ->take(3)
@@ -878,6 +907,7 @@ class PropertieController extends Controller
             });
 
         $buyProperties = BuyPropertie::where('community_id', $id)
+            ->where('status','active')
             ->where('is_featured','1')    
             ->with(['banners', 'propertyType'])
             ->take(3)
@@ -907,8 +937,10 @@ class PropertieController extends Controller
     public function ReportList(){
         $report = Report::latest()->first();
         $reports = ReportIndividual::where('status', 'active')
-        ->select('report_type', 'slug', 'background_image', 'heading')
-        ->get();    
+            ->select('report_type', 'slug', 'background_image', 'heading')
+            ->orderBy('id', 'desc')
+            ->get();
+    
         return view('reports', compact('report','reports'));
     }
 }

@@ -80,6 +80,34 @@
                             </div>
                         @endif
                 </div>
+
+                <!-- Reource Blog Selection  -->
+
+                @php
+                            $selectedBlogs = explode(',', $pm->blog); // Convert the stored string into an array
+                        @endphp
+
+                <div class="form-group">
+                    <label for="blog">Blogs</label>
+                    <select class="form-control select2" multiple data-placeholder="Select Blogs" name="blog[]" id="blog">
+                        <option value=""> Select Blogs</option>
+                        
+
+                        @if(isset($blogs) && !empty($blogs))
+                            @foreach ($blogs as $blog)
+                                <option value="{{ $blog->id }}" {{ in_array($blog->id, $selectedBlogs) ? 'selected' : '' }}>
+                                    {{ $blog->name }}
+                                </option>
+                            @endforeach
+                        @endif
+
+                    </select>
+                    @error('blog')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+                <!-- Reource Blog Selection  -->
+
             </div>
         </div>
         <button type="submit" class="green-btn">Create Page</button>

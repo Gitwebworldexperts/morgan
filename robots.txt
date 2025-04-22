@@ -1,4 +1,11 @@
 User-agent: *
 Disallow: /public/admin/
 Disallow: /public/captcha/
-Sitemap: https://myprojectdemonstration.net/development/morgan/web/sitemap.xml
+Disallow: /public/website-backup/
+Disallow: /website-backup/
+Disallow: /bkp/
+Disallow: /bkp
+Disallow: /cdn-cgi/l/email-protection
+Disallow: /google/redirect
+
+Sitemap: https://www.morgansrealty.com/sitemap.xml

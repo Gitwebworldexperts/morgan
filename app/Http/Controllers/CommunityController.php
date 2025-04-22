@@ -40,15 +40,14 @@ class CommunityController extends Controller
             'status' => 'required|in:active,inactive'
         ]);
 
-        
+        $featured_image = $request->hasFile('featured_image') ? $imageUploadService->storeImage($request->file('featured_image'), 'images',46) :"";
+        $section_i_image = $request->hasFile('section_i_image') ? $imageUploadService->storeImage($request->file('section_i_image'), 'images',47) :"";
+        $second_image = $request->hasFile('second_image') ? $imageUploadService->storeImage($request->file('second_image'), 'images',48) :"";
+        $third_image = $request->hasFile('third_image') ? $imageUploadService->storeImage($request->file('third_image'), 'images',49) :"";
 
-        // Store images and return paths
-        $featured_image = $request->hasFile('featured_image') ? $imageUploadService->storeImage($request->file('featured_image'), 'images') :"";
-        $section_i_image = $request->hasFile('section_i_image') ? $imageUploadService->storeImage($request->file('section_i_image'), 'images') :"";
-        $second_image = $request->hasFile('second_image') ? $imageUploadService->storeImage($request->file('second_image'), 'images') :"";
-        $third_image = $request->hasFile('third_image') ? $imageUploadService->storeImage($request->file('third_image'), 'images') :"";
-
+        $slug = generateSlug($request->community_name, \App\Models\Community::class);
         Community::create([
+            'slug' => $slug,
             'community_name' => $request->community_name,
             'featured_image' => $featured_image,
             'section_i_image' => $section_i_image,
@@ -96,24 +95,26 @@ class CommunityController extends Controller
 
         // Update images only if new ones are uploaded
         if ($request->hasFile('featured_image')) {
-            $community->featured_image = $request->hasFile('featured_image') ? $imageUploadService->storeImage($request->file('featured_image'), 'images') :"";
+            $community->featured_image = $request->hasFile('featured_image') ? $imageUploadService->storeImage($request->file('featured_image'), 'images',99) :"";
         }
 
         if ($request->hasFile('section_i_image')) {
-            $community->section_i_image = $request->hasFile('section_i_image') ? $imageUploadService->storeImage($request->file('section_i_image'), 'images') :"";
+            $community->section_i_image = $request->hasFile('section_i_image') ? $imageUploadService->storeImage($request->file('section_i_image'), 'images',103) :"";
         }
 
         if ($request->hasFile('second_image')) {
-            $community->second_image = $request->hasFile('second_image') ? $imageUploadService->storeImage($request->file('second_image'), 'images') :"";
+            $community->second_image = $request->hasFile('second_image') ? $imageUploadService->storeImage($request->file('second_image'), 'images',107) :"";
         }
 
         if ($request->hasFile('third_image')) {
-            $community->third_image = $request->hasFile('third_image') ? $imageUploadService->storeImage($request->file('third_image'), 'images') :"";
+            $community->third_image = $request->hasFile('third_image') ? $imageUploadService->storeImage($request->file('third_image'), 'images',111) :"";
         }
 
         
-
+        // $slug = generateSlug($request->community_name, \App\Models\Community::class);
+        
         $community->update([
+            // 'slug' => $slug,
             'community_name' => $request->community_name,
             'section_i_content' => $request->section_i_content,
             'section_ii_content' => $request->section_ii_content,

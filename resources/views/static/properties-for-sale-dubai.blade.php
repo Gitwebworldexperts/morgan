@@ -1,5 +1,19 @@
 @extends('layouts.app')
-@section('title', 'Property for Sale')
+
+@php
+$global = Config::get('static_meta', []);
+
+$meta_title = $global['properties-for-sale-dubai'][0] ?? '';
+$meta_description = $global['properties-for-sale-dubai'][1] ?? '';
+@endphp
+
+@section('title', $meta_title ?: 'Jumeirah Bay Island Villas')
+
+@section('meta')
+    <meta property="og:title" content="@yield('title')" />
+    <meta property="og:description" content="{!! $meta_description ?: '' !!}" />
+    <meta name="description" content="{!! $meta_description ?: '' !!}">
+@endsection
 @section('content')
 <section class="banner inr-banner mb-4" style="background-image: url({{ asset('/img/inr-banner.png') }});">
     <div class="container">

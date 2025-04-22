@@ -20,16 +20,21 @@
     <meta property="og:title" content="{{$page_name}}" />
   @endif
   @if(isset($home->meta_description) && !empty($home->meta_description))
-    <meta property="og:description" content="{{ $home->meta_description }}" />
+    <meta name="description" content="{!! $home->meta_description !!}">
+    <meta property="og:description" content="{!! $home->meta_description !!}" />
   @endif
 @endsection
+@section('headscript')
+<!-- <link rel="preload" as="image" href="{{ $home->first_section_image ? assets($home->first_section_image,1290,701) : assets('img/Home-banner.jpg') }}"> -->
+@endsection
+
 
 @section('content')
 
 @if($home->section_1)
     <!-- banner -->
-    <section class="banner" style="background-image: url('{{ $home->first_section_image ? asset($home->first_section_image) : asset('img/Home-banner.png') }}');">
-
+    <section class="banner home_page_banner_parent">
+        <img class="home_page_banner w-100" style="width: 100%;" width="1440" height="701" loading="eager" src="{{ $home->first_section_image ? assets($home->first_section_image,1290,701) : assets('img/Home-banner.jpg') }}" alt="Morgan Home Page Banner">
         <div class="container">
             <div class="slider-info banner-bg">
                 <div class="BannerBox">
@@ -74,8 +79,11 @@
                     <div class="col-lg-7 col-md-6 col-12">
                         <div class="panel-sec-content">
                             <p>{!! Str::words($home->second_description, 45, '...') !!}</p> <a
-                                href="{{$buttonUrl_2}}" class="link-btn">{{$buttonName_1}}<img
-                                    src="{{ asset('img/arrow.svg') }}"></a>
+                                href="{{$buttonUrl_2}}" class="link-btn">
+                                {{$buttonName_1}}
+                                <span class="sr-only"> about Morgan’s Realty</span>
+                                <img width="13" height="auto"
+                                     src="{{ assets('img/arrow.svg') }}"></a>
                         </div>
                     </div>
                 </div>
@@ -95,7 +103,7 @@
                     <div class="col-lg-4 col-12"></div>
                 </div>
             </div>
-              <div class="row">
+            <div class="row">
                     <div class="col-12">
                         <div class="cards-main">
                             <div class="owl-carousel" id="instructor-slider">
@@ -106,16 +114,18 @@
                                     <div class="card-box"> 
                                         
                                             <figure>
+                                                @if($featured->type_name)
                                                 <div class="VillaText">
-                                                    <p>Villa</p>
+                                                <p>{{ $featured->type_name }}</p>
                                                 </div>
+                                                @endif
                                                 <a href="{{ route('detail.page',$featured->slug) }}">
                                                     @if($featured->featured_image)
-                                                        <img src="{{ asset($featured->featured_image) }}" alt="Featured Image">
+                                                        <img loading="lazy" width="300" height="auto" src="{{ assets($featured->featured_image,345,295) }}" alt="Featured Image">
                                                     @elseif(isset($featured->banners[0]->image_url) && $featured->banners[0]->image_url)
-                                                        <img src="{{ asset($featured->banners[0]->image_url) }}" alt="Featured Image">
+                                                        <img loading="lazy" width="300" height="auto" src="{{ assets($featured->banners[0]->image_url,345,295) }}" alt="Featured Image">
                                                     @else
-                                                        <img src="{{ asset('img/thumbnail-placeholder-gallery.png') }}" alt="Featured Image">
+                                                        <img loading="lazy" width="300" height="auto" src="{{ assets('img/thumbnail-placeholder-gallery.png',345,295) }}" alt="Featured Image">
                                                     @endif  
                                                 </a>
                                                 <div class="Wishlist {{ in_array(route('detail.page', $featured->slug), $wish) ? 'added' : '' }}" 
@@ -123,8 +133,8 @@
                                                     data-type="{{ $featured->property_source }}" 
                                                     data-url="{{ route('detail.page', $featured->slug) }}"  
                                                     data-auth="{{ isset(auth()->user()->id) ? auth()->user()->id : '' }}">
-                                                    <img class="heart-o-icon" src="{{ asset('img/heart-o.svg') }}">
-                                                    <img src="{{ asset('img/heart.svg') }}" class="heart-icon">
+                                                    <img loading="lazy" width="300" height="auto" class="heart-o-icon" src="{{ assets('img/heart-o.svg') }}">
+                                                    <img loading="lazy" width="300" height="auto" src="{{ assets('img/heart.svg') }}" class="heart-icon">
                                                 </div>
 
                                             </figure>
@@ -133,16 +143,16 @@
                                             <a href="{{ route('detail.page',$featured->slug) }}" >
                                                 <h3>{{ $featured->name }}</h3>
                                                 @if($featured->address)
-                                                <p ><img src="{{ asset('img/map.svg') }}">{!! Str::words($featured->address, 4, '...') !!}</p>
+                                                <p ><img width="13" height="auto" loading="lazy" src="{{ assets('img/map.svg') }}">{!! Str::words($featured->address, 4, '...') !!}</p>
                                                 @endif
                                                 <div class="HotelViews">
                                                     <ul>
-                                                        <li><img src="{{ asset('img/1.svg') }}"> {{ number_format($featured->area) }} SQ FT</li>
+                                                        <li><img loading="lazy" width="17" height="19" src="{{ assets('img/1.svg') }}"> {{ number_format($featured->area) }} SQ FT</li>
                                                         @if($featured->bed)
-                                                        <li><img src="{{ asset('img/2.svg') }}"> {{ $featured->bed }}</li>
+                                                        <li><img loading="lazy" width="17" height="15" src="{{ assets('img/2.svg') }}"> {{ $featured->bed }}</li>
                                                         @endif
                                                         @if($featured->jacuzzi)
-                                                        <li><img src="{{ asset('img/3.svg') }}"> {{ $featured->jacuzzi }}</li>
+                                                        <li><img loading="lazy" width="17" height="13" src="{{ assets('img/3.svg') }}"> {{ $featured->jacuzzi }}</li>
                                                         @endif
                                                     </ul>
                                                 </div>
@@ -180,7 +190,7 @@
                     <div class="col-lg-8 col-12">
                         <h2 class="m-0">{{$home->fourth_heading}}</h2>
                     </div>
-                    <div class="col-lg-4 col-12">
+                    <div class="col-lg-4 col-12 mobile-none">
                         <div class="head-btn"> 
                         @php
                             $jsonData = [];
@@ -202,27 +212,27 @@
                     @foreach($private_properties as $private)
                         <div class="col">
                             <div class="office-box"> <a href="{{ route('private.detail_page',$private->slug) }}"> 
-                                    <figure> <img src="{{ asset($private->featured_image) }}" onerror="this.onerror=null; this.src='{{ asset('img/thumbnail-placeholder-gallery.png') }}';" class="" alt=""></figure>
+                                    <figure> <img width="300" height="auto" loading="lazy" src="{{ assets($private->featured_image) }}" onerror="this.onerror=null; this.src='{{ assets('img/thumbnail-placeholder-gallery.png') }}';" class="" alt=""></figure>
                                         <figcaption>
                                             <div class="add-grp">
                                                 @if(isset($private->propertyType->type_name) && $private->propertyType->type_name)
                                                     <div class="VillaText">{{ $private->propertyType->type_name ?? "" }}</div>
                                                 @endif
                                                 @if($private->address)
-                                                <p class="private_address"><img src="{{ asset('img/map.svg') }}">{!! Str::words(strip_tags($private->address), 4, '...') !!}</p>
+                                                <p class="private_address"><img loading="lazy" width="13" height="13" src="{{ assets('img/map.svg') }}">{!! Str::words(strip_tags($private->address), 4, '...') !!}</p>
                                                 @endif
                                             </div>
                                             <h3>{{ $private->name }}</h3>
                                             <div class="HotelViews">
                                                 <ul>
                                                     @if($private->area)
-                                                    <li><img src="img/hotel/1.svg"> {{ number_format($private->area) }} SQ FT</li>
+                                                    <li><img loading="lazy" width="17" height="19" src="img/hotel/1.svg"> {{ number_format($private->area) }} SQ FT</li>
                                                     @endif
                                                     @if($private->bed)
-                                                    <li><img src="img/hotel/2.svg"> {{ $private->bed }}</li>
+                                                    <li><img loading="lazy" width="17" height="15" src="img/hotel/2.svg"> {{ $private->bed }}</li>
                                                     @endif
                                                     @if($private->jacuzzi)
-                                                    <li><img src="img/hotel/3.svg"> {{ $private->jacuzzi }}</li>
+                                                    <li><img loading="lazy" width="17" height="13" src="img/hotel/3.svg"> {{ $private->jacuzzi }}</li>
                                                     @endif
                                                 </ul>
                                             </div>
@@ -234,8 +244,22 @@
                     @endforeach
                 @endif
             </div>
+            
+            <div class="col-lg-4 col-12 desktop-none">
+                        <div class="head-btn mt-4"> 
+                        @php
+                            $jsonData = [];
+                            $buttonName_1 = $buttonUrl_2 = "";
+                            $jsonData = optional(json_decode($home->fourth_section_button, true))[0] ?? [];
+                            $buttonName_1 = $jsonData['buttonName'] ?? $button_name;
+                            $buttonUrl_2 = $jsonData['buttonUrl'] ?? $button_url;
+                        @endphp
+                            <a href="{{ $buttonUrl_2 }}" class="light-btn mx-auto">{{ $buttonName_1 }}</a> 
+                        </div>
+                    </div>
         </div>
     </section> <!-- section -->
+    @if(0)
     <section class="space private-office-sec bg-black desktop-none d-none">
         <div class="container">
             <div class="heading-pnel HeadingMiddleBorder fff">
@@ -256,21 +280,21 @@
                     @foreach($private_properties as $private)
                         <div class="col">
                             <div class="office-box"> <a href="#">
-                                    <figure> <img src="{{ asset($private->featured_image) }}" class="" alt="">
+                                    <figure> <img width="400" height="auto" loading="lazy" src="{{ assets($private->featured_image) }}" class="" alt="">
                                         <figcaption>
                                             <div class="add-grp">
                                                 <div class="VillaText">                                                
                                                 Villa</div>
                                                 @if($private->address)
-                                                <p><img src="{{ asset('img/map.svg') }}">{!! Str::words($private->address, 4, '...') !!}</p>
+                                                <p><img width="13" height="17" loading="lazy" src="{{ assets('img/map.svg') }}">{!! Str::words($private->address, 4, '...') !!}</p>
                                                 @endif
                                             </div>
                                             <h3>{{ $private->name }}</h3>
                                             <div class="HotelViews">
                                                 <ul>
-                                                    <li><img src="{{ asset('img/1.svg') }}"> {{ number_format($private->area) }} SQ FT</li>
-                                                    <li><img src="{{ asset('img/2.svg') }}"> {{ $private->bed }}</li>
-                                                    <li><img src="{{ asset('img/3.svg') }}"> {{ $private->jacuzzi }}</li>
+                                                    <li><img loading="lazy" width="17" height="19" src="{{ assets('img/1.svg') }}"> {{ number_format($private->area) }} SQ FT</li>
+                                                    <li><img loading="lazy" width="17" height="15" src="{{ assets('img/2.svg') }}"> {{ $private->bed }}</li>
+                                                    <li><img loading="lazy" width="17" height="13" src="{{ assets('img/3.svg') }}"> {{ $private->jacuzzi }}</li>
                                                 </ul>
                                             </div>
                                             <h6><span>AED</span> {{ number_format($private->sale_price) }}/-</h6>
@@ -283,6 +307,7 @@
             </div>
         </div>
     </section> <!-- section -->
+    @endif
     @endif
     @if($home->section_5)
     <section class="space International-sec">
@@ -302,7 +327,7 @@
                 $url = $jsonData['buttonUrl'] ?? $button_url;
             @endphp
             <div class="international-main" id="international-main" 
-     style="background-image: url('{{ $home->fifth_section_image ? asset($home->fifth_section_image) : asset('img/international-bg.png') }}');">
+     style="background-image: url('{{ $home->fifth_section_image ? assets($home->fifth_section_image) : assets('img/international-bg.png') }}');">
                 <div class="row">
                     <div class="col-12">
                         <div class="tabs-grp">
@@ -312,9 +337,9 @@
                                     @foreach($regions as $item)
                                         <li class="nav-item" role="presentation"> 
                                             <a class="nav-link {{ $first1 ? 'active' : '' }}" id="Africa-tab{{ $item->id }}"
-                                            data-toggle="tab" data-image="{{ asset($item->image_url) }}" 
+                                            data-toggle="tab" data-image="{{ assets($item->image_url) }}" 
                                             data-target="#Africa{{ $item->id }}" type="button" role="tab"
-                                            aria-controls="home" aria-selected="true">{{ $item->name }}</a> 
+                                            aria-controls="{{ $item->name }}" aria-selected="true">{{ $item->name }}</a> 
                                         </li>
                                         @php $first1 = false; @endphp
                                     @endforeach
@@ -373,21 +398,21 @@
                                         @foreach($project_propertie as $item)
                                 <div class="item">
                                     <div class="new-development card-box"> 
-                                              <figure><a href="{{ route('devlopment.detail_page',$item->slug) }}"><img src="{{ asset($item->featured_image) }}" class=""
-                                                                alt=""></a>
+                                              <figure><a href="{{ route('devlopment.detail_page',$item->slug) }}">
+                                                  <img width="300" height="auto" loading="lazy" src="{{ assets($item->featured_image,345,295) }}" class="" alt=""></a>
                                                                 <div class="Wishlist {{ in_array(route('devlopment.detail_page',$item->slug), $wish) ? 'added' : '' }}" 
                                                                     data-id="{{ $item->id }}" 
                                                                     data-type="{{ $item->property_source }}" 
                                                                     data-url="{{ route('devlopment.detail_page', $item->slug) }}"  
                                                                     data-auth="{{ isset(auth()->user()->id) ? auth()->user()->id : '' }}">
-                                                                    <img class="heart-o-icon" src="{{ asset('img/heart-o.svg') }}">
-                                                                    <img src="{{ asset('img/heart.svg') }}" class="heart-icon">
+                                                                    <img width="17" height="17" loading="lazy" class="heart-o-icon" src="{{ assets('img/heart-o.svg') }}">
+                                                                    <img width="17" height="17" loading="lazy" src="{{ assets('img/heart.svg') }}" class="heart-icon">
                                                                 </div>
                                                         </figure>
                                          <figcaption> <a href="{{ route('devlopment.detail_page',$item->slug) }}">
                                                             <h3>{{ $item->name }}</h3>
                                                             @if($item->address)
-                                                            <p><img src="{{ asset('img/map.svg') }}">{!! Str::words(strip_tags($item->address), 4, '...') !!}</p>
+                                                            <p><img width="17" height="17" loading="lazy" src="{{ assets('img/map.svg') }}">{!! Str::words(strip_tags($item->address), 4, '...') !!}</p>
                                                             @endif
                                                         </a> </figcaption>
                                     </div>
@@ -430,8 +455,7 @@
      <!-- section -->
     @endif
     @if($home->section_8)
-    
-    <section class="space full-width-sec"  style="background-image: url('{{ $home->eigth_section_bg ? asset($home->eigth_section_bg) : asset('img/full-img.png') }}');">
+    <section class="space full-width-sec"  style="background-image: url('{{ $home->eigth_section_bg ? assets($home->eigth_section_bg) : assets('img/full-img.png') }}');">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-12">
@@ -492,7 +516,7 @@
                         @endphp
                         <div class="col-lg-3 col-md-6 col-6">
                             <div class="blog-box">
-                                <figure> <a href="{{ $item->slug ? route('blog', ['slug' => $item->slug]) : '#' }}"><img alt="Image not found" onerror="this.onerror=null; this.src='{{ asset('featured_images/featured_image_1731072533.jpg') }}';"  src="{{ asset('post/'.$firstImage) }}" class="w-100" alt=""></a> </figure>
+                                <figure> <a href="{{ $item->slug ? route('blog', ['slug' => $item->slug]) : '#' }}"><img loading="lazy" alt="Morgan’s International Realty" onerror="this.onerror=null; this.src='{{ assets('featured_images/featured_image_1731072533.jpg') }}';"  src="{{ assets('post/'.$firstImage,335,285) }}" class="w-100" alt=""></a> </figure>
                                 <figcaption> <span style="text-transform: uppercase;">{{ $item->created_at->format('d M Y') }}</span> <a href="{{ $item->slug ? route('blog', ['slug' => $item->slug]) : '#' }}">
                                         <h4>{!! Str::words($item->name, 10, '...') !!}</h4> 
                                     </a> </figcaption>
@@ -514,7 +538,7 @@
 
     <section class="CTA-strip">
         <div class="container">
-            <div class="row"  style="background-image: url('{{ $home->tenth_section_image ? asset($home->tenth_section_image) : asset('img/Home-banner.png') }}');">
+            <div class="row"  style="background-image: url('{{ $home->tenth_section_image ? assets($home->tenth_section_image) : assets('img/Home-banner.png') }}');">
                 <div class="col-lg-6">
                     <div class="heading-pnel fff m-0">
                         <h2 class="m-0">{{ $home->tenth_heading }}</h2>
@@ -541,7 +565,8 @@
 
 
 @endsection
-@section('scripts')   
+@section('scripts')
+
 <script>
     // Ensure the document is ready before executing the script
     jQuery(document).ready(function() {
@@ -554,4 +579,27 @@
         });
     });
 </script>
+
+<style>
+section.banner.home_page_banner_parent {
+    position: relative;
+}
+img.home_page_banner {
+    position: absolute;
+    width: 100%;
+    height: calc(100% + 50px);
+    object-fit: cover;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+</style>
+
 @endsection

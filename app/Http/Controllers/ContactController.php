@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Contact;
 use App\Models\FormData;
+use App\Mail\ContactMail;
+
 
 class ContactController extends Controller
 {
@@ -32,6 +34,7 @@ class ContactController extends Controller
             'email' => 'required|email|max:255',
             'phone' => 'required|string|max:20',
             'message' => 'required|string',
+            'form' => 'max:0'
         ]);
 
 
@@ -48,6 +51,10 @@ class ContactController extends Controller
         $contact->ip_address = $request->$ipAddress;
         // Save the property to the database to get the ID
         $contact->save();
+
+
+        $adminEmail = env('APP_ADMIN', 'yesvant@webworldexpertsindia.com'); 
+        Mail::to($adminEmail)->send(new ContactMail($contact));
 
         return redirect()->route('thank-you');        
         return redirect()->back()->with('success', 'Thank you for your message!');

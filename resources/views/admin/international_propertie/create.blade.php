@@ -114,6 +114,13 @@
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
             </div>
+            <div class="form-group col-md-12">
+                <label for="test_price">Price Input</label>
+                <input type="text" class="form-control"  name="price_input" id="price_input" value="{{ old('price_input') }}">
+                @error('price_input')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
             
         </div>
 

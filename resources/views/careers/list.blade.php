@@ -52,7 +52,9 @@
     <script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function() {
-            new DataTable('#example');
+            new DataTable('#example', {
+                "ordering": false // Disable sorting
+            });
         });
     </script>
 @endsection

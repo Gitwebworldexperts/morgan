@@ -120,7 +120,7 @@
                 </div>
             </div>
         </section>
-
+        @if(isset($posts) && !empty($posts) && count($posts))
         <section class="space blogs-sec blog-listing-page pt-0">
             <div class="container">
                 <div class="heading-pnel text-center">
@@ -131,7 +131,7 @@
                     </div>
                 </div>
                 <div class="row">
-                @if(isset($posts) && !empty($posts))
+                
                     @foreach($posts as $item)
                     @php 
                             $imageLinks = $item->images;
@@ -151,11 +151,11 @@
                         </div>
                     </div>
                     @endforeach
-                @endif
+                
                 </div>
             </div>
     </section>
-
+    @endif
     @include('faq', ['page_name' => 'propertyManagement'])
 
 

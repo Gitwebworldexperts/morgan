@@ -27,6 +27,7 @@ class MortgageCalculatorController extends Controller
             'load_duration' => 'required|integer|min:1|max:30',
             'intrest_rate' => 'required|numeric|min:0|max:100',
             'monthely_payment' => 'required|numeric',
+            'form' => 'max:0'
         ]);
 
         $user = Auth::user();

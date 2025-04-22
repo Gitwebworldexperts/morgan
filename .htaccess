@@ -1,21 +1,140 @@
 <IfModule mod_rewrite.c>
-    <IfModule mod_negotiation.c>
-        Options -MultiViews -Indexes
-    </IfModule>
-
     RewriteEngine On
 
-    # Handle Authorization Header
-    RewriteCond %{HTTP:Authorization} .
-    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+    # Force HTTPS and Non-WWW
+    RewriteCond %{HTTPS} !=on [OR]
+    RewriteCond %{HTTP_HOST} ^morgansrealty\.com [NC]
+    RewriteRule ^(.*)$ https://www.morgansrealty.com/$1 [R=301,L]
 
-    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_URI} ^/properties/brochure/ [NC]
+    RewriteRule ^ https://www.morgansrealty.com/ [L,R=301]
+
+    # Redirect /contact to /contactus
+    RewriteRule ^contact$ /contactus [R=301,L]
+
+    RewriteCond %{THE_REQUEST} /(.+/)?index\.php [NC]
+    RewriteRule ^(.+/)?index\.php$ /%1 [R=301,L]
+
+    RewriteCond %{REQUEST_URI} ^/blogs/view/([^/]+)/.+$ [NC]
+    RewriteRule ^ /blogs/view/%1 [R=301,L]
+
+    RewriteCond %{THE_REQUEST} ^[A-Z]+\s/investment/lists\?source=[^\s]+ [NC]
+    RewriteRule ^investment/lists$ /investment/lists? [R=301,L]
+
+
+    # Redirect /career/{id} to /careers/apply
+    RewriteRule ^career/([0-9]+)$ /careers/apply [R=301,L]
+
+    # ✅ Redirect /search/index?prop_for=rent to /search?prop_for=rent
+    RewriteCond %{REQUEST_URI} ^/search/index$
+    RewriteCond %{QUERY_STRING} ^prop_for=rent$
+    RewriteRule ^search/index$ /search?prop_for=rent [R=301,L]
+    
+    RewriteCond %{REQUEST_URI} ^/search/index$
+    RewriteRule ^search/index$ / [R=301,L]
+
+    # --- Custom 301 Redirects for Old Community URLs ---
+    Redirect 301 /communitie/al-barari-2 https://www.morgansrealty.com/communities/al-barari
+    Redirect 301 /communitie/al-furjan-2 https://www.morgansrealty.com/communities/al-furjan
+    Redirect 301 /communitie/business-bay-2 https://www.morgansrealty.com/communities/business-bay
+
+    Redirect 301 /contactus/enquiry3 https://www.morgansrealty.com/contactus
+    
+    
+    
+    Redirect 301 /communities/al-barari-2 https://www.morgansrealty.com/communities/al-barari
+    Redirect 301 /communities/al-furjan-2 https://www.morgansrealty.com/communities/al-furjan
+    Redirect 301 /communities/business-bay-2 https://www.morgansrealty.com/communities/business-bay
+    
+    
+    Redirect 301  /communitie https://www.morgansrealty.com/communities
+    Redirect 301  /communitie/palm-jumeirah https://www.morgansrealty.com/communities/palm-jumeirah 
+    Redirect 301  /communitie/jumeirah-lake-towers https://www.morgansrealty.com/communities/jumeirah-lake-towers 
+    Redirect 301  /communitie/al-barsha https://www.morgansrealty.com/communities/al-barsha 
+    Redirect 301  /communitie/mudon https://www.morgansrealty.com/communities/mudon 
+    Redirect 301  /communitie/discovery-gardens https://www.morgansrealty.com/communities/discovery-gardens 
+    Redirect 301  /communitie/mohammad-bin-rashid-city https://www.morgansrealty.com/communities/mohammad-bin-rashid-city 
+    Redirect 301  /communitie/dubai-investment-park https://www.morgansrealty.com/communities/dubai-investment-park 
+    Redirect 301  /communitie/dubai-marina https://www.morgansrealty.com/communities/dubai-marina 
+    Redirect 301  /communitie/jumeirah-beach-residence https://www.morgansrealty.com/communities/jumeirah-beach-residence 
+    Redirect 301  /communitie/jumeirah-golf-estates https://www.morgansrealty.com/communities/jumeirah-golf-estates 
+    Redirect 301  /communitie/downtown-dubai https://www.morgansrealty.com/communities/downtown-dubai 
+    Redirect 301  /communitie/jumeirah-bay-island https://www.morgansrealty.com/communities/jumeirah-bay-island 
+    Redirect 301  /communitie/tilal-al-ghaf https://www.morgansrealty.com/communities/tilal-al-ghaf    
+    
+    
+    Redirect 301 /branded_residences https://www.morgansrealty.com/branded-residences-dubai
+
+    # Redirect index.php to root
+    RewriteCond %{THE_REQUEST} \s/index\.php [NC]
+    RewriteRule ^index\.php$ https://www.morgansrealty.com/ [R=301,L]
+
+    # Remove trailing slash
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
-    # Send Requests To Front Controller...
+    # Send all requests to index.php (Laravel)
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+# ✅ Asset Caching for Static Files
+<IfModule mod_expires.c>
+    ExpiresActive On
+
+    # Images
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+
+    # Fonts
+    ExpiresByType application/font-woff2 "access plus 1 year"
+    ExpiresByType application/font-woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+
+    # Stylesheets
+    ExpiresByType text/css "access plus 1 month"
+
+    # JavaScript
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+</IfModule>
+
+# ✅ Prevent caching of dynamic content (like index.php, route responses)
+<IfModule mod_headers.c>
+    <FilesMatch "\.(html|htm|php)$">
+        Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+        Header set Pragma "no-cache"
+        Header set Expires "Wed, 11 Jan 1984 05:00:00 GMT"
+    </FilesMatch>
+</IfModule>
+
+# 🔒 Block Access to Sensitive Files
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|sql)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# ⚡ Enable Gzip Compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/x-javascript
+</IfModule>
+
+# ⚙️ Force PHP 8.2
+AddHandler application/x-httpd-php82 .php
+
+# ❌ Custom 404 Page
+ErrorDocument 404 /404.html
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the “alt-php82” package as the default “PHP” programming language.
+<IfModule mime_module>
+  AddHandler application/x-httpd-alt-php82___lsphp .php .php8 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit

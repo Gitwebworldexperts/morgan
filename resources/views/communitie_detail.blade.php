@@ -119,11 +119,20 @@
             </div>
         </section>
 
-        <section class="space position-relative">
-            <div class="container">
+        <?php 
+            $id_name = (isset($allProperties) && is_array($allProperties) && count($allProperties) < 4) 
+            ? 'single_slider' 
+            : 'instructor-slider';
+            
+            $class_name = !(isset($allProperties) && is_array($allProperties) && count($allProperties)) 
+            ? 'd-none mt-1 pt-1' 
+            : '';
+        ?>
+        <section class="space position-relative ">
+            <div class="container ">
                 <div class="heading-pnel HeadingMiddleBorder">
                     <div class="row">
-                        <div class="col-lg-8 col-12">
+                        <div class="col-lg-8 col-12 {{ $class_name }}">
                             <h2 class="m-0">Featured Properties</h2>
                         </div>
                         <div class="col-lg-4 col-12"></div>
@@ -132,7 +141,10 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="cards-main">
-                            <div class="owl-carousel " id="instructor-slider">
+                            
+                            
+                            
+                            <div class="owl-carousel " id="{{ $id_name }}">
                             
                             @if(isset($allProperties) && !empty($allProperties))
                               @foreach($allProperties as $item)
@@ -181,7 +193,7 @@
                                                 <img style="width:12px;margin-top:4px;margin-right:5px;" src="{{ asset('/img/hotel/map.svg')}}">{!! Str::words($item->address, 4, '...') !!}
                                             </span>
                                             @endif
-                                            @if($item->property_source != "branded")
+                                            @if($item->property_source != "branded" && $item->property_source != 'project')
                                             <div class="HotelViews">
                                                 <ul>
                                                     @if(number_format($item->area))

@@ -44,13 +44,7 @@
                             $imageLinks = $item->images;
                             $imageArray = explode(',', $imageLinks);
                             $firstImage = $imageArray[0] ?? null;
-                            $value = assets('post/'.$firstImage);
-
                             @endphp
-                         <div class="d-block">
-                          
-                           {{ dump($value); }}
-                        </div>
                         @if($key == 0)
                         <!-- Featured Blog -->
                         <div class="col-12">
@@ -58,9 +52,9 @@
                                 <figure>
                                     <a href="{{ $item->slug ? route('blog', ['slug' => $item->slug]) : '#' }}">
                                         <img 
-                                            src="{{ asset('post/'.$firstImage) }}" 
+                                            src="{{ assets('post/'.$firstImage) }}" 
                                             alt="Image not found" 
-                                            onerror="this.onerror=null; this.src='{{ asset('featured_images/featured_image_1731072533.jpg') }}';" 
+                                            onerror="this.onerror=null; this.src='{{ assets('featured_images/featured_image_1731072533.jpg') }}';" 
                                             class="w-100">
                                     </a>
                                 </figure>
@@ -82,9 +76,9 @@
                                 <figure>
                                     <a href="{{ $item->slug ? route('blog', ['slug' => $item->slug]) : '#' }}">
                                         <img 
-                                            src="{{ asset('post/'.$firstImage) }}" 
+                                            src="{{ assets('post/'.$firstImage) }}" 
                                             alt="Image not found" 
-                                            onerror="this.onerror=null; this.src='{{ asset('featured_images/featured_image_1731072533.jpg') }}';">
+                                            onerror="this.onerror=null; this.src='{{ assets('featured_images/featured_image_1731072533.jpg') }}';">
                                     </a>
                                 </figure>
                                 <figcaption>

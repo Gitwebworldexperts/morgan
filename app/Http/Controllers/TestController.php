@@ -15,6 +15,11 @@ use SoapClient;
 use Exception;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
+
 
 class TestController extends Controller
 {
@@ -22,8 +27,20 @@ class TestController extends Controller
 
     public function __construct(ApiRequestService $apiRequestService)
     {
-        $this->apiRequestService = $apiRequestService;
+        Config::set('app.debug', true);   
     }
+
+    public function optimize(){
+        Artisan::call('route:cache');
+        Artisan::call('config:cache');
+        Artisan::call('view:cache');
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'App optimized: route, config, and views cached.',
+        ]);
+    }
+
 
     public function index_out()
     {

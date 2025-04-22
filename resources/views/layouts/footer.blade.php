@@ -56,7 +56,7 @@ $property_type = allPropertyType();
                                                 <option value="6">6</option>
                                                 <option value="7">7+</option>
                                             </select> </div>
-                                        <div class="BookingFromBtn"><button type="submit"><img
+                                        <div class="BookingFromBtn"><button type="submit"><img width="17" height="17" loading="lazy"
                                         src="{{ asset('img/search.svg') }}"> Search</button></div>
                                     </div>
                                 </div>
@@ -96,7 +96,7 @@ $property_type = allPropertyType();
                                                 <option value="7">7+</option>
                                             </select> </div>
                                        
-                                        <div class="BookingFromBtn"><button type="submit"><img
+                                        <div class="BookingFromBtn"><button type="submit"><img width="17" height="17" loading="lazy"
                                         src="{{ asset('img/search.svg') }}"> Search</button></div>
                                         
                                     </div>
@@ -110,14 +110,14 @@ $property_type = allPropertyType();
     </div>
 </div>
 
-        <a id="back2Top" class="top-scroll" title="Back to top" href="#" style=""><img src="{{asset('img/arrow-right.svg')}}" class=""></a> 
+        <a id="back2Top" class="top-scroll" title="Back to top" href="#" style=""><img width="17" height="17" loading="lazy" src="{{asset('img/arrow-right.svg')}}" class=""></a> 
         <!-- footer -->
         <footer class="footer">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-4 col-md-4 col-12 mb-3">
                         <div class="footer-item logo-item">
-                            <div class="foot-logo"> <img src="{{asset(siteFooterLogo())}}" class="" alt="logo"> </div>
+                            <div class="foot-logo"> <img width="300" height="auto" loading="lazy" src="{{asset(siteFooterLogo())}}" class="" alt="logo"> </div>
                             <div id="" class="vcard">
  <span class="fn n">
     <span class="given-name"></span>
@@ -127,11 +127,23 @@ $property_type = allPropertyType();
  <div class="org">Morgans International Realty</div>
  <div class="adr">
   <div class="street-address">{!! isset($footerSection->address) ? $footerSection->address : ""!!}</div>
-  <span class="locality">Media City</span>
-, 
-  <span class="region">Dubai</span>
-, 
-  <span class="postal-code">450642</span>
+  @php
+  $addressParts = [];
+
+  if (!empty($footerSection->locality)) {
+      $addressParts[] = '<span class="locality">' . e($footerSection->locality) . '</span>';
+  }
+
+  if (!empty($footerSection->region)) {
+      $addressParts[] = '<span class="region">' . e($footerSection->region) . '</span>';
+  }
+
+  if (!empty($footerSection->postal_code)) {
+      $addressParts[] = '<span class="postal-code">' . e($footerSection->postal_code) . '</span>';
+  }
+@endphp
+
+{!! implode(', ', $addressParts) !!}
 
  </div>
   <a class="email" href="mailto:{{ isset($footerSection->email) ? $footerSection->email : ''}}">{{ isset($footerSection->email) ? $footerSection->email : ""}}</a>
@@ -155,12 +167,14 @@ $property_type = allPropertyType();
                                                     $urls = $footerSections['urls'] ?? [];
 
                                         @endphp
-                                        @foreach($urls as $key => $item)
-                                            <li><a href="{{$key}}">{{$item}}</a></li>    
-                                        @endforeach
+                                            @foreach($urls as $key => $item)
+                                                @if(isset($item[0]) && isset($item[1]) && $item[1] == '1')
+                                                    <li><a href="{{$key}}">{{$item[0]}}</a></li>    
+                                                @endif
+                                            @endforeach
                                         @endif
 
-                                        <li class="mega-menu-footer"><a style="text-decoration:none" class="" target="">Resources</a>
+                                        <li class="mega-menu-footer"><a style="text-decoration:none" class="" href="#" onclick="event.preventDefault();" target="">Resources</a>
                                         <div class="submenu">
                                         <ul>
                                             <li class="footerSubMenuTT "><a href="{{ route('devlopment.detail_page','atlantis-the-royal-residences') }}">Atlantis the Royal Residences</a></li>
@@ -229,11 +243,13 @@ $property_type = allPropertyType();
                                         @endphp
 
                                         @if($temp2 && $temp1)
+                                        @if(isset($item[0]) && isset($item[1]) && $item[1] == '1')
                                             <li><a href="{{ route('search', [
                                                 'prop_for' => $temp2,
                                                 'sub_type' => $temp1, // Use $temp1 here
-                                            ]) }}">{{ $item }}</a></li>
-                                        @endif
+                                            ]) }}">{{ $item[0] }}</a></li>
+                                            @endif
+                                            @endif
 
                                         @endforeach
                                         @endif
@@ -285,7 +301,7 @@ $property_type = allPropertyType();
                                                         <div class="form__label-row ">
                                                             <label class="entry__label" style="display: none; font-weight: 700; text-align:left; font-size:16px; text-align:left; font-weight:700; font-family:Helvetica, sans-serif; color:#3c4858;" for="EMAIL" data-required="*">Enter your email address to subscribe</label>
                                                             <div class="entry__field">
-                                                            <input class="input " type="text" id="EMAIL" name="EMAIL" autocomplete="off" placeholder="Enter your email address..." data-required="true" required />
+                                                            <input class="input " style="max-width:100%" type="text" id="EMAIL" name="EMAIL" autocomplete="off" placeholder="Enter your email address..." data-required="true" required />
                                                             </div>
                                                         </div>
                                                         <label class="entry__error entry__error--primary" style="font-size:16px; text-align:left; font-family:Helvetica, sans-serif; color:#661d1d; background-color:#ffeded; border-radius:3px; border-color:#ff4949;">
@@ -354,7 +370,9 @@ $property_type = allPropertyType();
 
                                         @endphp
                                         @foreach($footerSections as $key => $item)
-                                            <li><a href="{{$key}}" target="_blank">{!! $item !!}</a></li>    
+                                            @if(isset($item[0]) && isset($item[1]) && $item[1] == '1')
+                                                <li><a href="{{$key}}" aria-label="Social link" target="_blank">{!! $item[0] !!}</a></li>
+                                            @endif    
                                         @endforeach
                                         @endif
                                     </ul>
@@ -369,74 +387,16 @@ $property_type = allPropertyType();
                     <div class="row">
                         <div class="col-12">
                             <div class="copy-cont text-center">
-                                <p>{!! $footerSection->copyright !!}</p>
+                                <p>{{ strip_tags($footerSection->copyright) }}</p><p> Developed by <b><a style="color: #fff;font-size: 14px;color: #F2EFE5;" href="https://www.webworldexperts.com/" target="_blank">Webworld Experts</a></b></p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </footer>
- 
-                <div class="overlay-body"></div>
-
+        <script src="https://widgets.leadconnectorhq.com/loader.js" defer data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js" data-widget-id="67e261b014647143f91cdbf4"></script>
+        <div class="overlay-body"></div>
 <style>
-    
-    li.mega-menu-footer {
-        position: relative;
-    }
-    li.mega-menu-footer .submenu {
-        bottom: 18px;
-        display: none;
-        left: 0;
-        padding: 0 0 8px 0;
-        position: absolute;
-        width: 270px;
-        z-index: 999999;
-    }
-    li.mega-menu-footer .submenu ul {
-        background: #313131;
-        padding: 0;
-    }
-
-    li.mega-menu-footer .submenu ul {
-        max-height: 365px;
-        overflow: auto;
-    }
-    li.mega-menu-footer .submenu ul li {
-        padding: 0;
-    }
-    li.mega-menu-footer .submenu ul li a {
-        width: 100%;
-        display: inline-block;
-        padding: 0px 15px;
-        height: 30px;
-        line-height: 30px;
-        color: #fff;
-    }
-    li.mega-menu-footer:hover .submenu {
-        display: block;
-    }
-.Wishlist.added .heart-o-icon {
-    display: none !important;
-}
-.Wishlist.added .heart-icon {
-    display: block !important;
-}
-.card-box figure a>img {
-    height: 100%;
-    object-fit: cover;
-    width: 100%;
-}
-
-
-
-/* snippet */
-
-.from-newsltr .sib-form {
-    padding: 0;
-    border: 0;
-}
-
-
+    li.mega-menu-footer{position:relative}li.mega-menu-footer .submenu{bottom:18px;display:none;left:0;padding:0 0 8px;position:absolute;width:270px;z-index:999999}li.mega-menu-footer .submenu ul{background:#313131;padding:0;max-height:365px;overflow:auto}li.mega-menu-footer .submenu ul li{padding:0}li.mega-menu-footer .submenu ul li a{width:100%;display:inline-block;padding:0 15px;height:30px;line-height:30px;color:#fff}li.mega-menu-footer:hover .submenu{display:block}.Wishlist.added .heart-o-icon{display:none!important}.Wishlist.added .heart-icon{display:block!important}.card-box figure a>img{height:100%;object-fit:cover;width:100%}.from-newsltr .sib-form{padding:0;border:0}#preloader{position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(255,255,255,.8);display:flex;justify-content:center;align-items:center;z-index:9999}.spinner{border:4px solid #f3f3f3;border-top:4px solid #3a3526;border-radius:50%;width:50px;height:50px;animation:1s linear infinite spin}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
 </style>
 

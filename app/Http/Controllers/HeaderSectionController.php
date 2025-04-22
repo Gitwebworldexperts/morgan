@@ -54,21 +54,22 @@ class HeaderSectionController extends Controller
         }
         $actions  = $data['nav_name'];
         $urls = $data['nav_url'];
+        $status = $data['nav_status'];
         // Combine the arrays into an associative array
         $url_json = $combined = [];
         foreach ($urls as $index => $url) {
-            $url_json[$url] = $actions[$index];
+            $url_json[$url] = [$actions[$index],$status[$index]];
         }
 
 
         $new_actions  = $data['new_nav_name'];
         $new_urls = $data['new_nav_url'];
+        $new_status = $data['new_nav_status'];  
         // Combine the arrays into an associative array
         $new_url_json = $new_combined = [];
         foreach ($new_urls as $index => $url) {
-            $new_url_json[$url] = $new_actions[$index];
+            $new_url_json[$url] = [$new_actions[$index],$new_status[$index]];
         }
-
 
         $buttons = ['first_button_name'=>$data['first_button_name'],'first_button_url'=>$data['first_button_url'],'second_button_name'=>$data['second_button_name'],'second_button_url'=> $data['second_button_url']];
 
@@ -76,7 +77,7 @@ class HeaderSectionController extends Controller
         // Convert to JSON
 
         $json = json_encode($combined, JSON_PRETTY_PRINT);
-        // Retrieve the first record of HeaderSections, if any
+         // Retrieve the first record of HeaderSections, if any
         $headerSection = HeaderSections::first();
 
         // If no existing record, create a new instance

@@ -20,9 +20,11 @@ $copy = $footerSection->copyright;
         <link href="{{ asset('css/indireport/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
         <!-- <link href="{{ asset('css/indireport/owl.theme.default.css') }}" rel="stylesheet" type="text/css" /> -->
         <!-- <link href="{{ asset('css/indireport/owl.carousel.min.css') }}" rel="stylesheet" type="text/css" /> -->
-        <link href="{{ asset('css/indireport/common.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('css/indireport/common.css?v1') }}" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+        <link rel="canonical" href="{{ url()->current() }}">
+        
         <link href="{{ asset('css/indireport/responsive.css') }}" rel="stylesheet" type="text/css" />
         <style>
             .footerIcons i {
@@ -33,9 +35,49 @@ $copy = $footerSection->copyright;
                 display: inline-block;
             }
         </style>
+                <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-H0L8EQZMHD"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'G-H0L8EQZMHD');
+    </script>
+    <meta name="google-site-verification" content="ZdLhyH7_yM8MxGSfrrIQu3sxAh8c1dwoN7A2mvQsBMI" />
+    
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NTMCLWV');</script>
+    <!-- End Google Tag Manager -->
+    
+    
+       <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1164815760335008');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1164815760335008&ev=PageView&noscript=1"
+    /></noscript>
     </head>
 
     <body>
+        	<!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NTMCLWV"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     @if($whatsapp)
       <div class="whatsapp-float">    
           <a href="https://api.whatsapp.com/send?phone={{ $whatsapp }}" target="_blank" class="whatsapp-btn">
@@ -199,7 +241,9 @@ $copy = $footerSection->copyright;
 
                                         @endphp
                                         @foreach($footerSections as $key => $item)
-                                            <li><a style="color: #fff;" target="_blank" href="{{$key}}">{!! $item !!}</a></li>    
+                                            @if(isset($item[0]) && isset($item[1]))
+                                                <li><a style="color: #fff;" target="_blank" href="{{$key}}">{!! $item[0] !!}</a></li>    
+                                            @endif
                                         @endforeach
                                         @endif
                                         </ul>
@@ -209,7 +253,7 @@ $copy = $footerSection->copyright;
         </div>
       </div>
     </footer>
- 
+    <script src="https://widgets.leadconnectorhq.com/loader.js" data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js" data-widget-id="67e261b014647143f91cdbf4"></script>
     <script src="{{ asset('js/indireport/jquery-3.6.0.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/indireport/bootstrap.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/indireport/owl.carousel.js') }}" type="text/javascript"></script>

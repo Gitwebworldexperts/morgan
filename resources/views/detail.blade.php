@@ -19,6 +19,7 @@
     <meta property="og:title" content="{{$page_name}}" />
   @endif
   @if(isset($foundProperty['meta_description2']) && !empty($foundProperty['meta_description2']))
+    <meta name="description" content="{{ $foundProperty['meta_description2'] }}" />
     <meta property="og:description" content="{{ $foundProperty['meta_description2'] }}" />
   @endif
 @endsection
@@ -166,6 +167,7 @@
             </div>
         </div>
         <div class="col-12">
+          @if(!isset($investment))
           <div class="gallery-grid" id="aniimated-thumbnials">
             @if($foundProperty->featured_image)
             <a href="{{ asset($foundProperty->featured_image) }}" id="gallery-item-1">
@@ -201,6 +203,15 @@
 
             @endif
           </div>
+          @else
+          <div style="500px">
+              @php
+                  $image = $foundProperty->featured_image ?? 
+                          (!empty($foundProperty->banners) && isset($foundProperty->banners[0]) ? $foundProperty->banners[0]->image_url : 'img/thumbnail-placeholder-gallery.png');
+              @endphp
+              <img class="w-100" style="border-radius: 5px;" src="{{ asset($image) }}" alt="Feature highlights of our new property">
+          </div>
+          @endif
         </div>
       </div>
     </div>
@@ -224,9 +235,15 @@
             @endif
             @if((number_format($foundProperty->sale_price) || number_format($foundProperty->area) || $foundProperty->bed || $foundProperty->jacuzzi))
             <div class="price-amenitity">
-              @if(number_format($foundProperty->sale_price))
-              <h3>AED {{ number_format($foundProperty->sale_price) }}/-</h3>
-              @endif
+                @if(isset($foundProperty->price_input))
+                    <h3>{{ ucfirst($foundProperty->price_input) }}</h3>
+                @else
+                    @if(number_format($foundProperty->sale_price))
+                      <h3>AED {{ number_format($foundProperty->sale_price) }}/-</h3>
+                    @endif  
+                @endif
+                
+              
               <div class="main-amenity">
                 @if(number_format($foundProperty->area))
                 <div class="amenity-box">
@@ -387,11 +404,34 @@
                       </ul>
                   </div>
               @endif
-               {!! renderInterestForm() !!} 
-
-              <!-- {{-- {!! renderInterestForm('apply_job') !!} --}} -->
-
-              <!-- {!! renderInterestForm('listing_form') !!} -->
+              
+              <form id="contactForm" action="{{ route('intrest.submit') }}" method="POST">
+                  @csrf
+                    @if(isset($foundProperty->reference_number) && !empty($foundProperty->reference_number))
+                        <input type="hidden" name="listingId" value="{{ $foundProperty->reference_number }}">    
+                    @endif
+                    
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="form" style="display:none;">
+                    <input class="form-control" name="fullName" type="text" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input class="form-control" name="email" type="email" placeholder="example@gmail.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Contact Number</label>
+                    <input class="form-control" name="contactNumber" type="text" placeholder="+91 2344 34332" required>
+                </div>
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea class="form-control" name="message" placeholder="Enter your message..." required></textarea>
+                </div>
+                <button type="submit" data-sitekey="6LdTOJIqAAAAAIzlPRlnrnXROcFEH92ZzhUR-pAs" data-callback='onSubmit' data-action='submit'  class="g-recaptcha green-btn submit-btn">Submit</button>
+            </form>
+              
+        
               
             </div>
             @if(isset($agent) && !empty($agent))
@@ -402,15 +442,19 @@
                 </figure>
                 <figcaption>
                   <h3>{{ $agent->name }}</h3>
-                  <p>Senior Consultant</p>
+                  {!! $agent->detail !!}
                 </figcaption>
               </div>
               <div class="agent-contact-btn">
+                @if(isset($agent->mobile) && $agent->mobile)
                 <a href="https://wa.me/{{$agent->mobile}}" target="_blank" class="light-btn">
                   <img src="{{ asset('/img/whatsapp-dark.png') }}" alt="" class=""> Whatsapp </a>
+                @endif
+                @if(isset($agent->phone) && $agent->phone)
                 <a href="tel:{{$agent->phone}}" class="light-btn">
                   <img src="{{ asset('/img/call-dark.png') }}" alt="" class=""> Call Us Now! </a>
-              </div>
+                @endif
+                </div>
             </div>
             @endif
 
@@ -519,11 +563,16 @@
       <div class="heading-pnel HeadingMiddleBorder">
         <div class="row">
           <div class="col-lg-8 col-12">
-          
           @if(isset($devlopment))
           <h2 class="m-0">More New Developments</h2>
           @elseif($property_type == 'investment' || $property_type == 'invest')
           <h2 class="m-0">More Investments</h2>
+          @elseif($property_type == 'private')
+          <h2 class="m-0">More New Private Lists</h2>
+          @elseif($property_type == 'international')
+          <h2 class="m-0">More International Properties</h2>
+          @elseif($property_type == 'branded')
+          <h2 class="m-0">More Branded Properties</h2>
           @else
           <h2 class="m-0">More Properties</h2>
           @endif
@@ -633,7 +682,14 @@ span.address_section p {
 </style>
 @endsection
 
+
 @section('scripts')
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<script>
+   function onSubmit(token) {
+     document.getElementById("contactForm").submit();
+   }
+ </script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     // Count the number of anchor tags in the gallery grid
@@ -723,4 +779,5 @@ $(document).ready(function() {
   color: #fff !important;
 }
 </style>
+
 @endsection

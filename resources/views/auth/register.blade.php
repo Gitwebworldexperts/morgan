@@ -27,7 +27,7 @@
             <div class="col-lg-6">
                 <div class="login-from">
                     <h2 class="mb-2">{{ __('Register') }}</h2>
-                    <p class="mb-4">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+                    <p class="mb-4">Create an account to access all your listings, manage inquiries, and stay connected with your clients effortlessly. Need help? Our support team is always here for you!</p>
 
                     
                      <form method="POST" action="{{ route('register') }}">

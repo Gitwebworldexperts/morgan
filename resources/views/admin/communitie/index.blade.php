@@ -34,7 +34,7 @@
                                 <a class="edit_button" href="{{ route('communities.edit', $community->id) }}">
                                     <i class="fa-solid fa-pencil"></i> Edit
                                 </a>
-                                <a class="edit_button" href="{{ route('detail.communitie', base64_encode($community->id)) }}">
+                                <a class="edit_button" href="{{ route('detail.communitie', $community->slug) }}">
                                     <i class="fa-solid  fa-eye"></i> 
                                 </a>
                                 <form action="{{ route('communities.destroy', $community->id) }}" method="POST" style="display:inline;">
